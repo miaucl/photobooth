@@ -72,11 +72,12 @@ class Camera:
         self._previewSize = self._computePreviewDimensions(self._captureSize)
         self._is_preview = self._is_preview and self._cap.hasPreview
 
-        # Initialize template
+        # Initialize template with size of test picture
         self._template.startup(self._captureSize)
 
         self.setIdle()
-        self._comm.send(Workers.MASTER, StateMachine.CameraEvent('ready'))
+        # starting up and passing total number of pictures to make it available in overall context for later states
+        self._comm.send(Workers.MASTER, StateMachine.CameraEvent('ready', num_pictures=self._template.totalNumPics))
 
     def teardown(self, state):
 

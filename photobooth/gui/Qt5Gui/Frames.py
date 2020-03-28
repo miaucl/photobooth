@@ -103,7 +103,7 @@ class IdleMessage(QtWidgets.QFrame):
 
 class GreeterMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_x, num_y, skip, countdown_action):
+    def __init__(self, num_pictures, countdown_action):
 
         super().__init__()
         self.setObjectName('GreeterMessage')
@@ -111,7 +111,6 @@ class GreeterMessage(QtWidgets.QFrame):
         self._text_title = _('Get ready!')
         self._text_button = _('Start countdown')
 
-        num_pictures = max(num_x * num_y - len(skip), 1)
         if num_pictures > 1:
             self._text_label = _('for {} pictures...').format(num_pictures)
         else:
@@ -138,12 +137,11 @@ class GreeterMessage(QtWidgets.QFrame):
 
 class CaptureMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_picture, num_x, num_y, skip):
+    def __init__(self, num_picture, num_pictures):
 
         super().__init__()
         self.setObjectName('PoseMessage')
 
-        num_pictures = max(num_x * num_y - len(skip), 1)
         if num_pictures > 1:
             self._text = _('Picture {} of {}...').format(num_picture,
                                                          num_pictures)

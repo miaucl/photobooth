@@ -177,16 +177,21 @@ class GpioEvent(Event):
 
 class CameraEvent(Event):
 
-    def __init__(self, name, picture=None):
+    def __init__(self, name, picture=None, num_pictures=None):
 
         super().__init__(name)
         self._picture = picture
+        self._num_pictures = num_pictures
 
     @property
     def picture(self):
 
         return self._picture
 
+    @property
+    def num_pictures(self):
+
+        return self._num_pictures
 
 class WorkerEvent(Event):
 
@@ -338,6 +343,7 @@ class StartupState(State):
     def handleEvent(self, event, context):
 
         if isinstance(event, CameraEvent) and event.name == 'ready':
+            context.num_pictures = event.num_pictures
             context.is_running = True
             context.state = IdleState()
         else:
@@ -354,66 +360,83 @@ class IdleState(State):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'trigger'):
-            context.state = GreeterState()
+            context.state = GreeterState(num_pictures=context.num_pictures)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 
 class GreeterState(State):
 
-    def __init__(self):
+    def __init__(self, num_pictures=None):
 
         super().__init__()
+        self._num_pictures = num_pictures
 
     def handleEvent(self, event, context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'countdown'):
-            context.state = CountdownState(1)
+            context.state = CountdownState(1, num_pictures=context.num_pictures)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
+    @property
+    def num_pictures(self):
+
+        return self._num_pictures
 
 class CountdownState(State):
 
-    def __init__(self, num_picture):
+    def __init__(self, num_picture, num_pictures=0):
 
         super().__init__()
 
         self._num_picture = num_picture
+        self._num_pictures = num_pictures
 
     @property
     def num_picture(self):
 
         return self._num_picture
+
+    @property
+    def num_pictures(self):
+
+        return self._num_pictures
 
     def handleEvent(self, event, context):
 
         if isinstance(event, GuiEvent) and event.name == 'countdown':
             pass
         elif isinstance(event, GuiEvent) and event.name == 'capture':
-            context.state = CaptureState(self.num_picture)
+            context.state = CaptureState(self.num_picture, self.num_pictures)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 
 class CaptureState(State):
 
-    def __init__(self, num_picture):
+    def __init__(self, num_picture, num_pictures):
 
         super().__init__()
 
         self._num_picture = num_picture
+        self._num_pictures = num_pictures
 
     @property
     def num_picture(self):
 
         return self._num_picture
 
+    @property
+    def num_pictures(self):
+
+        return self._num_pictures
+
     def handleEvent(self, event, context):
 
         if isinstance(event, CameraEvent) and event.name == 'countdown':
-            context.state = CountdownState(self.num_picture + 1)
+            context.state = CountdownState(self.num_picture + 1, self._num_pictures)
         elif isinstance(event, CameraEvent) and event.name == 'assemble':
             context.state = AssembleState()
         else:
