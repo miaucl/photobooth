@@ -1,0 +1,12 @@
+<template width="3496" height="2362" background="#000000">
+    <image id="back" file="photostrips-back.png" />
+    <photo id="r1" shot="1" x="450" y="70" width="1050" height="700" rotation="90"></photo>
+    <photo id="r2" shot="2" x="1210" y="70" width="1050" height="700" rotation="90"></photo>
+    <photo id="r3" shot="3" x="1970" y="70" width="1050" height="700" rotation="90"></photo>
+    <photo id="r4" shot="4" x="2730" y="70" width="1050" height="700" rotation="90"></photo>
+    <photo id="l1" shot="1" x="450" y="1240" width="1050" height="700" rotation="90"></photo>
+    <photo id="l2" shot="2" x="1210" y="1240" width="1050" height="700" rotation="90"></photo>
+    <photo id="l3" shot="3" x="1970" y="1240" width="1050" height="700" rotation="90"></photo>
+    <photo id="l4" shot="4" x="2730" y="1240" width="1050" height="700" rotation="90"></photo>
+    <image id="overlay" file="photostrips-overlay.png" />
+</template>
