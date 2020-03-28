@@ -30,7 +30,7 @@ import logging
 import logging.handlers
 import multiprocessing as mp
 
-from . import camera, gui
+from . import camera, gui, template
 from .Config import Config
 from .gpio import Gpio
 from .util import lookup_and_import
@@ -56,9 +56,11 @@ class CameraProcess(mp.Process):
 
         logging.debug('CameraProcess: Initializing...')
 
+        TemplateModule = lookup_and_import(
+            template.modules, self._cfg.get('Template', 'module'), 'template')
         CameraModule = lookup_and_import(
             camera.modules, self._cfg.get('Camera', 'module'), 'camera')
-        cap = camera.Camera(self._cfg, self._comm, CameraModule)
+        cap = camera.Camera(self._cfg, self._comm, CameraModule, TemplateModule)
 
         while True:
             try:

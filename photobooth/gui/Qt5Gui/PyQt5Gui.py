@@ -177,6 +177,7 @@ class PyQt5Gui(GuiSkeleton):
         self._enableEscape()
         self._disableTrigger()
 
+        ## TODO: replace picture count & skip logic here
         num_pic = (self._cfg.getInt('Picture', 'num_x'),
                    self._cfg.getInt('Picture', 'num_y'))
         skip = [i for i in self._cfg.getIntList('Picture', 'skip')
@@ -205,6 +206,7 @@ class PyQt5Gui(GuiSkeleton):
 
     def showCapture(self, state):
 
+        ## TODO: replace picture count & skip logic here
         num_pic = (self._cfg.getInt('Picture', 'num_x'),
                    self._cfg.getInt('Picture', 'num_y'))
         skip = [i for i in self._cfg.getIntList('Picture', 'skip')
