@@ -15,12 +15,12 @@ The templates are defined in XML. The XML file descibes size&color of the backgr
 * `Photo` refers to a shot taken by the camera. Positioning, resizing, rotation are supported currently. Make sure shots are numbered correctly!
 
 Currently, two examples are provided: 
-* `standard_2x2.xml` mimics the current behaviour of composing 2x2 photos on a white back.
-* `example.xml` is a showcase for current capabilities (sorry for my limited design skills). Curious to see what others come up with!
+* `standard_2x2.xml` mimics the current behaviour of composing 2x2 photos on a white back. <img alt="Example for standard 2x2 template" title="Standard 2x2 template" src="supplementals/templates/standard_2x2-result.jpg" width="280" />
+* `example.xml` is a showcase for current capabilities (sorry for my limited design skills). Curious to see what others come up with! <img alt="Example for example template" title="Example template" src="supplementals/templates/example-result.jpg" width="280" />
 
 To test & develop further templates the templating can be called directly from the CLI:
 ```
-python -m photobooth.template.FancyTemplate -t .\supplementals\templates\example
+python -m photobooth.template.FancyTemplate -t .\supplementals\templates\example.xml
 ```
 `-h` provides a short help
 
