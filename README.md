@@ -24,7 +24,8 @@ python -m photobooth.template.FancyTemplate -t .\supplementals\templates\example
 ```
 `-h` provides a short help
 
-Further ideas for optimization (Please add/prioritize):
+#### Further ideas for optimization 
+(Please add/prioritize)
 * [ ] caching of photo manipulations to increase speed
 * [ ] resizing of image tag
 * [ ] text tag to add text labels (almost same can be achieved by final overlay image including the text)

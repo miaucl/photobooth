@@ -6,7 +6,6 @@ import logging
 from PIL import Image, ImageOps, ImageFont, ImageDraw
 from io import BytesIO
 import os
-import glob
 from xml.etree import ElementTree
 
 from . import Template
@@ -160,7 +159,7 @@ class FancyTemplate(Template):
 
 
     def startup(self, capture_size):
-        xmltemplate = glob.glob(os.path.join(self._templateFolder, "*.xml"))[0]
+        xmltemplate = self._templateFile
         logging.debug("xmltemplate = %s", xmltemplate)
         self._assemblytasks = self._parseXMLTemplate(xmltemplate)
         # implement parser for JSON alternatively??
@@ -238,7 +237,7 @@ if __name__ == "__main__":
     # Add parameter for direct startup
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true', help='enable additional debug output')
-    parser.add_argument('-t', '--template', type=str, help='template folder to be used', default="supplementals/templates/example")
+    parser.add_argument('-t', '--template', type=str, help='template file to be used', default="supplementals/templates/example")
     parser.add_argument('-o', '--out', type=str, help='output file name')
     parser.add_argument('photos', type=str, nargs='*', help='input photos file name')
     parsed_args = parser.parse_args(sys.argv[1:]) # script path included in argv[0] -> excluding
