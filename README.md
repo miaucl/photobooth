@@ -39,6 +39,8 @@ Screenshots produced using `CameraDummy` that produces unicolor images.
 
 ### Fancy Templates
 
+Credits to @tammtimmer.
+
 The templates are defined in XML. The XML file descibes size&color of the background. On top each XML tag adds an element on top of the others:
 
 * `Image` can be PNG (incl transparency if required) or JPG etc and should be the same size like defined in the background. Can be used for a picture background or final overlay ontop of photos.
@@ -57,6 +59,12 @@ python -m photobooth.template.FancyTemplate -t .\supplementals\templates\example
 ```
 
 `-h` provides a short help
+
+### Slideshow
+
+Credits to @tammtimmer.
+
+The slideshow presents images already taken in a random order after a set idle time.
 
 ### Technical specifications
 
@@ -91,10 +99,6 @@ I appreciate any feedback or bug reports.
 Please submit them via the [Issue tracker](https://github.com/miaucl/photobooth/issues/new?template=bug_report.md) and always include your `photobooth.log` file (is created automatically in the top folder) and a description of your hardware and software setup.
 
 I am also happy to hear any success stories! Feel free to [submit them here](https://github.com/miaucl/photobooth/issues/new?template=success-story.md).
-
-## Other interesting PRs
-
-- tammtimmer:slideshow
 
 ## License
 

@@ -27,6 +27,7 @@ class AssemblyTask():
         org_size = image.size
         org_aspect_ratio = org_size[0]/org_size[1]
         target_aspect_ratio = size[0]/size[1]
+        logging.info("Orig Size %s size %s",org_size,size)
 
         img = image.copy()
         if org_aspect_ratio < target_aspect_ratio:
@@ -43,7 +44,8 @@ class AssemblyTask():
             left_crop = (org_size[0] - new_width) / 2
             img = img.crop((left_crop, 0, org_size[0]-left_crop, org_size[1]))
             logging.debug("resize too broad: %s %s %s %s %s %s", str(org_size), str(size), size_ratio, new_width, left_crop, str(img.size))
-        img.thumbnail(size)
+        # img.thumbnail(size)
+        img = img.resize(size, resample=Image.BICUBIC)
         return img
 
 
@@ -98,10 +100,11 @@ class PhotoAssemblyTask(AssemblyTask):
             #photo.thumbnail(self._size)
         if self._rotate != 0:
             photo = photo.convert('RGBA')
-            photo = photo.rotate(self._rotate, expand=True)
+            photo = photo.rotate(self._rotate, resample=Image.BICUBIC, expand=True)
             image.paste(photo, self._position, photo)
         else:
             image.paste(photo, self._position)
+            
 class FancyTemplate(Template):
 
     def __init__(self, config):
@@ -148,7 +151,8 @@ class FancyTemplate(Template):
                     position = (int(step.get("x")), int(step.get("y")))
                     size = (int(step.get("width")), int(step.get("height")))
                     rotation = int(step.get("rotation")) if step.get("rotation") else 0
-
+                    logging.info("Picture %s size %s",name,size)
+                    
                     pat = PhotoAssemblyTask(
                         name, shot, position, size, rotation)
                     assemblytasks.append(pat)

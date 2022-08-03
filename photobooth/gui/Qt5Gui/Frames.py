@@ -26,6 +26,8 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 
+from PIL import Image, ImageQt
+
 from .. import modules
 from ... import camera
 from ... import printer
@@ -87,8 +89,22 @@ class IdleMessage(QtWidgets.QFrame):
 
         self._message_label = _('Hit the')
         self._message_button = _('Button!')
+        self._picture = None
 
         self.initFrame(trigger_action)
+
+    @property
+    def picture(self):
+
+        return self._picture
+
+    @picture.setter
+    def picture(self, picture):
+
+        if not isinstance(picture, QtGui.QImage):
+            raise ValueError('picture must be a QtGui.QImage')
+
+        self._picture = picture
 
     def initFrame(self, trigger_action):
 
@@ -100,6 +116,24 @@ class IdleMessage(QtWidgets.QFrame):
         lay.addWidget(lbl)
         lay.addWidget(btn)
         self.setLayout(lay)
+
+    def paintEvent(self, event):
+
+        painter = QtGui.QPainter(self)
+
+        # background image
+        if self.picture is not None:
+
+            pix = QtGui.QPixmap.fromImage(self.picture)
+            pix = pix.scaled(int(self.width()//1.9),
+                             int(self.height()//1.9),
+                             QtCore.Qt.KeepAspectRatio,
+                             QtCore.Qt.FastTransformation)
+            origin = ((int(self.width() * 0.05)),
+                      (self.height() - pix.height()) // 2)
+            painter.drawPixmap(QtCore.QPoint(*origin), pix)
+
+        painter.end()
 
 
 class GreeterMessage(QtWidgets.QFrame):
@@ -147,7 +181,7 @@ class CaptureMessage(QtWidgets.QFrame):
             self._text = _('Picture {} of {}...').format(num_picture,
                                                          num_pictures)
         else:
-            self._text = 'Taking a photo...'
+            self._text = _('Taking a photo...')
 
         self.initFrame()
 
@@ -185,6 +219,83 @@ class PictureMessage(QtWidgets.QFrame):
 
         painter = QtGui.QPainter(self)
         self._paintPicture(painter)
+        painter.end()
+
+
+class SlideshowMessage(QtWidgets.QFrame):
+
+    def __init__(self, slide, text, trigger_action):
+
+        super().__init__()
+        self.setObjectName('SlideshowMessage')
+
+        self._slide = slide
+        self._newslide = slide
+        self._lastslide = slide
+        self._text = text
+        self._alpha = 0.0
+        self.initFrame(trigger_action)
+        
+    def initFrame(self, trigger_action):
+        
+        # lbl = QtWidgets.QLabel(self._text)
+        btn = QtWidgets.QPushButton(self._text)
+        btn.clicked.connect(trigger_action)
+
+        lay = QtWidgets.QVBoxLayout()
+        # lay.addWidget(lbl)
+        lay.addWidget(btn)
+        self.setLayout(lay)
+
+    @property
+    def slide(self):
+
+        return self._slide
+
+    @slide.setter
+    def slide(self, slide):
+
+        if not isinstance(slide, Image.Image):
+            raise ValueError('slide must be a QtGui.QImage')
+
+        self._slide = slide
+
+    @property
+    def alpha(self):
+        return self._alpha
+
+    @alpha.setter
+    def alpha(self, alpha):
+        self._alpha = alpha
+
+    def showEvent(self, event):
+        self.startTimer(25)
+
+    def timerEvent(self, event):
+
+        if ((self.alpha < 1.0) and 
+            (getattr(self._lastslide,"size") == getattr(self.slide,"size"))):
+            self._newslide = Image.blend(self._lastslide, self.slide, round(self.alpha,1))
+            self.alpha = round(self.alpha,1) + 0.1
+        else:
+            self._newslide = self.slide 
+            self._lastslide = self.slide 
+            
+        self.update()
+
+    def paintEvent(self, event):
+
+        painter = QtGui.QPainter(self)
+
+        slide = ImageQt.ImageQt(self._newslide)
+        slide = slide.scaled(self.contentsRect().size(),
+                             QtCore.Qt.KeepAspectRatio,
+                             QtCore.Qt.FastTransformation)
+
+        origin = ((self.width() - slide.width()) // 2,
+                  (self.height() - slide.height()) // 2)
+        painter.drawImage(QtCore.QPoint(*origin), slide )
+            
         painter.end()
 
 
@@ -328,8 +439,12 @@ class PostprocessMessage(Widgets.TransparentOverlay):
     def initFrame(self, tasks, idle_handle, worker):
 
         def disableAndCall(button, handle):
-            button.setEnabled(False)
-            button.update()
+            for i, button in enumerate(self._buttons):
+                logging.info('Button {}'.format(button.text()) )
+                button.setEnabled(False)
+                button.update()
+            self._label.setText(_('print in progress'))
+            self._label.update()
             worker.put(handle)
 
         def createButton(task):
@@ -337,17 +452,18 @@ class PostprocessMessage(Widgets.TransparentOverlay):
             button.clicked.connect(lambda: disableAndCall(button, task.action))
             return button
 
-        buttons = [createButton(task) for task in tasks]
-        buttons.append(QtWidgets.QPushButton(_('Start over')))
-        buttons[-1].clicked.connect(idle_handle)
+        self._buttons = [createButton(task) for task in tasks]
+        self._buttons.append(QtWidgets.QPushButton(_('Start over')))
+        self._buttons[-1].clicked.connect(idle_handle)
 
         button_lay = QtWidgets.QGridLayout()
-        for i, button in enumerate(buttons):
+        for i, button in enumerate(self._buttons):
             pos = divmod(i, 2)
             button_lay.addWidget(button, *pos)
 
         layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(QtWidgets.QLabel(_('Happy?')))
+        self._label = QtWidgets.QLabel(_('Happy?'))
+        layout.addWidget(self._label)
         layout.addLayout(button_lay)
         self.setLayout(layout)
 
@@ -473,6 +589,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createCameraSettings(), _('Camera'))
         tabs.addTab(self.createTemplateSettings(), _('Template'))
         tabs.addTab(self.createPictureSettings(), _('Picture'))
+        tabs.addTab(self.createSlideshowSettings(), _('Slideshow'))
         tabs.addTab(self.createStorageSettings(), _('Storage'))
         tabs.addTab(self.createGpioSettings(), _('GPIO'))
         tabs.addTab(self.createPrinterSettings(), _('Printer'))
@@ -764,6 +881,28 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createSlideshowSettings(self):
+
+        self.init('Slideshow')
+        
+        box_start_slideshow_time = QtWidgets.QSpinBox()
+        box_start_slideshow_time.setRange(3, 100)
+        box_start_slideshow_time.setValue(self._cfg.getInt('Slideshow', 'start_slideshow_time'))
+        self.add('Slideshow', 'start_slideshow_time', box_start_slideshow_time)
+
+        box_pic_slideshow_time = QtWidgets.QSpinBox()
+        box_pic_slideshow_time.setRange(5, 100)
+        box_pic_slideshow_time.setValue(self._cfg.getInt('Slideshow', 'pic_slideshow_time'))
+        self.add('Slideshow', 'pic_slideshow_time', box_pic_slideshow_time)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Wait for Slideshow time [s]:'), box_start_slideshow_time)
+        layout.addRow(_('Wait for change pictures time [s]:'), box_pic_slideshow_time)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
     def createStorageSettings(self):
 
         self.init('Storage')
@@ -803,9 +942,9 @@ class Settings(QtWidgets.QFrame):
 
         self.init('Gpio')
 
-        enable = QtWidgets.QCheckBox()
-        enable.setChecked(self._cfg.getBool('Gpio', 'enable'))
-        self.add('Gpio', 'enable', enable)
+        enable_button = QtWidgets.QCheckBox()
+        enable_button.setChecked(self._cfg.getBool('Gpio', 'enable_button'))
+        self.add('Gpio', 'enable_button', enable_button)
 
         exit_pin = QtWidgets.QSpinBox()
         exit_pin.setRange(1, 40)
@@ -816,6 +955,10 @@ class Settings(QtWidgets.QFrame):
         trig_pin.setRange(1, 40)
         trig_pin.setValue(self._cfg.getInt('Gpio', 'trigger_pin'))
         self.add('Gpio', 'trigger_pin', trig_pin)
+
+        enable_light = QtWidgets.QCheckBox()
+        enable_light.setChecked(self._cfg.getBool('Gpio', 'enable_light'))
+        self.add('Gpio', 'enable_light', enable_light)
 
         lamp_pin = QtWidgets.QSpinBox()
         lamp_pin.setRange(1, 40)
@@ -843,9 +986,10 @@ class Settings(QtWidgets.QFrame):
         lay_rgb.addWidget(chan_b_pin)
 
         layout = QtWidgets.QFormLayout()
-        layout.addRow(_('Enable GPIO:'), enable)
+        layout.addRow(_('Enable GPIO buttons:'), enable_button)
         layout.addRow(_('Exit button pin (BCM numbering):'), exit_pin)
         layout.addRow(_('Trigger button pin (BCM numbering):'), trig_pin)
+        layout.addRow(_('Enable GPIO light:'), enable_light)
         layout.addRow(_('Idle lamp pin (BCM numbering):'), lamp_pin)
         layout.addRow(_('RGB LED pins (BCM numbering):'), lay_rgb)
 
@@ -1051,6 +1195,11 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Picture', 'background',
                       self.get('Picture', 'background').text())
 
+        self._cfg.set('Slideshow', 'start_slideshow_time',
+                      str(self.get('Slideshow', 'start_slideshow_time').text()))
+        self._cfg.set('Slideshow', 'pic_slideshow_time',
+                      str(self.get('Slideshow', 'pic_slideshow_time').text()))
+
         self._cfg.set('Storage', 'basedir',
                       self.get('Storage', 'basedir').text())
         self._cfg.set('Storage', 'basename',
@@ -1058,11 +1207,14 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Storage', 'keep_pictures',
                       str(self.get('Storage', 'keep_pictures').isChecked()))
 
-        self._cfg.set('Gpio', 'enable',
-                      str(self.get('Gpio', 'enable').isChecked()))
+        self._cfg.set('Gpio', 'enable_button',
+                      str(self.get('Gpio', 'enable_button').isChecked()))
         self._cfg.set('Gpio', 'exit_pin', self.get('Gpio', 'exit_pin').text())
         self._cfg.set('Gpio', 'trigger_pin',
                       self.get('Gpio', 'trigger_pin').text())
+
+        self._cfg.set('Gpio', 'enable_light',
+                      str(self.get('Gpio', 'enable_light').isChecked()))
         self._cfg.set('Gpio', 'lamp_pin', self.get('Gpio', 'lamp_pin').text())
         self._cfg.set('Gpio', 'chan_r_pin',
                       self.get('Gpio', 'chan_r_pin').text())

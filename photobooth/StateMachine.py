@@ -361,9 +361,28 @@ class IdleState(State):
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'trigger'):
             context.state = GreeterState(num_pictures=context.num_pictures)
+        elif isinstance(event, GuiEvent) and event.name == 'slideshow':
+            context.state = SlideshowState()
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
+class SlideshowState(State):
+
+    def __init__(self):
+
+        super().__init__()
+
+    def handleEvent(self, event, context):
+
+        if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
+           event.name == 'trigger'):
+            context.state = IdleState()
+        elif (isinstance(event, GuiEvent) and 
+             ((event.name == 'slideshow') or (event.name == 'updateslideshow'))):
+            logging.info('Picture ...' )
+            pass
+        else:
+            raise TypeError('Unknown Event type "{}"'.format(event))
 
 class GreeterState(State):
 

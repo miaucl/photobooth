@@ -21,7 +21,9 @@ import logging
 
 import os.path
 from glob import glob
+from time import localtime, strftime
 
+import random
 
 class PictureList:
     """A simple helper class.
@@ -43,12 +45,29 @@ class PictureList:
         self.counter = 0
         self.shot_counter = 0
 
-        # Ensure directory exists
+        # Ensure directory exists 
         dirname = os.path.dirname(self.basename)
+        logging.info('Dirname {}'.format(dirname))
         if not os.path.exists(dirname):
-            os.makedirs(dirname)
-
+            # Create default directory if basename don't work
+            try: 
+                os.makedirs(dirname)
+            except OSError as error:
+                logging.info('Dirname {} not possible.'.format(dirname))
+                path = os.path.join("%Y-%m-%d",
+                                    os.path.basename(self.basename))
+                self.basename = strftime(path, localtime())
+                dirname = os.path.dirname(self.basename)
+                logging.info('New dirname {}'.format(dirname))
+                if not os.path.exists(dirname):
+                    os.makedirs(dirname)
+                
         self.findExistingFiles()
+        
+        # Print initial infos
+        logging.info('Number of last existing file: %d', self.counter)
+        logging.info('Saving pictures as "%s%s.%s"', self.basename,
+                     self.count_width * 'X', 'jpg')
 
     def findExistingFiles(self):
         """Count number of existing files matchin the given basename
@@ -56,7 +75,7 @@ class PictureList:
         # Find existing files
         count_pattern = '[0-9]' * self.count_width
         pictures = glob(self.basename + count_pattern + self.suffix)
-
+    
         # Get number of latest file
         if len(pictures) == 0:
             self.counter = 0
@@ -66,16 +85,16 @@ class PictureList:
             self.counter = int(last_picture[
                 -(self.count_width + len(self.suffix)):-len(self.suffix)])
 
-        # Print initial infos
-        logging.info('Number of last existing file: %d', self.counter)
-        logging.info('Saving pictures as "%s%s.%s"', self.basename,
-                     self.count_width * 'X', 'jpg')
-
     @property
     def basename(self):
         """Return the basename for the files"""
         return self._basename
 
+    @basename.setter
+    def basename(self, basename):
+        logging.info('New basename is {}'.format(basename))
+        self._basename = basename
+        
     def getFilename(self, count):
         """Return the file name for a given file number"""
         return self.basename + str(count).zfill(self.count_width) + self.suffix
@@ -99,3 +118,12 @@ class PictureList:
         """Update counter and return the next filename"""
         self.shot_counter += 1
         return self.getFilenameShot(self.counter, self.shot_counter)
+
+    def getRandomPic(self):
+        """Return a random filename """
+        
+        self.findExistingFiles()
+        if self.counter == 0:
+            return self.getFilename(0)
+        else:
+            return self.getFilename(random.randrange(self.counter)+1)

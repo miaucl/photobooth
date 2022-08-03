@@ -1,257 +1,361 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: Photobooth\n"
+"POT-Creation-Date: 2022-05-31 23:31+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
-"Project-Id-Version: Photobooth\n"
-"Language: de\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-Basepath: ../../../gui\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: photobooth/gui/Qt5Gui/Frames.py:50
+#: GuiPostprocessor.py:112
+msgid "Print"
+msgstr "Drucken!"
+
+#: Qt5Gui/Frames.py:53
 msgid "Start photobooth"
 msgstr "Photobooth starten"
 
-#: photobooth/gui/Qt5Gui/Frames.py:53
+#: Qt5Gui/Frames.py:56
 msgid "Set date/time"
 msgstr "Uhrzeit ändern"
 
-#: photobooth/gui/Qt5Gui/Frames.py:56
+#: Qt5Gui/Frames.py:59
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: photobooth/gui/Qt5Gui/Frames.py:59
+#: Qt5Gui/Frames.py:62
 msgid "Quit"
 msgstr "Beenden"
 
-#: photobooth/gui/Qt5Gui/Frames.py:68
+#: Qt5Gui/Frames.py:71
 msgid "photobooth"
 msgstr "Photobooth"
 
-#: photobooth/gui/Qt5Gui/Frames.py:87
+#: Qt5Gui/Frames.py:90
 msgid "Hit the"
-msgstr "Drück' den"
+msgstr "Drücke den"
 
-#: photobooth/gui/Qt5Gui/Frames.py:88
+#: Qt5Gui/Frames.py:91
 msgid "Button!"
 msgstr "Knopf!"
 
-#: photobooth/gui/Qt5Gui/Frames.py:111
+#: Qt5Gui/Frames.py:146
 msgid "Get ready!"
 msgstr "Bereit machen!"
 
-#: photobooth/gui/Qt5Gui/Frames.py:112
+#: Qt5Gui/Frames.py:147
 msgid "Start countdown"
 msgstr "Countdown starten"
 
-#: photobooth/gui/Qt5Gui/Frames.py:116
+#: Qt5Gui/Frames.py:150
 msgid "for {} pictures..."
 msgstr "für {} Fotos..."
 
-#: photobooth/gui/Qt5Gui/Frames.py:148
+#: Qt5Gui/Frames.py:181
 msgid "Picture {} of {}..."
 msgstr "Foto {} von {}..."
 
-#: photobooth/gui/Qt5Gui/Frames.py:342
-msgid "Start over"
-msgstr "Nochmal"
+#: Qt5Gui/Frames.py:184
+msgid "Taking a photo..."
+msgstr "Mache ein Foto ..."
 
-#: photobooth/gui/Qt5Gui/Frames.py:351
+#: Qt5Gui/Frames.py:446
+msgid "print in progress"
+msgstr "Drucken läuft ..."
+
+#: Qt5Gui/Frames.py:456
+msgid "Start over"
+msgstr "Lieber nicht drucken"
+
+#: Qt5Gui/Frames.py:465
 msgid "Happy?"
 msgstr "Zufrieden?"
 
-#: photobooth/gui/Qt5Gui/Frames.py:383
+#: Qt5Gui/Frames.py:498
 msgid "Date:"
 msgstr "Datum:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:384
+#: Qt5Gui/Frames.py:499
 msgid "Time:"
 msgstr "Uhrzeit:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:387
+#: Qt5Gui/Frames.py:502
 msgid "Set system date and time:"
 msgstr "Systemzeit ändern:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:396 photobooth/gui/Qt5Gui/Frames.py:486
+#: Qt5Gui/Frames.py:511 Qt5Gui/Frames.py:605
 msgid "Save and restart"
 msgstr "Speichern & Neustart"
 
-#: photobooth/gui/Qt5Gui/Frames.py:400 photobooth/gui/Qt5Gui/Frames.py:490
+#: Qt5Gui/Frames.py:515 Qt5Gui/Frames.py:609
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: photobooth/gui/Qt5Gui/Frames.py:472
+#: Qt5Gui/Frames.py:587
 msgid "Interface"
 msgstr "Oberfläche"
 
-#: photobooth/gui/Qt5Gui/Frames.py:473
+#: Qt5Gui/Frames.py:588
 msgid "Photobooth"
 msgstr "Photobooth"
 
-#: photobooth/gui/Qt5Gui/Frames.py:474
+#: Qt5Gui/Frames.py:589
 msgid "Camera"
 msgstr "Kamera"
 
-#: photobooth/gui/Qt5Gui/Frames.py:475
+#: Qt5Gui/Frames.py:590
+msgid "Template"
+msgstr "Vorlage"
+
+#: Qt5Gui/Frames.py:591
 msgid "Picture"
 msgstr "Bild"
 
-#: photobooth/gui/Qt5Gui/Frames.py:476
+#: Qt5Gui/Frames.py:592
+msgid "Slideshow"
+msgstr "Diaschau"
+
+#: Qt5Gui/Frames.py:593
 msgid "Storage"
 msgstr "Speicher"
 
-#: photobooth/gui/Qt5Gui/Frames.py:477
+#: Qt5Gui/Frames.py:594
 msgid "GPIO"
 msgstr "GPIO"
 
-#: photobooth/gui/Qt5Gui/Frames.py:478
+#: Qt5Gui/Frames.py:595
 msgid "Printer"
 msgstr "Drucker"
 
-#: photobooth/gui/Qt5Gui/Frames.py:494
+#: Qt5Gui/Frames.py:596
+msgid "Mailer"
+msgstr "Mailer"
+
+#: Qt5Gui/Frames.py:597
+msgid "Upload"
+msgstr "Upload"
+
+#: Qt5Gui/Frames.py:613
 msgid "Restore defaults"
 msgstr "Zurücksetzen"
 
-#: photobooth/gui/Qt5Gui/Frames.py:553
+#: Qt5Gui/Frames.py:672
 msgid "Enable fullscreen:"
 msgstr "Vollbild aktivieren:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:554
+#: Qt5Gui/Frames.py:673
 msgid "Gui module:"
 msgstr "GUI Modul:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:555
+#: Qt5Gui/Frames.py:674
 msgid "Window size [px]:"
 msgstr "Fenstergröße [px]:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:556
+#: Qt5Gui/Frames.py:675
 msgid "Hide cursor:"
 msgstr "Mauszeiger ausblenden:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:557
+#: Qt5Gui/Frames.py:676
 msgid "Appearance:"
 msgstr "Erscheinungsbild:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:597
+#: Qt5Gui/Frames.py:716
 msgid "Show preview during countdown:"
 msgstr "Vorschau während Countdown zeigen:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:598
+#: Qt5Gui/Frames.py:717
 msgid "Greeter time before countdown [s]:"
 msgstr "Wartezeit auf Begrüßungsbildschirm [s]:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:599
+#: Qt5Gui/Frames.py:718
 msgid "Countdown time [s]:"
 msgstr "Countdown-Dauer [s]:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:600
+#: Qt5Gui/Frames.py:719
 msgid "Picture display time [s]:"
 msgstr "Anzeigedauer fertiges Bild [s]:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:601
+#: Qt5Gui/Frames.py:720
 msgid "Postprocess timeout [s]:"
 msgstr "Wartezeit auf Nachbearbeitungsbildschirm [s]"
 
-#: photobooth/gui/Qt5Gui/Frames.py:602
+#: Qt5Gui/Frames.py:721
 msgid "Overwrite displayed error message:"
 msgstr "Ersetze angezeigte Fehlermeldung:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:617
+#: Qt5Gui/Frames.py:752
 msgid "Camera module:"
 msgstr "Kamera Modul:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:681 photobooth/gui/Qt5Gui/Frames.py:684
+#: Qt5Gui/Frames.py:753
+msgid "Camera rotation:"
+msgstr "Kamera Orientierung:"
+
+#: Qt5Gui/Frames.py:772 Qt5Gui/Frames.py:775 Qt5Gui/Frames.py:862
+#: Qt5Gui/Frames.py:865
 msgid "Select file"
 msgstr "Datei auswählen"
 
-#: photobooth/gui/Qt5Gui/Frames.py:692
+#: Qt5Gui/Frames.py:783
+msgid "Template module:"
+msgstr "Vorlagen Modul:"
+
+#: Qt5Gui/Frames.py:784
+msgid "Fancy template file:"
+msgstr "Fancy Vorlagendatei:"
+
+#: Qt5Gui/Frames.py:873
 msgid "Number of shots per picture:"
 msgstr "Anzahl Fotos pro Bild:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:693
+#: Qt5Gui/Frames.py:874
 msgid "Size of assembled picture [px]:"
 msgstr "Größe des fertigen Bildes [px]:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:694
+#: Qt5Gui/Frames.py:875
 msgid "Min. distance between shots [px]:"
 msgstr "Min. Abstand der Fotos im Bild [px]:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:695
-msgid "Omit last picture:"
-msgstr "Letztes Foto weg lassen:"
+#: Qt5Gui/Frames.py:876
+#, fuzzy
+#| msgid "Min. distance between shots [px]:"
+msgid "Min. distance border to shots [px]:"
+msgstr "Min. Abstand der Fotos im Bild [px]:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:696
+#: Qt5Gui/Frames.py:877
+msgid "Skip pictures:"
+msgstr "Nicht zu benutzende Bilder (Kommasepariert)"
+
+#: Qt5Gui/Frames.py:878
 msgid "Background image:"
 msgstr "Hintergrundbild:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:717 photobooth/gui/Qt5Gui/Frames.py:721
+#: Qt5Gui/Frames.py:899
+msgid "Wait for Slideshow time [s]:"
+msgstr "Inaktive Zeit bis zum Start der Diaschau [s]:"
+
+#: Qt5Gui/Frames.py:900
+msgid "Wait for change pictures time [s]:"
+msgstr "Anzeigezeit der Bilder [s]"
+
+#: Qt5Gui/Frames.py:921 Qt5Gui/Frames.py:925
 msgid "Select directory"
 msgstr "Verzeichnis auswählen:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:729
+#: Qt5Gui/Frames.py:933
 msgid "Output directory (strftime possible):"
 msgstr "Ausgabeverzeichnis (strftime möglich):"
 
-#: photobooth/gui/Qt5Gui/Frames.py:730
+#: Qt5Gui/Frames.py:934
 msgid "Basename of files (strftime possible):"
 msgstr "Dateiname (strftime möglich):"
 
-#: photobooth/gui/Qt5Gui/Frames.py:731
+#: Qt5Gui/Frames.py:935
 msgid "Keep single shots:"
 msgstr "Einzelfotos behalten:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:781
-msgid "Enable GPIO:"
-msgstr "GPIO aktivieren:"
+#: Qt5Gui/Frames.py:989
+msgid "Enable GPIO buttons:"
+msgstr "GPIO Tasten aktivieren:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:782
+#: Qt5Gui/Frames.py:990
 msgid "Exit button pin (BCM numbering):"
 msgstr "Pin für Beenden-Schalter (BCM-Numm.):"
 
-#: photobooth/gui/Qt5Gui/Frames.py:783
+#: Qt5Gui/Frames.py:991
 msgid "Trigger button pin (BCM numbering):"
 msgstr "Pin für Auslöser (BCM-Numm.):"
 
-#: photobooth/gui/Qt5Gui/Frames.py:784
+#: Qt5Gui/Frames.py:992
+msgid "Enable GPIO light:"
+msgstr "GPIO Licht aktivieren:"
+
+#: Qt5Gui/Frames.py:993
 msgid "Idle lamp pin (BCM numbering):"
 msgstr "Pin für Leerlauf-Lampe (BCM-Numm.):"
 
-#: photobooth/gui/Qt5Gui/Frames.py:785
+#: Qt5Gui/Frames.py:994
 msgid "RGB LED pins (BCM numbering):"
 msgstr "Pins für RGB-LEDs (BCM-Numm.):"
 
-#: photobooth/gui/Qt5Gui/Frames.py:826
+#: Qt5Gui/Frames.py:1035
 msgid "Enable printing:"
 msgstr "Drucken aktivieren:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:827
+#: Qt5Gui/Frames.py:1036
 msgid "Module:"
 msgstr "Modul:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:828
+#: Qt5Gui/Frames.py:1037
 msgid "Print to PDF (for debugging):"
 msgstr "In PDF drucken (für Debugging):"
 
-#: photobooth/gui/Qt5Gui/Frames.py:829
+#: Qt5Gui/Frames.py:1038
 msgid "Ask for confirmation before printing:"
 msgstr "Bestätigung vor Druckvorgang nötig:"
 
-#: photobooth/gui/Qt5Gui/Frames.py:830
+#: Qt5Gui/Frames.py:1039
 msgid "Paper size [mm]:"
 msgstr "Papiergröße [mm]:"
 
-#: photobooth/gui/Qt5Gui/PyQt5Gui.py:164
+#: Qt5Gui/Frames.py:1096
+msgid "Enable Mailer:"
+msgstr "Mailer aktivieren:"
+
+#: Qt5Gui/Frames.py:1097
+msgid "Sender mail address:"
+msgstr "Sendeadresse:"
+
+#: Qt5Gui/Frames.py:1098
+msgid "Recipient mail address:"
+msgstr "Empfangsadresse:"
+
+#: Qt5Gui/Frames.py:1099
+msgid "Mail subject"
+msgstr "Betreff:"
+
+#: Qt5Gui/Frames.py:1100
+msgid "Mail message:"
+msgstr "Nachricht:"
+
+#: Qt5Gui/Frames.py:1101
+msgid "SMTP server:"
+msgstr ""
+
+#: Qt5Gui/Frames.py:1102 Qt5Gui/Frames.py:1138
+msgid "Server requires auth:"
+msgstr "Server benötigt Autorisierung:"
+
+#: Qt5Gui/Frames.py:1136
+msgid "Enable WebDAV upload:"
+msgstr "WebDAV aktivieren:"
+
+#: Qt5Gui/Frames.py:1137
+msgid "URL (folder must exist):"
+msgstr "URL (Verzeichnis muss existieren):"
+
+#: Qt5Gui/PyQt5Gui.py:146
+msgid "No slideshow yet..."
+msgstr "Noch keine Diaschau ..."
+
+#: Qt5Gui/PyQt5Gui.py:206
 msgid "Starting the photobooth..."
 msgstr "Starte die Photobooth..."
 
-#: photobooth/gui/Qt5Gui/PyQt5Gui.py:214
+#: Qt5Gui/PyQt5Gui.py:302
 msgid "Processing picture..."
-msgstr "Bild wird erzeugt..."
+msgstr "Bearbeite das Bild..."
 
-#: photobooth/gui/Qt5Gui/PyQt5Gui.py:286
+#: Qt5Gui/PyQt5Gui.py:375
 msgid "Confirmation"
 msgstr "Bestätigung"
 
-#: photobooth/gui/Qt5Gui/PyQt5Gui.py:287
+#: Qt5Gui/PyQt5Gui.py:376
 msgid "Quit Photobooth?"
 msgstr "Photobooth beenden?"
-

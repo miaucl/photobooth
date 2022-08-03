@@ -28,7 +28,6 @@ from .PictureList import PictureList
 from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
 from .PictureUploadWebdav import PictureUploadWebdav
-from .PictureList import PictureList
 
 
 class Worker:
@@ -36,7 +35,7 @@ class Worker:
     def __init__(self, config, comm):
 
         self._comm = comm
-
+        
         # Picture naming convention for assembled pictures
         path = os.path.join(config.get('Storage', 'basedir'),
                             config.get('Storage', 'basename'))

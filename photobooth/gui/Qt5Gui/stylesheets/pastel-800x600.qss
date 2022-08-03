@@ -32,7 +32,7 @@ QPushButton:pressed {
 QFrame#IdleMessage {
     background-image: url(photobooth/gui/Qt5Gui/images/arrow-800x600.png);
     background-repeat: no-repeat;
-    padding: 80px 40px 60px 40px;
+    padding: 80px 400px 60px 40px;
 }
 
 QFrame#IdleMessage QLabel {
@@ -49,6 +49,20 @@ QFrame#IdleMessage QPushButton {
 QFrame#IdleMessage QPushButton:pressed {
     background-color: rgba(255, 27, 0, 200);
     color: #eeeeee;
+}
+
+/* Slideshow Screen */
+
+QFrame#SlideshowMessage {
+    margin: 30px;
+}
+ 
+QFrame#SlideshowMessage QPushButton {
+    border: none;
+    color: rgba(255, 27, 0, 200);
+    font-size: 120px;
+    text-align: center;
+    min-height: 550px;
 }
 
 /* Greeter Screen */
@@ -154,9 +168,9 @@ QWidget#PostprocessMessage QPushButton:pressed {
 }
 
 QWidget#PostprocessMessage QPushButton:disabled {
+    color: #66333333;
+    border-color: #66333333;
     background-color: #33eeeeee;
-    color: #11eeeeee;
-    border-color: #11eeeeee;
 }
 
 /* Customizing settings */
