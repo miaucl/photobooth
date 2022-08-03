@@ -41,9 +41,13 @@ class CameraDummy(CameraInterface):
 
     def getPreview(self):
 
+        logging.debug('Get preview')
+
         return self.getPicture()
 
     def getPicture(self):
+
+        logging.debug('Get picture')
 
         self._hue = (self._hue + 1) % 360
         r, g, b = hsv_to_rgb(self._hue / 360, .2, .9)

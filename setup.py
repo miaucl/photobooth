@@ -184,10 +184,10 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
+        'numpy',
         'opencv-python',
         'Pillow',
         'gpiozero',
-        'gphoto2',
         'pycups',
         'requests'
         ],
@@ -203,6 +203,8 @@ setup(
     extras_require={  # Optional
         'pyqt': ['PyQt5'],
         'picamera': ['picamera'],
+        'picamera2': ['picamera2'],
+        'gphoto2': ['gphoto2'],
         'gphoto2-cffi': ['gphoto2-cffi'],
         'dev': ['setuptools', 'wheel', 'twine', 'Babel',],
     },
