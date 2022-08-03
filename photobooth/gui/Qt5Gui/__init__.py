@@ -23,7 +23,9 @@ styles = (('default', 'stylesheets/default.qss'),
           ('dark (1680 x 1050 px)', 'stylesheets/dark-1680x1050.qss'),
           ('dark (1024 x 600 px)', 'stylesheets/dark-1024x600.qss'),
           ('dark (800 x 600 px)', 'stylesheets/dark-800x600.qss'),
+          ('dark (800 x 480 px)', 'stylesheets/dark-800x480.qss'),
           ('pastel (1024 x 600 px)', 'stylesheets/pastel-1024x600.qss'),
-          ('pastel (800 x 600 px)', 'stylesheets/pastel-800x600.qss'))
+          ('pastel (800 x 600 px)', 'stylesheets/pastel-800x600.qss'),
+          ('pastel (800 x 480 px)', 'stylesheets/pastel-800x480.qss'))
 
 from .PyQt5Gui import PyQt5Gui  # noqa

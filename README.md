@@ -2,7 +2,7 @@
 
 Disclaimer:
 
-_The original `README.md` can be found [here](./README.old.md) with credits to @reuterbal for the original development of this software. As of `2022-07-31`, there has not been any changes since 3 years and I therefore regard it as abandoned._
+_The original `README.md` can be found [here](./README.old.md) with credits to @reuterbal for the original development of this software and to @andyboeh, @tammtimmer, @t0mmo for additional features. As of `2022-07-31`, there has not been any changes since 3 years and I therefore regard it as abandoned._
 
 A flexible Photobooth software.
 
@@ -91,6 +91,10 @@ I appreciate any feedback or bug reports.
 Please submit them via the [Issue tracker](https://github.com/miaucl/photobooth/issues/new?template=bug_report.md) and always include your `photobooth.log` file (is created automatically in the top folder) and a description of your hardware and software setup.
 
 I am also happy to hear any success stories! Feel free to [submit them here](https://github.com/miaucl/photobooth/issues/new?template=success-story.md).
+
+## Other interesting PRs
+
+- tammtimmer:slideshow
 
 ## License
 
