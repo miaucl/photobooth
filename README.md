@@ -93,6 +93,10 @@ Default settings are stored in [`photobooth/defaults.cfg`](photobooth/defaults.c
 The software design is very modular.
 Feel free to add new postprocessing components, a GUI based on some other library, etc.
 
+## Translations
+
+Have a look at [LOCALE](./LOCALE.md).
+
 ## Feedback and bugs
 
 I appreciate any feedback or bug reports.

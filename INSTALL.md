@@ -67,6 +67,7 @@ In a terminal, enter the following commands
 sudo apt install python3-dev python3-pip virtualenv 
 sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools pyqt5-dev pyqt5-dev-tools # for PyQt5-GUI
 sudo apt install libcups2-dev # to use pycups
+sudo apt install gettext # to add other languages
 ```
 
 #### Additional requirements for picamera2 on bullseye
@@ -156,24 +157,8 @@ source .venv/bin/activate
 Run the following command to download and install all dependencies and the photobooth:
 
 ```bash
-pip install -e .
+pip install -r requirements.txt
 ```
-
-Some dependencies are optional and must be included explicitly if you plan on using them.
-For that, change the above command to (note the lack of a whitespace after the dot)
-
-```bash
-pip install -e .[extras]
-```
-
-and replace `extras` by a comma separated list (without whitespaces!) of the desired options.
-These include:
-
-- `pyqt` if you want to install PyQt5 from PIP (doesn't work on Raspbian)
-- `picamera` if you want to use the Raspberry Pi camera module on buster
-- `picamera2` if you want to use the Raspberry Pi camera module on bullseye
-- `gphoto2` if you want to use the `gphoto2` cameras
-- `gphoto2-cffi` if you want to use the `gphoto2-cffi` bindings
 
 ## Run Photobooth
 
@@ -206,3 +191,5 @@ To exit the application, use the Esc-key or an external button.
 You can directly startup the photobooth to the idle screen (skipping the welcome screen) by appending the parameter `--run`.
 
 If you want to run from `ssh`, you need to set `export DISPLAY=:0` for it to work.
+
+If you want to use another language, change it either in your machine or prepend `LANG=ex python...` before the start command.
