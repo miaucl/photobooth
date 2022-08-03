@@ -1,0 +1,6 @@
+<template width="3496" height="2362" background="#FFFFFF">
+    <photo id="topleft" shot="1" x="40" y="40" width="1698" height="1131" rotation="0"></photo>
+    <photo id="topright" shot="2" x="1768" y="40" width="1698" height="1131" rotation="0"></photo>
+    <photo id="bottomleft" shot="3" x="40" y="1191" width="1698" height="1131" rotation="0"></photo>
+    <photo id="bottomright" shot="4" x="1768" y="1191" width="1698" height="1131" rotation="0"></photo>
+</template>

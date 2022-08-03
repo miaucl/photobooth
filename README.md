@@ -4,8 +4,6 @@ Disclaimer:
 
 _The original `README.md` can be found [here](./README.old.md) with credits to @reuterbal for the original development of this software. As of `2022-07-31`, there has not been any changes since 3 years and I therefore regard it as abandoned._
 
-***
-
 A flexible Photobooth software.
 
 It supports many different camera models, the appearance can be adapted to your likings, and it runs on many different hardware setups.
@@ -38,6 +36,27 @@ Screenshots produced using `CameraDummy` that produces unicolor images.
 #### Theme _dark_
 
 <img alt="Idle screen" title="Idle screen" src="screenshots/dark_1.png" width="280" /> <img alt="Greeter screen" title="Greeter screen" src="screenshots/dark_2.png" width="280" /> <img alt="Countdown screen" title="Countdown screen" src="screenshots/dark_3.png" width="280" /> <img alt="Postprocessing screen" title="Postprocessing screen" src="screenshots/dark_4.png" width="280" />
+
+### Fancy Templates
+
+The templates are defined in XML. The XML file descibes size&color of the background. On top each XML tag adds an element on top of the others:
+
+* `Image` can be PNG (incl transparency if required) or JPG etc and should be the same size like defined in the background. Can be used for a picture background or final overlay ontop of photos.
+* `Photo` refers to a shot taken by the camera. Positioning, resizing, rotation are supported currently. Make sure shots are numbered correctly!
+
+Currently, three examples are provided:
+
+* `standard_2x2.xml` mimics the current behaviour of composing 2x2 photos on a white back. <img alt="Example for standard 2x2 template" title="Standard 2x2 template" src="supplementals/templates/standard_2x2-result.jpg" width="280" />
+* `example.xml` is a showcase for current capabilities (sorry for my limited design skills). Curious to see what others come up with! <img alt="Example for example template" title="Example template" src="supplementals/templates/example-result.jpg" width="280" />
+* `photostrips.xml` is another showcase for what's possible <img alt="Example for photostrips template" title="Photostrips template" src="supplementals/templates/photostrips-result.jpg" width="280" />
+
+To test & develop further templates the templating can be called directly from the CLI:
+
+```bash
+python -m photobooth.template.FancyTemplate -t .\supplementals\templates\example.xml
+```
+
+`-h` provides a short help
 
 ### Technical specifications
 

@@ -22,12 +22,12 @@ import logging
 
 class PictureDimensions:
 
-    def __init__(self, config, capture_size):
+    def __init__(self, config):
 
         self._num_pictures = (config.getInt('Picture', 'num_x'),
                               config.getInt('Picture', 'num_y'))
 
-        self._capture_size = capture_size
+        self._capture_size = 0
 
         self._output_size = (config.getInt('Picture', 'size_x'),
                              config.getInt('Picture', 'size_y'))
@@ -41,9 +41,7 @@ class PictureDimensions:
                       if 1 <= i and
                       i <= self._num_pictures[0] * self._num_pictures[1]]
 
-        self.computeThumbnailDimensions()
 
-        self.computePreviewDimensions(config)
 
     def _computeResizeFactor(self, coord, inner_size):
 
@@ -51,13 +49,17 @@ class PictureDimensions:
                  self.innerDistance[coord]) /
                 (self.numPictures[coord] * self.captureSize[coord]))
 
+
     def _computeThumbOffset(self, coord, inner_size):
 
         return (inner_size - self.numPictures[coord] *
                 self.thumbnailSize[coord]) // (self.numPictures[coord] + 1)
 
-    def computeThumbnailDimensions(self):
 
+    def computeThumbnailDimensions(self, capture_size):
+
+        self._capture_size = capture_size
+        
         border = tuple(self.outerDistance[i] - self.innerDistance[i]
                        for i in range(2))
         inner_size = tuple(self.outputSize[i] - 2 * border[i]
@@ -87,16 +89,7 @@ class PictureDimensions:
                                                  self.numPictures[0],
                                                  self.numPictures[1], thumbs))
 
-    def computePreviewDimensions(self, config):
 
-        gui_size = (config.getInt('Gui', 'width'),
-                    config.getInt('Gui', 'height'))
-
-        resize_factor = min(min((gui_size[i] / self.captureSize[i]
-                                 for i in range(2))), 1)
-
-        self._preview_size = tuple(int(self.captureSize[i] * resize_factor)
-                                   for i in range(2))
 
     @property
     def numPictures(self):
@@ -108,11 +101,6 @@ class PictureDimensions:
 
         return max(self._num_pictures[0] * self._num_pictures[1] -
                    len(self._skip), 1)
-
-    @property
-    def skipLast(self):
-
-        return self._skip_last
 
     @property
     def captureSize(self):
@@ -143,8 +131,3 @@ class PictureDimensions:
     def thumbnailOffset(self):
 
         return self._thumb_offsets
-
-    @property
-    def previewSize(self):
-
-        return self._preview_size

@@ -29,6 +29,7 @@ from PyQt5 import QtWidgets
 from .. import modules
 from ... import camera
 from ... import printer
+from ... import template
 
 from . import Widgets
 from . import styles
@@ -103,7 +104,7 @@ class IdleMessage(QtWidgets.QFrame):
 
 class GreeterMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_x, num_y, skip, countdown_action):
+    def __init__(self, num_pictures, countdown_action):
 
         super().__init__()
         self.setObjectName('GreeterMessage')
@@ -111,7 +112,6 @@ class GreeterMessage(QtWidgets.QFrame):
         self._text_title = _('Get ready!')
         self._text_button = _('Start countdown')
 
-        num_pictures = max(num_x * num_y - len(skip), 1)
         if num_pictures > 1:
             self._text_label = _('for {} pictures...').format(num_pictures)
         else:
@@ -138,12 +138,11 @@ class GreeterMessage(QtWidgets.QFrame):
 
 class CaptureMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_picture, num_x, num_y, skip):
+    def __init__(self, num_picture, num_pictures):
 
         super().__init__()
         self.setObjectName('PoseMessage')
 
-        num_pictures = max(num_x * num_y - len(skip), 1)
         if num_pictures > 1:
             self._text = _('Picture {} of {}...').format(num_picture,
                                                          num_pictures)
@@ -472,6 +471,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createGuiSettings(), _('Interface'))
         tabs.addTab(self.createPhotoboothSettings(), _('Photobooth'))
         tabs.addTab(self.createCameraSettings(), _('Camera'))
+        tabs.addTab(self.createTemplateSettings(), _('Template'))
         tabs.addTab(self.createPictureSettings(), _('Picture'))
         tabs.addTab(self.createStorageSettings(), _('Storage'))
         tabs.addTab(self.createGpioSettings(), _('GPIO'))
@@ -634,6 +634,37 @@ class Settings(QtWidgets.QFrame):
         layout = QtWidgets.QFormLayout()
         layout.addRow(_('Camera module:'), module)
         layout.addRow(_('Camera rotation:'), rotation)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
+    def createTemplateSettings(self):
+
+        self.init('Template')
+
+        module = self.createModuleComboBox(template.modules,
+                                           self._cfg.get('Template', 'module'))
+        self.add('Template', 'module', module)
+
+        tf_widget = QtWidgets.QLineEdit(self._cfg.get('Template', 'template'))
+        self.add('Template', 'template', tf_widget)
+
+        def file_dialog():
+            dialog = QtWidgets.QFileDialog.getOpenFileName
+            tf_widget.setText(dialog(self, _('Select file'), os.path.expanduser('~'),
+                              'XML Templates (*.xml)')[0])
+
+        file_button = QtWidgets.QPushButton(_('Select file'))
+        file_button.clicked.connect(file_dialog)
+
+        lay_templ_file = QtWidgets.QHBoxLayout()
+        lay_templ_file.addWidget(tf_widget)
+        lay_templ_file.addWidget(file_button)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Template module:'), module)
+        layout.addRow(_('Fancy template file:'), lay_templ_file)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -997,6 +1028,10 @@ class Settings(QtWidgets.QFrame):
                                               'module').currentIndex()][0])
         self._cfg.set('Camera', 'rotation', str(
             self.rot_vals_[self.get('Camera', 'rotation').currentIndex()]))
+
+        self._cfg.set('Template', 'module', template.modules[self.get('Template',
+                                              'module').currentIndex()][0])
+        self._cfg.set('Template', 'template', self.get('Template', 'template').text())
 
         self._cfg.set('Picture', 'num_x', self.get('Picture', 'num_x').text())
         self._cfg.set('Picture', 'num_y', self.get('Picture', 'num_y').text())

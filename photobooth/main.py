@@ -30,7 +30,7 @@ import logging
 import logging.handlers
 import multiprocessing as mp
 
-from . import camera, gui
+from . import camera, gui, template
 from .Config import Config
 from .gpio import Gpio
 from .util import lookup_and_import
@@ -56,9 +56,11 @@ class CameraProcess(mp.Process):
 
         logging.debug('CameraProcess: Initializing...')
 
+        TemplateModule = lookup_and_import(
+            template.modules, self._cfg.get('Template', 'module'), 'template')
         CameraModule = lookup_and_import(
             camera.modules, self._cfg.get('Camera', 'module'), 'camera')
-        cap = camera.Camera(self._cfg, self._comm, CameraModule)
+        cap = camera.Camera(self._cfg, self._comm, CameraModule, TemplateModule)
 
         while True:
             try:
@@ -166,7 +168,7 @@ def mainloop(comm, context):
                         return exit_code
         except Exception as e:
             logging.exception('Main: Exception "{}"'.format(e))
-            comm.send(Workers.MASTER, ErrorEvent('Gpio', str(e)))
+            comm.send(Workers.MASTER, ErrorEvent('MainLoop', str(e)))
 
 
 def run(argv, is_run):
@@ -215,7 +217,7 @@ def main(argv):
     else:
         log_level = logging.INFO
     formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        '%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d %(funcName)s]: %(message)s')
 
     # create console handler and set format
     ch = logging.StreamHandler()
