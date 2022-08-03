@@ -70,7 +70,7 @@ class Welcome(QtWidgets.QFrame):
 
         title = QtWidgets.QLabel(_('photobooth'))
 
-        url = 'https://github.com/reuterbal/photobooth'
+        url = 'https://github.com/miaucl/photobooth'
         link = QtWidgets.QLabel('<a href="{0}">{0}</a>'.format(url))
 
         lay = QtWidgets.QVBoxLayout()
@@ -89,22 +89,29 @@ class IdleMessage(QtWidgets.QFrame):
 
         self._message_label = _('Hit the')
         self._message_button = _('Button!')
-        self._picture = None
+        
+        ############
+        # Enable for picture in idle frame
+        ############
+        # self._picture = None
 
         self.initFrame(trigger_action)
+    
+    ############
+    # Enable for picture in idle frame
+    ############
+    # @property
+    # def picture(self):
 
-    @property
-    def picture(self):
+    #     return self._picture
 
-        return self._picture
+    # @picture.setter
+    # def picture(self, picture):
 
-    @picture.setter
-    def picture(self, picture):
+    #     if not isinstance(picture, QtGui.QImage):
+    #         raise ValueError('picture must be a QtGui.QImage')
 
-        if not isinstance(picture, QtGui.QImage):
-            raise ValueError('picture must be a QtGui.QImage')
-
-        self._picture = picture
+    #     self._picture = picture
 
     def initFrame(self, trigger_action):
 
@@ -117,23 +124,26 @@ class IdleMessage(QtWidgets.QFrame):
         lay.addWidget(btn)
         self.setLayout(lay)
 
-    def paintEvent(self, event):
+    ############
+    # Enable for picture in idle frame
+    ############
+    # def paintEvent(self, event):
 
-        painter = QtGui.QPainter(self)
+    #     painter = QtGui.QPainter(self)
 
-        # background image
-        if self.picture is not None:
+    #     # background image
+    #     if self.picture is not None:
 
-            pix = QtGui.QPixmap.fromImage(self.picture)
-            pix = pix.scaled(int(self.width()//1.9),
-                             int(self.height()//1.9),
-                             QtCore.Qt.KeepAspectRatio,
-                             QtCore.Qt.FastTransformation)
-            origin = ((int(self.width() * 0.05)),
-                      (self.height() - pix.height()) // 2)
-            painter.drawPixmap(QtCore.QPoint(*origin), pix)
+    #         pix = QtGui.QPixmap.fromImage(self.picture)
+    #         pix = pix.scaled(int(self.width()//1.9),
+    #                          int(self.height()//1.9),
+    #                          QtCore.Qt.KeepAspectRatio,
+    #                          QtCore.Qt.FastTransformation)
+    #         origin = ((int(self.width() * 0.05)),
+    #                   (self.height() - pix.height()) // 2)
+    #         painter.drawPixmap(QtCore.QPoint(*origin), pix)
 
-        painter.end()
+    #     painter.end()
 
 
 class GreeterMessage(QtWidgets.QFrame):

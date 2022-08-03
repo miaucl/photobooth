@@ -140,7 +140,7 @@ class PyQt5Gui(GuiSkeleton):
          QtCore.QObject.killTimer(self, self._timerStartSlideshow)
          QtCore.QObject.killTimer(self, self._timerViewSlides)
 
-    def _newslideshowPicture (self):
+    def _newslideshowPicture(self):
         
         if (self._pic_list.counter == 0) :
             picture = Image.new('RGBA',self._default_size,(128,128,128,0))
@@ -262,7 +262,6 @@ class PyQt5Gui(GuiSkeleton):
             lambda: self._comm.send(Workers.MASTER, GuiEvent('countdown')))
 
     def showCountdown(self, state):
-        logging.info(' ' )
 
         countdown_time = self._cfg.getInt('Photobooth', 'countdown_time')
         self._setWidget(Frames.CountdownMessage(

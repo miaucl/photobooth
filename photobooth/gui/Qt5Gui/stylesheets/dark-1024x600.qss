@@ -55,6 +55,7 @@ QFrame#IdleMessage QPushButton:pressed {
     color: #eeeeee;
 }
 /* Slideshow Screen */
+
 QFrame#SlideshowMessage {
     margin: 30px;
 }
