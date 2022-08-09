@@ -26,9 +26,12 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 
+from PIL import Image, ImageQt
+
 from .. import modules
 from ... import camera
 from ... import printer
+from ... import template
 
 from . import Widgets
 from . import styles
@@ -40,6 +43,7 @@ class Welcome(QtWidgets.QFrame):
                  exit_action):
 
         super().__init__()
+        self.setObjectName('WelcomeMessage')
 
         self.initFrame(start_action, set_date_action, settings_action,
                        exit_action)
@@ -59,23 +63,59 @@ class Welcome(QtWidgets.QFrame):
         btnQuit = QtWidgets.QPushButton(_('Quit'))
         btnQuit.clicked.connect(exit_action)
 
-        btnLay = QtWidgets.QHBoxLayout()
-        btnLay.addWidget(btnStart)
-        btnLay.addWidget(btnSetDate)
-        btnLay.addWidget(btnSettings)
-        btnLay.addWidget(btnQuit)
-
         title = QtWidgets.QLabel(_('photobooth'))
 
-        url = 'https://github.com/reuterbal/photobooth'
+        url = 'https://github.com/miaucl/photobooth'
         link = QtWidgets.QLabel('<a href="{0}">{0}</a>'.format(url))
+        link.setObjectName('WelcomeMessageLink')
 
         lay = QtWidgets.QVBoxLayout()
         lay.addWidget(title)
-        lay.addLayout(btnLay)
+        lay.addWidget(btnStart)
+        lay.addWidget(btnSetDate)
+        lay.addWidget(btnSettings)
+        lay.addWidget(btnQuit)
         lay.addWidget(link)
         self.setLayout(lay)
 
+class WaitMessage(QtWidgets.QFrame):
+
+    def __init__(self, message):
+
+        super().__init__()
+        self.setObjectName('WaitMessage')
+
+        self._text = message
+        self._clock = Widgets.SpinningWaitClock()
+
+        self.initFrame()
+
+    def initFrame(self):
+
+        lbl = QtWidgets.QLabel(self._text)
+        lay = QtWidgets.QVBoxLayout()
+        lay.addWidget(lbl)
+        self.setLayout(lay)
+
+    def showEvent(self, event):
+
+        self.startTimer(100)
+
+    def timerEvent(self, event):
+
+        self._clock.value += 1
+        self.update()
+
+    def paintEvent(self, event):
+
+        offset = ((self.width() - self._clock.width()) // 2,
+                  (self.height() - self._clock.height()) // 2)
+
+        painter = QtGui.QPainter(self)
+        self._clock.render(painter, QtCore.QPoint(*offset),
+                           self._clock.visibleRegion(),
+                           QtWidgets.QWidget.DrawChildren)
+        painter.end()
 
 class IdleMessage(QtWidgets.QFrame):
 
@@ -86,8 +126,29 @@ class IdleMessage(QtWidgets.QFrame):
 
         self._message_label = _('Hit the')
         self._message_button = _('Button!')
+        
+        ############
+        # Enable for picture in idle frame
+        ############
+        # self._picture = None
 
         self.initFrame(trigger_action)
+    
+    ############
+    # Enable for picture in idle frame
+    ############
+    # @property
+    # def picture(self):
+
+    #     return self._picture
+
+    # @picture.setter
+    # def picture(self, picture):
+
+    #     if not isinstance(picture, QtGui.QImage):
+    #         raise ValueError('picture must be a QtGui.QImage')
+
+    #     self._picture = picture
 
     def initFrame(self, trigger_action):
 
@@ -100,10 +161,31 @@ class IdleMessage(QtWidgets.QFrame):
         lay.addWidget(btn)
         self.setLayout(lay)
 
+    ############
+    # Enable for picture in idle frame
+    ############
+    # def paintEvent(self, event):
+
+    #     painter = QtGui.QPainter(self)
+
+    #     # background image
+    #     if self.picture is not None:
+
+    #         pix = QtGui.QPixmap.fromImage(self.picture)
+    #         pix = pix.scaled(int(self.width()//1.9),
+    #                          int(self.height()//1.9),
+    #                          QtCore.Qt.KeepAspectRatio,
+    #                          QtCore.Qt.FastTransformation)
+    #         origin = ((int(self.width() * 0.05)),
+    #                   (self.height() - pix.height()) // 2)
+    #         painter.drawPixmap(QtCore.QPoint(*origin), pix)
+
+    #     painter.end()
+
 
 class GreeterMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_x, num_y, skip, countdown_action):
+    def __init__(self, num_pictures, countdown_action):
 
         super().__init__()
         self.setObjectName('GreeterMessage')
@@ -111,7 +193,6 @@ class GreeterMessage(QtWidgets.QFrame):
         self._text_title = _('Get ready!')
         self._text_button = _('Start countdown')
 
-        num_pictures = max(num_x * num_y - len(skip), 1)
         if num_pictures > 1:
             self._text_label = _('for {} pictures...').format(num_pictures)
         else:
@@ -138,17 +219,16 @@ class GreeterMessage(QtWidgets.QFrame):
 
 class CaptureMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_picture, num_x, num_y, skip):
+    def __init__(self, num_picture, num_pictures):
 
         super().__init__()
         self.setObjectName('PoseMessage')
 
-        num_pictures = max(num_x * num_y - len(skip), 1)
         if num_pictures > 1:
             self._text = _('Picture {} of {}...').format(num_picture,
                                                          num_pictures)
         else:
-            self._text = 'Taking a photo...'
+            self._text = _('Taking a photo...')
 
         self.initFrame()
 
@@ -189,44 +269,88 @@ class PictureMessage(QtWidgets.QFrame):
         painter.end()
 
 
-class WaitMessage(QtWidgets.QFrame):
+class SlideshowMessage(QtWidgets.QFrame):
 
-    def __init__(self, message):
+    def __init__(self, slide, text, transition, trigger_action):
 
         super().__init__()
-        self.setObjectName('WaitMessage')
+        self.setObjectName('SlideshowMessage')
 
-        self._text = message
-        self._clock = Widgets.SpinningWaitClock()
+        self._slide = slide
+        self._newslide = slide
+        self._lastslide = slide
+        self._text = text
+        self._transition = transition
+        self._alpha = 0.0
+        self.initFrame(trigger_action)
+        
+    def initFrame(self, trigger_action):
+        
+        btn = QtWidgets.QPushButton(self._text)
+        btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        btn.clicked.connect(trigger_action)
 
-        self.initFrame()
-
-    def initFrame(self):
-
-        lbl = QtWidgets.QLabel(self._text)
         lay = QtWidgets.QVBoxLayout()
-        lay.addWidget(lbl)
+        lay.addWidget(btn, stretch=1)
         self.setLayout(lay)
 
-    def showEvent(self, event):
+    @property
+    def slide(self):
 
-        self.startTimer(100)
+        return self._slide
+
+    @slide.setter
+    def slide(self, slide):
+
+        if not isinstance(slide, Image.Image):
+            raise ValueError('slide must be a QtGui.QImage')
+
+        self._slide = slide
+
+    @property
+    def alpha(self):
+        return self._alpha
+
+    @alpha.setter
+    def alpha(self, alpha):
+        self._alpha = alpha
+
+    def showEvent(self, event):
+        self.startTimer(25)
 
     def timerEvent(self, event):
 
-        self._clock.value += 1
+        if (self._transition == "fade"):
+            if ((self.alpha < 1.0) and 
+                (getattr(self._lastslide,"size") == getattr(self.slide,"size"))):
+                self._newslide = Image.blend(self._lastslide, self.slide, round(self.alpha,1))
+                self.alpha = round(self.alpha,1) + 0.1
+            else:
+                self._newslide = self.slide 
+                self._lastslide = self.slide 
+        elif (self._transition == "none"):
+            self._newslide = self.slide 
+        else:
+            raise ValueError(f"Transition '{self._transition}' is not valid")
+
         self.update()
 
     def paintEvent(self, event):
 
-        offset = ((self.width() - self._clock.width()) // 2,
-                  (self.height() - self._clock.height()) // 2)
-
         painter = QtGui.QPainter(self)
-        self._clock.render(painter, QtCore.QPoint(*offset),
-                           self._clock.visibleRegion(),
-                           QtWidgets.QWidget.DrawChildren)
+
+        slide = ImageQt.ImageQt(self._newslide)
+        slide = slide.scaled(self.contentsRect().size(),
+                             QtCore.Qt.KeepAspectRatio,
+                             QtCore.Qt.FastTransformation)
+
+        origin = ((self.width() - slide.width()) // 2,
+                  (self.height() - slide.height()) // 2)
+        painter.drawImage(QtCore.QPoint(*origin), slide )
+            
         painter.end()
+
+
 
 
 class CountdownMessage(QtWidgets.QFrame):
@@ -329,8 +453,12 @@ class PostprocessMessage(Widgets.TransparentOverlay):
     def initFrame(self, tasks, idle_handle, worker):
 
         def disableAndCall(button, handle):
-            button.setEnabled(False)
-            button.update()
+            for i, button in enumerate(self._buttons):
+                logging.info('Button {}'.format(button.text()) )
+                button.setEnabled(False)
+                button.update()
+            self._label.setText(_('print in progress'))
+            self._label.update()
             worker.put(handle)
 
         def createButton(task):
@@ -338,17 +466,19 @@ class PostprocessMessage(Widgets.TransparentOverlay):
             button.clicked.connect(lambda: disableAndCall(button, task.action))
             return button
 
-        buttons = [createButton(task) for task in tasks]
-        buttons.append(QtWidgets.QPushButton(_('Start over')))
-        buttons[-1].clicked.connect(idle_handle)
+        self._buttons = [createButton(task) for task in tasks]
+        self._buttons.append(QtWidgets.QPushButton(_('Start over')))
+        self._buttons[-1].clicked.connect(idle_handle)
 
         button_lay = QtWidgets.QGridLayout()
-        for i, button in enumerate(buttons):
+        for i, button in enumerate(self._buttons):
             pos = divmod(i, 2)
             button_lay.addWidget(button, *pos)
 
         layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(QtWidgets.QLabel(_('Happy?')))
+        self._label = QtWidgets.QLabel(_('Happy?'))
+        layout.addWidget(self._label, stretch=0)
+        layout.addStretch(1)
         layout.addLayout(button_lay)
         self.setLayout(layout)
 
@@ -472,7 +602,9 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createGuiSettings(), _('Interface'))
         tabs.addTab(self.createPhotoboothSettings(), _('Photobooth'))
         tabs.addTab(self.createCameraSettings(), _('Camera'))
+        tabs.addTab(self.createTemplateSettings(), _('Template'))
         tabs.addTab(self.createPictureSettings(), _('Picture'))
+        tabs.addTab(self.createSlideshowSettings(), _('Slideshow'))
         tabs.addTab(self.createStorageSettings(), _('Storage'))
         tabs.addTab(self.createGpioSettings(), _('GPIO'))
         tabs.addTab(self.createPrinterSettings(), _('Printer'))
@@ -639,6 +771,37 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createTemplateSettings(self):
+
+        self.init('Template')
+
+        module = self.createModuleComboBox(template.modules,
+                                           self._cfg.get('Template', 'module'))
+        self.add('Template', 'module', module)
+
+        tf_widget = QtWidgets.QLineEdit(self._cfg.get('Template', 'template'))
+        self.add('Template', 'template', tf_widget)
+
+        def file_dialog():
+            dialog = QtWidgets.QFileDialog.getOpenFileName
+            tf_widget.setText(dialog(self, _('Select file'), os.path.expanduser('~'),
+                              'XML Templates (*.xml)')[0])
+
+        file_button = QtWidgets.QPushButton(_('Select file'))
+        file_button.clicked.connect(file_dialog)
+
+        lay_templ_file = QtWidgets.QHBoxLayout()
+        lay_templ_file.addWidget(tf_widget)
+        lay_templ_file.addWidget(file_button)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Template module:'), module)
+        layout.addRow(_('Fancy template file:'), lay_templ_file)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
     def createPictureSettings(self):
 
         self.init('Picture')
@@ -733,6 +896,28 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createSlideshowSettings(self):
+
+        self.init('Slideshow')
+        
+        box_start_slideshow_time = QtWidgets.QSpinBox()
+        box_start_slideshow_time.setRange(3, 100)
+        box_start_slideshow_time.setValue(self._cfg.getInt('Slideshow', 'start_slideshow_time'))
+        self.add('Slideshow', 'start_slideshow_time', box_start_slideshow_time)
+
+        box_pic_slideshow_time = QtWidgets.QSpinBox()
+        box_pic_slideshow_time.setRange(5, 100)
+        box_pic_slideshow_time.setValue(self._cfg.getInt('Slideshow', 'pic_slideshow_time'))
+        self.add('Slideshow', 'pic_slideshow_time', box_pic_slideshow_time)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Wait for Slideshow time [s]:'), box_start_slideshow_time)
+        layout.addRow(_('Wait for change pictures time [s]:'), box_pic_slideshow_time)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
     def createStorageSettings(self):
 
         self.init('Storage')
@@ -772,9 +957,9 @@ class Settings(QtWidgets.QFrame):
 
         self.init('Gpio')
 
-        enable = QtWidgets.QCheckBox()
-        enable.setChecked(self._cfg.getBool('Gpio', 'enable'))
-        self.add('Gpio', 'enable', enable)
+        enable_button = QtWidgets.QCheckBox()
+        enable_button.setChecked(self._cfg.getBool('Gpio', 'enable_button'))
+        self.add('Gpio', 'enable_button', enable_button)
 
         exit_pin = QtWidgets.QSpinBox()
         exit_pin.setRange(1, 40)
@@ -785,6 +970,10 @@ class Settings(QtWidgets.QFrame):
         trig_pin.setRange(1, 40)
         trig_pin.setValue(self._cfg.getInt('Gpio', 'trigger_pin'))
         self.add('Gpio', 'trigger_pin', trig_pin)
+
+        enable_light = QtWidgets.QCheckBox()
+        enable_light.setChecked(self._cfg.getBool('Gpio', 'enable_light'))
+        self.add('Gpio', 'enable_light', enable_light)
 
         lamp_pin = QtWidgets.QSpinBox()
         lamp_pin.setRange(1, 40)
@@ -812,9 +1001,10 @@ class Settings(QtWidgets.QFrame):
         lay_rgb.addWidget(chan_b_pin)
 
         layout = QtWidgets.QFormLayout()
-        layout.addRow(_('Enable GPIO:'), enable)
+        layout.addRow(_('Enable GPIO buttons:'), enable_button)
         layout.addRow(_('Exit button pin (BCM numbering):'), exit_pin)
         layout.addRow(_('Trigger button pin (BCM numbering):'), trig_pin)
+        layout.addRow(_('Enable GPIO light:'), enable_light)
         layout.addRow(_('Idle lamp pin (BCM numbering):'), lamp_pin)
         layout.addRow(_('RGB LED pins (BCM numbering):'), lay_rgb)
 
@@ -998,6 +1188,10 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Camera', 'rotation', str(
             self.rot_vals_[self.get('Camera', 'rotation').currentIndex()]))
 
+        self._cfg.set('Template', 'module', template.modules[self.get('Template',
+                                              'module').currentIndex()][0])
+        self._cfg.set('Template', 'template', self.get('Template', 'template').text())
+
         self._cfg.set('Picture', 'num_x', self.get('Picture', 'num_x').text())
         self._cfg.set('Picture', 'num_y', self.get('Picture', 'num_y').text())
         self._cfg.set('Picture', 'size_x',
@@ -1016,6 +1210,11 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Picture', 'background',
                       self.get('Picture', 'background').text())
 
+        self._cfg.set('Slideshow', 'start_slideshow_time',
+                      str(self.get('Slideshow', 'start_slideshow_time').text()))
+        self._cfg.set('Slideshow', 'pic_slideshow_time',
+                      str(self.get('Slideshow', 'pic_slideshow_time').text()))
+
         self._cfg.set('Storage', 'basedir',
                       self.get('Storage', 'basedir').text())
         self._cfg.set('Storage', 'basename',
@@ -1023,11 +1222,14 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Storage', 'keep_pictures',
                       str(self.get('Storage', 'keep_pictures').isChecked()))
 
-        self._cfg.set('Gpio', 'enable',
-                      str(self.get('Gpio', 'enable').isChecked()))
+        self._cfg.set('Gpio', 'enable_button',
+                      str(self.get('Gpio', 'enable_button').isChecked()))
         self._cfg.set('Gpio', 'exit_pin', self.get('Gpio', 'exit_pin').text())
         self._cfg.set('Gpio', 'trigger_pin',
                       self.get('Gpio', 'trigger_pin').text())
+
+        self._cfg.set('Gpio', 'enable_light',
+                      str(self.get('Gpio', 'enable_light').isChecked()))
         self._cfg.set('Gpio', 'lamp_pin', self.get('Gpio', 'lamp_pin').text())
         self._cfg.set('Gpio', 'chan_r_pin',
                       self.get('Gpio', 'chan_r_pin').text())

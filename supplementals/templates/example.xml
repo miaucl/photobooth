@@ -1,0 +1,12 @@
+<template width="3496" height="2362" background="#ABCDEF">
+    <image id="back" file="back.jpg" />
+    <photo id="left" shot="1" x="250" y="150" width="1000" height="800" rotation="15"></photo>
+    <photo id="right" shot="2" x="1500" y="200" width="1300" height="1000" rotation="0"></photo>
+    <photo id="leftbottom" shot="4" x="200" y="1200" width="1200" height="900" rotation="0"></photo>
+    <photo id="r1" shot="3" x="2900" y="700" width="400" height="300" rotation="0"></photo>
+    <photo id="r2" shot="3" x="2900" y="1100" width="400" height="300" rotation="0"></photo>
+    <photo id="r3" shot="3" x="2900" y="1500" width="400" height="300" rotation="0"></photo>
+    <photo id="r4" shot="3" x="2900" y="1900" width="400" height="300" rotation="0"></photo>
+    <image id="overlay" file="front.png" />
+    <text id="text" font="Arial" fontsize="12" x="100" y="200" rotation="0">not yet implemented - use overlay image instead for the meantime</text>
+</template>

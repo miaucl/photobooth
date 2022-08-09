@@ -47,6 +47,10 @@ class GuiSkeleton:
 
         raise NotImplementedError()
 
+    def showSlideshow(self, state):
+
+        raise NotImplementedError()
+
     def showGreeter(self, state):
 
         raise NotImplementedError()
@@ -78,7 +82,9 @@ class GuiSkeleton:
     def handleState(self, state):
 
         if isinstance(state, StateMachine.CameraEvent):
-            self.updateCountdown(state)
+            self.updatePreview(state)
+        elif isinstance(state, StateMachine.GuiEvent):
+            self.updateSlideshow(state)
         elif isinstance(state, StateMachine.ErrorState):
             self.showError(state)
         elif isinstance(state, StateMachine.WelcomeState):
@@ -87,6 +93,8 @@ class GuiSkeleton:
             self.showStartup(state)
         elif isinstance(state, StateMachine.IdleState):
             self.showIdle(state)
+        elif isinstance(state, StateMachine.SlideshowState):
+            self.showSlideshow(state)
         elif isinstance(state, StateMachine.GreeterState):
             self.showGreeter(state)
         elif isinstance(state, StateMachine.CountdownState):

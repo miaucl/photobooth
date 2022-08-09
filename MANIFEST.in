@@ -1,5 +1,0 @@
-include *.md
-include LICENSE.txt
-recursive-include photobooth *.cfg
-recursive-include photobooth/locale *.po
-recursive-include photobooth/locale *.mo

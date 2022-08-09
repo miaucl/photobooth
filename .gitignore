@@ -4,10 +4,10 @@ photobooth.cfg
 .eggs
 .venv
 photobooth.egg-info
-*.log
+*.log*
 *.log.20??-??-??
 print_*.pdf
 20??-??-??
 build
 dist
-
+dbe_*
