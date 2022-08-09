@@ -43,6 +43,7 @@ class Welcome(QtWidgets.QFrame):
                  exit_action):
 
         super().__init__()
+        self.setObjectName('WelcomeMessage')
 
         self.initFrame(start_action, set_date_action, settings_action,
                        exit_action)
@@ -62,23 +63,59 @@ class Welcome(QtWidgets.QFrame):
         btnQuit = QtWidgets.QPushButton(_('Quit'))
         btnQuit.clicked.connect(exit_action)
 
-        btnLay = QtWidgets.QHBoxLayout()
-        btnLay.addWidget(btnStart)
-        btnLay.addWidget(btnSetDate)
-        btnLay.addWidget(btnSettings)
-        btnLay.addWidget(btnQuit)
-
         title = QtWidgets.QLabel(_('photobooth'))
 
         url = 'https://github.com/miaucl/photobooth'
         link = QtWidgets.QLabel('<a href="{0}">{0}</a>'.format(url))
+        link.setObjectName('WelcomeMessageLink')
 
         lay = QtWidgets.QVBoxLayout()
         lay.addWidget(title)
-        lay.addLayout(btnLay)
+        lay.addWidget(btnStart)
+        lay.addWidget(btnSetDate)
+        lay.addWidget(btnSettings)
+        lay.addWidget(btnQuit)
         lay.addWidget(link)
         self.setLayout(lay)
 
+class WaitMessage(QtWidgets.QFrame):
+
+    def __init__(self, message):
+
+        super().__init__()
+        self.setObjectName('WaitMessage')
+
+        self._text = message
+        self._clock = Widgets.SpinningWaitClock()
+
+        self.initFrame()
+
+    def initFrame(self):
+
+        lbl = QtWidgets.QLabel(self._text)
+        lay = QtWidgets.QVBoxLayout()
+        lay.addWidget(lbl)
+        self.setLayout(lay)
+
+    def showEvent(self, event):
+
+        self.startTimer(100)
+
+    def timerEvent(self, event):
+
+        self._clock.value += 1
+        self.update()
+
+    def paintEvent(self, event):
+
+        offset = ((self.width() - self._clock.width()) // 2,
+                  (self.height() - self._clock.height()) // 2)
+
+        painter = QtGui.QPainter(self)
+        self._clock.render(painter, QtCore.QPoint(*offset),
+                           self._clock.visibleRegion(),
+                           QtWidgets.QWidget.DrawChildren)
+        painter.end()
 
 class IdleMessage(QtWidgets.QFrame):
 
@@ -234,7 +271,7 @@ class PictureMessage(QtWidgets.QFrame):
 
 class SlideshowMessage(QtWidgets.QFrame):
 
-    def __init__(self, slide, text, trigger_action):
+    def __init__(self, slide, text, transition, trigger_action):
 
         super().__init__()
         self.setObjectName('SlideshowMessage')
@@ -243,18 +280,18 @@ class SlideshowMessage(QtWidgets.QFrame):
         self._newslide = slide
         self._lastslide = slide
         self._text = text
+        self._transition = transition
         self._alpha = 0.0
         self.initFrame(trigger_action)
         
     def initFrame(self, trigger_action):
         
-        # lbl = QtWidgets.QLabel(self._text)
         btn = QtWidgets.QPushButton(self._text)
+        btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         btn.clicked.connect(trigger_action)
 
         lay = QtWidgets.QVBoxLayout()
-        # lay.addWidget(lbl)
-        lay.addWidget(btn)
+        lay.addWidget(btn, stretch=1)
         self.setLayout(lay)
 
     @property
@@ -283,14 +320,19 @@ class SlideshowMessage(QtWidgets.QFrame):
 
     def timerEvent(self, event):
 
-        if ((self.alpha < 1.0) and 
-            (getattr(self._lastslide,"size") == getattr(self.slide,"size"))):
-            self._newslide = Image.blend(self._lastslide, self.slide, round(self.alpha,1))
-            self.alpha = round(self.alpha,1) + 0.1
-        else:
+        if (self._transition == "fade"):
+            if ((self.alpha < 1.0) and 
+                (getattr(self._lastslide,"size") == getattr(self.slide,"size"))):
+                self._newslide = Image.blend(self._lastslide, self.slide, round(self.alpha,1))
+                self.alpha = round(self.alpha,1) + 0.1
+            else:
+                self._newslide = self.slide 
+                self._lastslide = self.slide 
+        elif (self._transition == "none"):
             self._newslide = self.slide 
-            self._lastslide = self.slide 
-            
+        else:
+            raise ValueError(f"Transition '{self._transition}' is not valid")
+
         self.update()
 
     def paintEvent(self, event):
@@ -309,44 +351,6 @@ class SlideshowMessage(QtWidgets.QFrame):
         painter.end()
 
 
-class WaitMessage(QtWidgets.QFrame):
-
-    def __init__(self, message):
-
-        super().__init__()
-        self.setObjectName('WaitMessage')
-
-        self._text = message
-        self._clock = Widgets.SpinningWaitClock()
-
-        self.initFrame()
-
-    def initFrame(self):
-
-        lbl = QtWidgets.QLabel(self._text)
-        lay = QtWidgets.QVBoxLayout()
-        lay.addWidget(lbl)
-        self.setLayout(lay)
-
-    def showEvent(self, event):
-
-        self.startTimer(100)
-
-    def timerEvent(self, event):
-
-        self._clock.value += 1
-        self.update()
-
-    def paintEvent(self, event):
-
-        offset = ((self.width() - self._clock.width()) // 2,
-                  (self.height() - self._clock.height()) // 2)
-
-        painter = QtGui.QPainter(self)
-        self._clock.render(painter, QtCore.QPoint(*offset),
-                           self._clock.visibleRegion(),
-                           QtWidgets.QWidget.DrawChildren)
-        painter.end()
 
 
 class CountdownMessage(QtWidgets.QFrame):
@@ -473,7 +477,8 @@ class PostprocessMessage(Widgets.TransparentOverlay):
 
         layout = QtWidgets.QVBoxLayout()
         self._label = QtWidgets.QLabel(_('Happy?'))
-        layout.addWidget(self._label)
+        layout.addWidget(self._label, stretch=0)
+        layout.addStretch(1)
         layout.addLayout(button_lay)
         self.setLayout(layout)
 

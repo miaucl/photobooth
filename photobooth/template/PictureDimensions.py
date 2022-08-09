@@ -50,10 +50,12 @@ class PictureDimensions:
                 (self.numPictures[coord] * self.captureSize[coord]))
 
 
-    def _computeThumbOffset(self, coord, inner_size):
+    def _computeContainFill(self, coord, inner_size):
 
-        return (inner_size - self.numPictures[coord] *
-                self.thumbnailSize[coord]) // (self.numPictures[coord] + 1)
+        print(inner_size, self.numPictures[coord],  self.innerDistance[coord], self.thumbnailSize[coord])
+        return (inner_size 
+                    - self.numPictures[coord] * self.thumbnailSize[coord] 
+                    - self.innerDistance[coord] * (self.numPictures[coord] + 1))
 
 
     def computeThumbnailDimensions(self, capture_size):
@@ -70,19 +72,27 @@ class PictureDimensions:
         self._thumb_size = tuple(int(self.captureSize[i] * resize_factor)
                                  for i in range(2))
 
-        thumb_dist = tuple(self._computeThumbOffset(i, inner_size[i])
-                           for i in range(2))
+        contain_fill = tuple(self._computeContainFill(i, inner_size[i])
+                                for i in range(2))
 
         thumbs = [i for i in range(self.numPictures[0] * self.numPictures[1])
                   if i + 1 not in self._skip]
+
 
         self._thumb_offsets = []
         for i in thumbs:
             pos = (i % self.numPictures[0], i // self.numPictures[0])
             self._thumb_offsets.append(tuple(border[j] +
-                                             (pos[j] + 1) * thumb_dist[j] +
+                                             contain_fill[j] // 2 + 
+                                             (pos[j] + 1) * self.innerDistance[j] +
                                              pos[j] * self.thumbnailSize[j]
                                              for j in range(2)))
+        print(contain_fill)
+        print(self._thumb_offsets)
+        print("################################")
+        print("################################")
+        print("################################")
+        print("################################")
 
         logging.debug(('Assembled picture will contain {} ({}x{}) pictures '
                        'in positions {}').format(self.totalNumPictures,

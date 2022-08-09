@@ -234,7 +234,7 @@ class PyQt5Gui(GuiSkeleton):
         self._timerViewSlides.start(view_time)
         picture, text = self._newslideshowPicture()
                 
-        self._setWidget(Frames.SlideshowMessage(picture,text,
+        self._setWidget(Frames.SlideshowMessage(picture,text, self._cfg.get('Slideshow', 'transition'),
                                                 lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger'))))
         
     def updateSlideshow(self, event):

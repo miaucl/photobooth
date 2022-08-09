@@ -188,7 +188,7 @@ class TransparentOverlay(QtWidgets.QWidget):
         self.setObjectName('TransparentOverlay')
 
         rect = parent.rect()
-        rect.adjust(50, 50, -50, -50)
+        rect.adjust(20, 20, -20, -20)
         self.setGeometry(rect)
 
         if timeout is not None:
