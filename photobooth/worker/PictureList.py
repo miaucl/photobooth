@@ -99,6 +99,10 @@ class PictureList:
         """Return the file name for a given file number"""
         return self.basename + str(count).zfill(self.count_width) + self.suffix
 
+    def getThumbnail(self, count):
+        """Return the thumbnail name for a given file number"""
+        return self.basename + str(count).zfill(self.count_width) + ".thumbnail" + self.suffix
+
     def getFilenameShot(self, count, shotCount):
         """Return the file name for a given shot & file number"""
         return self.getFilename(count+1)[:-len(self.suffix)] + \
@@ -109,10 +113,10 @@ class PictureList:
         return self.getFilename(self.counter)
 
     def getNextPic(self):
-        """Update counter and return the next filename"""
+        """Update counter and return the next filename and thumbnail"""
         self.counter += 1
         self.shot_counter = 0
-        return self.getFilename(self.counter)
+        return self.getFilename(self.counter), self.getThumbnail(self.counter)
 
     def getNextPicShot(self):
         """Update counter and return the next filename"""

@@ -149,7 +149,7 @@ class PyQt5Gui(GuiSkeleton):
             picturename = self._pic_list.getRandomPic()
             while (not os.path.isfile(picturename)):
                 picturename = self._pic_list.getRandomPic()
-            logging.debug('Picture name for slideshow {}'.format(picturename) )
+            logging.debug('Picture name for slideshow {}'.format(picturename))
             picture = Image.open(picturename)
             text = ('')
             
@@ -210,6 +210,8 @@ class PyQt5Gui(GuiSkeleton):
 
     def showIdle(self, state):
 
+        logging.info('Start Idle')
+
         self._enableEscape()
         self._enableTrigger()
         self._timerViewSlides.stop()
@@ -217,16 +219,18 @@ class PyQt5Gui(GuiSkeleton):
         slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
 
         self._setWidget(Frames.IdleMessage(
-            lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger'))))
+            lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')), 
+            lambda: self._comm.send(Workers.MASTER, GuiEvent('gallery'))))
         
         self._timerStartSlideshow.setSingleShot(True)
         self._timerStartSlideshow.start(slideshow_time)
 
     def showSlideshow(self, state):
 
+        logging.info('Start Slideshow')
+
         self._timerStartSlideshow.stop()
         view_time = self._cfg.getInt('Slideshow', 'pic_slideshow_time') * 1000
-        logging.info('Start Slideshow')
 
         logging.info('Picture Time {}'.format(view_time) )
 
@@ -234,7 +238,7 @@ class PyQt5Gui(GuiSkeleton):
         self._timerViewSlides.start(view_time)
         picture, text = self._newslideshowPicture()
                 
-        self._setWidget(Frames.SlideshowMessage(picture,text, self._cfg.get('Slideshow', 'transition'),
+        self._setWidget(Frames.SlideshowMessage(picture,text, self._cfg.getBool('Slideshow', 'fade'),
                                                 lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger'))))
         
     def updateSlideshow(self, event):
@@ -246,9 +250,33 @@ class PyQt5Gui(GuiSkeleton):
         
         # self._lastslide = picture
         
+    def showGallery(self, state):
+
+        logging.info('Start Gallery')
+
+        self._enableEscape()
+        self._enableTrigger()
+        self._timerStartSlideshow.stop()
+
+        if not isinstance(self._gui.centralWidget(), Frames.GalleryMessage):
+            logging.info('Skip Reinitialisating Gallery')
+            self._setWidget(Frames.GalleryMessage(self._pic_list, 
+                                                    lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')),
+                                                    lambda x: self._comm.send(Workers.MASTER, GuiEvent('galleryselect', picture=x))))
+
+
+    def showGallerySelect(self, state):
+
+        tasks = self._postprocess.getAll(ImageQt.ImageQt(state.picture))
+
+        Frames.GallerySelectMessage(
+            self._gui.centralWidget(), tasks, self._worker, state.picture,
+            lambda: self._comm.send(Workers.MASTER, GuiEvent('close')))
+
+      
     def showGreeter(self, state):
 
-        logging.info('Timer Remainig time"{}" '.format(self._timerStartSlideshow.remainingTime() ))
+        logging.info('Timer Remainig time"{}" '.format(self._timerStartSlideshow.remainingTime()))
         self._timerStartSlideshow.stop()
         self._enableEscape()
         self._disableTrigger()

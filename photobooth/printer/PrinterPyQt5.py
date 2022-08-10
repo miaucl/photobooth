@@ -48,7 +48,9 @@ class PrinterPyQt5(Printer):
     def print(self, picture):
 
         if self._print_pdf:
-            self._printer.setOutputFileName('print_%d.pdf' % self._counter)
+            outputFileName = 'print_%d.pdf' % self._counter
+            self._printer.setOutputFileName(outputFileName)
+            logging.info('Save as PDF: %s' % outputFileName)
             self._counter += 1
 
         logging.info('Printing picture')

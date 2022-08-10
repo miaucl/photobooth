@@ -119,11 +119,12 @@ class WaitMessage(QtWidgets.QFrame):
 
 class IdleMessage(QtWidgets.QFrame):
 
-    def __init__(self, trigger_action):
+    def __init__(self, trigger_action, gallery_action):
 
         super().__init__()
         self.setObjectName('IdleMessage')
 
+        self._gallery_button = _('Gallery')
         self._message_label = _('Hit the')
         self._message_button = _('Button!')
         
@@ -132,7 +133,7 @@ class IdleMessage(QtWidgets.QFrame):
         ############
         # self._picture = None
 
-        self.initFrame(trigger_action)
+        self.initFrame(trigger_action, gallery_action)
     
     ############
     # Enable for picture in idle frame
@@ -150,8 +151,11 @@ class IdleMessage(QtWidgets.QFrame):
 
     #     self._picture = picture
 
-    def initFrame(self, trigger_action):
+    def initFrame(self, trigger_action, gallery_action):
 
+        galleryBtn = QtWidgets.QPushButton(self._gallery_button)
+        galleryBtn.clicked.connect(gallery_action)
+        galleryBtn.setObjectName('GalleryButton')
         lbl = QtWidgets.QLabel(self._message_label)
         btn = QtWidgets.QPushButton(self._message_button)
         btn.clicked.connect(trigger_action)
@@ -159,6 +163,8 @@ class IdleMessage(QtWidgets.QFrame):
         lay = QtWidgets.QVBoxLayout()
         lay.addWidget(lbl)
         lay.addWidget(btn)
+        lay.addStretch(1)
+        lay.addWidget(galleryBtn)
         self.setLayout(lay)
 
     ############
@@ -271,7 +277,7 @@ class PictureMessage(QtWidgets.QFrame):
 
 class SlideshowMessage(QtWidgets.QFrame):
 
-    def __init__(self, slide, text, transition, trigger_action):
+    def __init__(self, slide, text, fade, trigger_action):
 
         super().__init__()
         self.setObjectName('SlideshowMessage')
@@ -280,7 +286,7 @@ class SlideshowMessage(QtWidgets.QFrame):
         self._newslide = slide
         self._lastslide = slide
         self._text = text
-        self._transition = transition
+        self._fade = fade
         self._alpha = 0.0
         self.initFrame(trigger_action)
         
@@ -320,7 +326,7 @@ class SlideshowMessage(QtWidgets.QFrame):
 
     def timerEvent(self, event):
 
-        if (self._transition == "fade"):
+        if (self._fade):
             if ((self.alpha < 1.0) and 
                 (getattr(self._lastslide,"size") == getattr(self.slide,"size"))):
                 self._newslide = Image.blend(self._lastslide, self.slide, round(self.alpha,1))
@@ -328,11 +334,8 @@ class SlideshowMessage(QtWidgets.QFrame):
             else:
                 self._newslide = self.slide 
                 self._lastslide = self.slide 
-        elif (self._transition == "none"):
-            self._newslide = self.slide 
         else:
-            raise ValueError(f"Transition '{self._transition}' is not valid")
-
+            self._newslide = self.slide 
         self.update()
 
     def paintEvent(self, event):
@@ -350,6 +353,122 @@ class SlideshowMessage(QtWidgets.QFrame):
             
         painter.end()
 
+
+class GalleryMessage(QtWidgets.QFrame):
+
+    def __init__(self, pictureList, trigger_action, gallery_select_action):
+
+        super().__init__()
+        self.setObjectName('GalleryMessage')
+
+        self._pictureList = pictureList
+        self._gallery_label = _('Gallery')
+        self._gallery_back_button = _('← Back')
+
+        self.initFrame(trigger_action, gallery_select_action)
+        
+    def initFrame(self, trigger_action, gallery_select_action):
+
+        tbl = QtWidgets.QTableView()
+        tbl.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        tbl.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        tbl.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        tbl.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        tbl.verticalScrollBar().setSingleStep(5)
+        tbl.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        tbl.horizontalHeader().hide()
+        tbl.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        tbl.verticalHeader().hide()
+        QtWidgets.QScroller.grabGesture(tbl.viewport(), QtWidgets.QScroller.LeftMouseButtonGesture)
+
+        dlgt = Widgets.GalleryThumbnailDelegate(gallery_select_action=gallery_select_action)
+
+        tbl.setItemDelegate(dlgt)
+
+        mdl = Widgets.GalleryThumbnailModel(pictureList=self._pictureList)
+
+        tbl.setModel(mdl)
+
+        lbl = QtWidgets.QLabel(self._gallery_label)
+        btn = QtWidgets.QPushButton(self._gallery_back_button)
+        btn.clicked.connect(trigger_action)
+        btn.setObjectName('GalleryBackButton')
+
+        hlay = QtWidgets.QHBoxLayout()
+        hlay.addWidget(btn)
+        hlay.addStretch(1)
+        hlay.addWidget(lbl)
+
+        vlay = QtWidgets.QVBoxLayout()
+        vlay.addLayout(hlay)
+        vlay.addWidget(tbl, stretch=1)
+        self.setLayout(vlay)
+
+
+
+class GallerySelectMessage(Widgets.GallerySelectOverlay):
+
+    def __init__(self, parent, tasks, worker, picture, close_handle):
+
+
+        super().__init__(parent)
+        self.setObjectName('GallerySelectMessage')
+
+        self._picture = picture
+
+        self.initFrame(tasks, close_handle, worker)
+
+    def initFrame(self, tasks, close_handle, worker):
+
+        def disableAndCall(button, handle):
+            for i, button in enumerate(self._buttons):
+                logging.info('Button {}'.format(button.text()) )
+                button.setEnabled(False)
+                button.update()
+            self._label.setText(_('print in progress'))
+            self._label.update()
+            worker.put(handle)
+            worker.put(close_handle)
+            worker.put(self.close)
+
+        def createButton(task):
+            button = QtWidgets.QPushButton(task.label)
+            button.clicked.connect(lambda: disableAndCall(button, task.action))
+            return button
+
+        self._buttons = [createButton(task) for task in tasks]
+        self._buttons.append(QtWidgets.QPushButton(_('Close')))
+        self._buttons[-1].clicked.connect(close_handle)
+        self._buttons[-1].clicked.connect(self.close)
+
+        button_lay = QtWidgets.QGridLayout()
+        for i, button in enumerate(self._buttons):
+            pos = divmod(i, 2)
+            button_lay.addWidget(button, *pos)
+
+        layout = QtWidgets.QVBoxLayout()
+        self._label = QtWidgets.QLabel("Options")
+        layout.addWidget(self._label, stretch=0)
+        layout.addStretch(1)
+        layout.addLayout(button_lay)
+        self.setLayout(layout)
+
+    def paintEvent(self, event):
+
+        super().paintEvent(event)
+
+        painter = QtGui.QPainter(self)
+
+        image = ImageQt.ImageQt(self._picture)
+        image = image.scaled(self.contentsRect().size(),
+                             QtCore.Qt.KeepAspectRatio,
+                             QtCore.Qt.FastTransformation)
+
+        origin = ((self.width() - image.width()) // 2,
+                  (self.height() - image.height()) // 2)
+        painter.drawImage(QtCore.QPoint(*origin), image)
+            
+        painter.end()
 
 
 
@@ -910,9 +1029,15 @@ class Settings(QtWidgets.QFrame):
         box_pic_slideshow_time.setValue(self._cfg.getInt('Slideshow', 'pic_slideshow_time'))
         self.add('Slideshow', 'pic_slideshow_time', box_pic_slideshow_time)
 
+
+        fade_slideshow = QtWidgets.QCheckBox()
+        fade_slideshow.setChecked(self._cfg.getBool('Slideshow', 'fade'))
+        self.add('Slideshow', 'fade_slideshow', fade_slideshow)
+
         layout = QtWidgets.QFormLayout()
         layout.addRow(_('Wait for Slideshow time [s]:'), box_start_slideshow_time)
         layout.addRow(_('Wait for change pictures time [s]:'), box_pic_slideshow_time)
+        layout.addRow(_('Wait for change pictures time [s]:'), fade_slideshow)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -1214,6 +1339,8 @@ class Settings(QtWidgets.QFrame):
                       str(self.get('Slideshow', 'start_slideshow_time').text()))
         self._cfg.set('Slideshow', 'pic_slideshow_time',
                       str(self.get('Slideshow', 'pic_slideshow_time').text()))
+        self._cfg.set('Slideshow', 'fade_slideshow',
+                      str(self.get('Slideshow', 'fade').isChecked()))
 
         self._cfg.set('Storage', 'basedir',
                       self.get('Storage', 'basedir').text())

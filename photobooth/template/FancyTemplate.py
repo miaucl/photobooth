@@ -184,7 +184,15 @@ class FancyTemplate(Template):
         
         byte_data = BytesIO()
         image.save(byte_data, format='jpeg')
-        return byte_data
+
+        MAX_SIZE = (80, 80) 
+        image.thumbnail(MAX_SIZE) 
+
+        thumbnail_byte_data = BytesIO()
+        image.save(thumbnail_byte_data, format='jpeg')
+
+
+        return byte_data, thumbnail_byte_data
 
 
 def testassemble(argv):
