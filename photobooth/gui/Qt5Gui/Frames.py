@@ -366,6 +366,9 @@ class GalleryMessage(QtWidgets.QFrame):
         self._gallery_label = _('Gallery')
         self._gallery_back_button = _('← Back')
 
+        # Reload picture list
+        self._pictureList.findExistingFiles()
+
         self.initFrame(trigger_action, gallery_select_action)
         
     def initFrame(self, trigger_action, gallery_select_action):
@@ -580,6 +583,8 @@ class PostprocessMessage(Widgets.TransparentOverlay):
             self._label.setText(_('Print in progress'))
             self._label.update()
             worker.put(handle)
+            worker.put(idle_handle)
+            worker.put(self.close)
 
         def createButton(task):
             button = QtWidgets.QPushButton(task.label)
