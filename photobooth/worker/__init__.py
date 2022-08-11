@@ -79,8 +79,9 @@ class Worker:
         if isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
         elif isinstance(state, StateMachine.ReviewState):
-            picturename = self._pic_list.getNextPic()
+            picturename, thumbnailname = self._pic_list.getNextPic()
             self.doPostprocessTasks(state.picture, picturename)
+            self.doPostprocessTasks(state.thumbnail, thumbnailname)
         elif isinstance(state, StateMachine.CameraEvent):
             if state.name == 'capture':
                 picturename = self._pic_list.getNextPicShot()

@@ -27,6 +27,14 @@ class GuiSkeleton:
         super().__init__()
         self._comm = communicator
 
+    def updatePreview(self, state):
+
+        raise NotImplementedError()
+
+    def updateSlideshow(self, state):
+
+        raise NotImplementedError()
+
     def showError(self, state):
 
         raise NotImplementedError()
@@ -48,6 +56,14 @@ class GuiSkeleton:
         raise NotImplementedError()
 
     def showSlideshow(self, state):
+
+        raise NotImplementedError()
+
+    def showGallery(self, state):
+
+        raise NotImplementedError()
+
+    def showGallerySelect(self, state):
 
         raise NotImplementedError()
 
@@ -85,6 +101,8 @@ class GuiSkeleton:
             self.updatePreview(state)
         elif isinstance(state, StateMachine.GuiEvent):
             self.updateSlideshow(state)
+
+
         elif isinstance(state, StateMachine.ErrorState):
             self.showError(state)
         elif isinstance(state, StateMachine.WelcomeState):
@@ -95,6 +113,10 @@ class GuiSkeleton:
             self.showIdle(state)
         elif isinstance(state, StateMachine.SlideshowState):
             self.showSlideshow(state)
+        elif isinstance(state, StateMachine.GalleryState):
+            self.showGallery(state)
+        elif isinstance(state, StateMachine.GallerySelectState):
+            self.showGallerySelect(state)
         elif isinstance(state, StateMachine.GreeterState):
             self.showGreeter(state)
         elif isinstance(state, StateMachine.CountdownState):

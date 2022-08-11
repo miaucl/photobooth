@@ -51,6 +51,10 @@ class GuiPostprocessor:
         for task in self._do_task_list:
             task.get(picture).action()
 
+    def getAll(self, picture):
+
+        return [task.get(picture) for task in self._get_task_list + self._do_task_list] 
+
 
 class PostprocessTask:
 

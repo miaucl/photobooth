@@ -51,4 +51,9 @@ class StandardTemplate(Template):
         byte_data = BytesIO()
         picture.save(byte_data, format='jpeg')
 
-        return byte_data
+        picture.thumbnail(((self._cfg.getInt("Gallery", "size_x"), self._cfg.getInt("Gallery", "size_y"))) ) 
+
+        thumbnail_byte_data = BytesIO()
+        picture.save(thumbnail_byte_data, format='jpeg')
+
+        return byte_data, thumbnail_byte_data

@@ -87,6 +87,19 @@ QFrame#IdleMessage QPushButton {
 QFrame#IdleMessage QPushButton:pressed {
 }
 
+QFrame#IdleMessage QPushButton#GalleryButton {
+    font-size: 40px;
+    text-align: center;
+
+    border-color: #76b5c5;
+
+}
+
+QFrame#IdleMessage QPushButton#GalleryButton:pressed {
+    background-color: #76b5c5;
+}
+
+
 /* Slideshow Screen */
 
 QFrame#SlideshowMessage {
@@ -104,6 +117,50 @@ QFrame#SlideshowMessage QPushButton {
 QFrame#SlideshowMessage QPushButton:pressed {
     background-color: transparent;
     border-color: transparent;
+}
+
+/** Gallery Message */
+
+QFrame#GalleryMessage {
+    margin: 0px;
+}
+
+QFrame#GalleryMessage QLabel {
+    font-size: 50px;
+    color: #154c79;
+}
+
+/* Gallery Select overlay */
+
+QWidget#GallerySelectOverlay {
+    background-color: #ffffff;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 30px;
+    border-color: #eeeeee;
+    padding: 40px;
+}
+
+/* Gallery Select message */
+
+QWidget#GallerySelectMessage QLabel {
+    color: #154c79;
+    font-size: 40x;
+    qproperty-alignment: AlignCenter;
+}
+
+QWidget#GallerySelectMessage QPushButton {
+    margin: 20px;
+    background-color: #abdbe3;
+}
+
+QWidget#GallerySelectMessage QPushButton:pressed {
+}
+
+QWidget#GallerySelectMessage QPushButton:disabled {
+    background-color: #eeeeee;
+    color: #f5e1c9;
+    border-color: #f5e1c9;
 }
 
 /* Greeter Screen */

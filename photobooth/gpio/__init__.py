@@ -89,6 +89,10 @@ class Gpio:
             self.showIdle()
         elif isinstance(state, StateMachine.SlideshowState):
             self.showSlideshow()
+        elif isinstance(state, StateMachine.GalleryState):
+            self.showGallery()
+        elif isinstance(state, StateMachine.GallerySelectState):
+            self.showGallerySelect()
         elif isinstance(state, StateMachine.GreeterState):
             self.showGreeter()
         elif isinstance(state, StateMachine.CountdownState):
@@ -176,6 +180,14 @@ class Gpio:
     def showSlideshow(self):
 
         self.enableTrigger()
+
+    def showGallery(self):
+
+        self.disableTrigger()
+
+    def showGallerySelect(self):
+
+        self.disableTrigger()
 
     def showGreeter(self):
 

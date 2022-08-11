@@ -52,7 +52,6 @@ class PictureDimensions:
 
     def _computeContainFill(self, coord, inner_size):
 
-        print(inner_size, self.numPictures[coord],  self.innerDistance[coord], self.thumbnailSize[coord])
         return (inner_size 
                     - self.numPictures[coord] * self.thumbnailSize[coord] 
                     - self.innerDistance[coord] * (self.numPictures[coord] + 1))
@@ -87,12 +86,6 @@ class PictureDimensions:
                                              (pos[j] + 1) * self.innerDistance[j] +
                                              pos[j] * self.thumbnailSize[j]
                                              for j in range(2)))
-        print(contain_fill)
-        print(self._thumb_offsets)
-        print("################################")
-        print("################################")
-        print("################################")
-        print("################################")
 
         logging.debug(('Assembled picture will contain {} ({}x{}) pictures '
                        'in positions {}').format(self.totalNumPictures,

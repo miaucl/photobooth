@@ -175,8 +175,8 @@ class Camera:
         self.setIdle()
 
         # assemble pictures based on template
-        byte_data = self._template.assemblePicture(self._pictures)
+        byte_data, thumbnail_byte_data = self._template.assemblePicture(self._pictures)
 
         self._comm.send(Workers.MASTER,
-                        StateMachine.CameraEvent('review', byte_data))
+                        StateMachine.CameraEvent('review', byte_data, thumbnail_byte_data))
         self._pictures = []

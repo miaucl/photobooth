@@ -167,8 +167,15 @@ class TeardownEvent(Event):
 
 class GuiEvent(Event):
 
-    pass
+    def __init__(self, name, picture=None):
 
+        super().__init__(name)
+        self._picture = picture
+
+    @property
+    def picture(self):
+
+        return self._picture
 
 class GpioEvent(Event):
 
@@ -177,16 +184,22 @@ class GpioEvent(Event):
 
 class CameraEvent(Event):
 
-    def __init__(self, name, picture=None, num_pictures=None):
+    def __init__(self, name, picture=None, thumbnail=None, num_pictures=None):
 
         super().__init__(name)
         self._picture = picture
+        self._thumbnail = thumbnail
         self._num_pictures = num_pictures
 
     @property
     def picture(self):
 
         return self._picture
+
+    @property
+    def thumbnail(self):
+
+        return self._thumbnail
 
     @property
     def num_pictures(self):
@@ -363,6 +376,8 @@ class IdleState(State):
             context.state = GreeterState(num_pictures=context.num_pictures)
         elif isinstance(event, GuiEvent) and event.name == 'slideshow':
             context.state = SlideshowState()
+        elif isinstance(event, GuiEvent) and event.name == 'gallery':
+            context.state = GalleryState()
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
@@ -383,6 +398,42 @@ class SlideshowState(State):
             pass
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
+
+class GalleryState(State):
+
+    def __init__(self):
+
+        super().__init__()
+
+    def handleEvent(self, event, context):
+
+        if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
+           event.name == 'trigger'):
+            context.state = IdleState()
+        elif (isinstance(event, GuiEvent) and event.name == 'galleryselect'):
+            context.state = GallerySelectState(event.picture)
+        else:
+            raise TypeError('Unknown Event type "{}"'.format(event))
+
+class GallerySelectState(State):
+
+    def __init__(self, picture=None):
+
+        super().__init__()
+        self._picture = picture
+
+    def handleEvent(self, event, context):
+
+        if (isinstance(event, GuiEvent) and
+           event.name == 'close'):
+            context.state = GalleryState()
+        else:
+            raise TypeError('Unknown Event type "{}"'.format(event))
+
+    @property
+    def picture(self):
+
+        return self._picture
 
 class GreeterState(State):
 
@@ -471,22 +522,28 @@ class AssembleState(State):
     def handleEvent(self, event, context):
 
         if isinstance(event, CameraEvent) and event.name == 'review':
-            context.state = ReviewState(event.picture)
+            context.state = ReviewState(event.picture, event.thumbnail)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 
 class ReviewState(State):
 
-    def __init__(self, picture):
+    def __init__(self, picture, thumbnail):
 
         super().__init__()
         self._picture = picture
+        self._thumbnail = thumbnail
 
     @property
     def picture(self):
 
         return self._picture
+
+    @property
+    def thumbnail(self):
+
+        return self._thumbnail
 
     def handleEvent(self, event, context):
 

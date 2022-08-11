@@ -18,11 +18,15 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import math
+import os
 
 from PyQt5 import Qt
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
+
+from collections import namedtuple
+from PIL import Image, ImageQt
 
 
 class SpinningWaitClock(QtWidgets.QWidget):
@@ -210,3 +214,126 @@ class TransparentOverlay(QtWidgets.QWidget):
 
         self.killTimer(self._timer)
         self._handle()
+
+# Create a custom namedtuple class to hold our data.
+thumbnailData = namedtuple("preview", "id label image")
+
+PrintRole = QtCore.Qt.DisplayRole + 100
+
+LabelColor = QtGui.QColor(30, 30, 30)
+LabelBackgroundColor = QtGui.QColor(255, 255, 255, 70)
+
+class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
+    
+    def __init__(self, gallery_select_action=None):
+
+        super().__init__()
+
+        self._gallery_select_action = gallery_select_action
+
+    def paint(self, painter, option, index):
+        # data is our preview object
+        data = index.model().data(index, QtCore.Qt.DisplayRole)
+        if data is None:
+            return
+            
+        image = ImageQt.ImageQt(data.image)
+        image = image.scaled(option.rect.size(),
+                             QtCore.Qt.KeepAspectRatio,
+                             QtCore.Qt.FastTransformation)
+
+        origin = ((option.rect.width() - image.width()) // 2,
+                  (option.rect.height() - image.height()) // 2)
+
+        painter.drawImage(option.rect.x() + origin[0], option.rect.y() + origin[1], image)
+
+        idLabel = f"#{ data.id }"
+
+        font = painter.font()
+        font.setPixelSize(18)
+        painter.setFont(font)
+
+        fontMetrics = painter.fontMetrics()
+
+        painter.fillRect(option.rect.x() + 3, option.rect.y() + 3, fontMetrics.horizontalAdvance(idLabel) + 6, fontMetrics.height(), LabelBackgroundColor)
+
+        painter.setPen(LabelColor)
+        painter.drawText(option.rect.x() + 6, option.rect.y() + 21, idLabel)
+        
+    def sizeHint(self, option, index):
+        data = index.model().data(index, QtCore.Qt.DisplayRole)
+        if data is None:
+            return QtCore.QSize(0, 0)
+
+        width, height = data.image.size
+            
+        return QtCore.QSize(option.rect.width(), option.rect.width() * (height / width))
+
+    def editorEvent(self, event, model, option, index):
+        if event.type() == QtCore.QEvent.MouseButtonPress and self._gallery_select_action:
+            data = index.model().data(index, PrintRole)
+            self._gallery_select_action(data.image)
+            return True
+        else:
+            return False
+
+
+class GalleryThumbnailModel(QtCore.QAbstractTableModel):
+    def __init__(self, pictureList=None, columns=1):
+        super().__init__()
+        self._pictureList = pictureList
+        self._columns = columns
+
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+
+        id = self._pictureList.counter - ((self._columns * index.row()) + index.column()) # Pictures are 1-indexed
+        if role == QtCore.Qt.DisplayRole:
+            f = self._pictureList.getThumbnail(id)
+            if (not os.path.isfile(f)):
+                return None
+
+            image = Image.open(f)
+            return thumbnailData(id, f, image)
+        elif role == PrintRole:
+            f = self._pictureList.getFilename(id)
+            if (not os.path.isfile(f)):
+                return None
+
+            image = Image.open(f)
+            return thumbnailData(id, f, image)
+        elif role == QtCore.Qt.ToolTipRole:
+            f = self._pictureList.getThumbnail(id)
+            return f
+        else: 
+            return None
+
+
+    def rowCount(self, index):
+        return self._pictureList.counter // self._columns + 1 if self._pictureList is not None else 0
+
+    def columnCount(self, index):
+        return self._columns
+
+class GallerySelectOverlay(QtWidgets.QWidget):
+
+    def __init__(self, parent):
+
+        super().__init__(parent)
+        self.setObjectName('GallerySelectOverlay')
+
+        rect = parent.rect()
+        rect.adjust(20, 20, -20, -20)
+        self.setGeometry(rect)
+
+        self.show()
+
+    def paintEvent(self, event):
+
+        opt = QtWidgets.QStyleOption()
+        opt.initFrom(self)
+        painter = QtGui.QPainter(self)
+        self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, opt, painter,
+                                   self)
+        painter.end()
