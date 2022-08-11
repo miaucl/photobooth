@@ -220,6 +220,9 @@ thumbnailData = namedtuple("preview", "id label image")
 
 PrintRole = QtCore.Qt.DisplayRole + 100
 
+LabelColor = QtGui.QColor(30, 30, 30)
+LabelBackgroundColor = QtGui.QColor(255, 255, 255, 70)
+
 class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
     
     def __init__(self, gallery_select_action=None):
@@ -243,6 +246,19 @@ class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
                   (option.rect.height() - image.height()) // 2)
 
         painter.drawImage(option.rect.x() + origin[0], option.rect.y() + origin[1], image)
+
+        idLabel = f"#{ data.id }"
+
+        font = painter.font()
+        font.setPixelSize(18)
+        painter.setFont(font)
+
+        fontMetrics = painter.fontMetrics()
+
+        painter.fillRect(option.rect.x() + 3, option.rect.y() + 3, fontMetrics.horizontalAdvance(idLabel) + 6, fontMetrics.height(), LabelBackgroundColor)
+
+        painter.setPen(LabelColor)
+        painter.drawText(option.rect.x() + 6, option.rect.y() + 21, idLabel)
         
     def sizeHint(self, option, index):
         data = index.model().data(index, QtCore.Qt.DisplayRole)
@@ -263,40 +279,42 @@ class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
 
 
 class GalleryThumbnailModel(QtCore.QAbstractTableModel):
-    def __init__(self, pictureList=None):
+    def __init__(self, pictureList=None, columns=1):
         super().__init__()
         self._pictureList = pictureList
+        self._columns = columns
 
     def data(self, index, role):
         if not index.isValid():
             return None
 
+        id = self._pictureList.counter - ((self._columns * index.row()) + index.column()) # Pictures are 1-indexed
         if role == QtCore.Qt.DisplayRole:
-            f = self._pictureList.getThumbnail((2 * index.row()) + index.column() + 1) # Pictures are 1-indexed
+            f = self._pictureList.getThumbnail(id)
             if (not os.path.isfile(f)):
                 return None
 
             image = Image.open(f)
-            return thumbnailData(index.internalId(), f, image)
+            return thumbnailData(id, f, image)
         elif role == PrintRole:
-            f = self._pictureList.getFilename((2 * index.row()) + index.column() + 1) # Pictures are 1-indexed
+            f = self._pictureList.getFilename(id)
             if (not os.path.isfile(f)):
                 return None
 
             image = Image.open(f)
-            return thumbnailData(index.internalId(), f, image)
+            return thumbnailData(id, f, image)
         elif role == QtCore.Qt.ToolTipRole:
-            f = self._pictureList.getThumbnail((2 * index.row()) + index.column() + 1) # Pictures are 1-indexed
+            f = self._pictureList.getThumbnail(id)
             return f
         else: 
             return None
 
 
     def rowCount(self, index):
-        return self._pictureList.counter // 2 + 1 if self._pictureList is not None else 0
+        return self._pictureList.counter // self._columns + 1 if self._pictureList is not None else 0
 
     def columnCount(self, index):
-        return 2
+        return self._columns
 
 class GallerySelectOverlay(QtWidgets.QWidget):
 

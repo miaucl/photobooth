@@ -260,7 +260,7 @@ class PyQt5Gui(GuiSkeleton):
 
         if not isinstance(self._gui.centralWidget(), Frames.GalleryMessage):
             logging.info('Skip Reinitialisating Gallery')
-            self._setWidget(Frames.GalleryMessage(self._pic_list, 
+            self._setWidget(Frames.GalleryMessage(self._pic_list, self._cfg.getInt("Gallery", "columns"),
                                                     lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')),
                                                     lambda x: self._comm.send(Workers.MASTER, GuiEvent('galleryselect', picture=x))))
 

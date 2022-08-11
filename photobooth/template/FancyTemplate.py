@@ -185,8 +185,7 @@ class FancyTemplate(Template):
         byte_data = BytesIO()
         image.save(byte_data, format='jpeg')
 
-        MAX_SIZE = (80, 80) 
-        image.thumbnail(MAX_SIZE) 
+        image.thumbnail((self._cfg.getInt("Gallery", "size_x"), self._cfg.getInt("Gallery", "size_y"))) 
 
         thumbnail_byte_data = BytesIO()
         image.save(thumbnail_byte_data, format='jpeg')

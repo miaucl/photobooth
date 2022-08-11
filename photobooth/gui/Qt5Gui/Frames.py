@@ -356,12 +356,13 @@ class SlideshowMessage(QtWidgets.QFrame):
 
 class GalleryMessage(QtWidgets.QFrame):
 
-    def __init__(self, pictureList, trigger_action, gallery_select_action):
+    def __init__(self, pictureList, columns, trigger_action, gallery_select_action):
 
         super().__init__()
         self.setObjectName('GalleryMessage')
 
         self._pictureList = pictureList
+        self._columns = columns
         self._gallery_label = _('Gallery')
         self._gallery_back_button = _('← Back')
 
@@ -385,7 +386,7 @@ class GalleryMessage(QtWidgets.QFrame):
 
         tbl.setItemDelegate(dlgt)
 
-        mdl = Widgets.GalleryThumbnailModel(pictureList=self._pictureList)
+        mdl = Widgets.GalleryThumbnailModel(pictureList=self._pictureList, columns=self._columns)
 
         tbl.setModel(mdl)
 
@@ -425,7 +426,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
                 logging.info('Button {}'.format(button.text()) )
                 button.setEnabled(False)
                 button.update()
-            self._label.setText(_('print in progress'))
+            self._label.setText(_('Print in progress'))
             self._label.update()
             worker.put(handle)
             worker.put(close_handle)
@@ -576,7 +577,7 @@ class PostprocessMessage(Widgets.TransparentOverlay):
                 logging.info('Button {}'.format(button.text()) )
                 button.setEnabled(False)
                 button.update()
-            self._label.setText(_('print in progress'))
+            self._label.setText(_('Print in progress'))
             self._label.update()
             worker.put(handle)
 
@@ -724,6 +725,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createTemplateSettings(), _('Template'))
         tabs.addTab(self.createPictureSettings(), _('Picture'))
         tabs.addTab(self.createSlideshowSettings(), _('Slideshow'))
+        tabs.addTab(self.createGallerySettings(), _('Gallery'))
         tabs.addTab(self.createStorageSettings(), _('Storage'))
         tabs.addTab(self.createGpioSettings(), _('GPIO'))
         tabs.addTab(self.createPrinterSettings(), _('Printer'))
@@ -1032,12 +1034,44 @@ class Settings(QtWidgets.QFrame):
 
         fade_slideshow = QtWidgets.QCheckBox()
         fade_slideshow.setChecked(self._cfg.getBool('Slideshow', 'fade'))
-        self.add('Slideshow', 'fade_slideshow', fade_slideshow)
+        self.add('Slideshow', 'fade', fade_slideshow)
 
         layout = QtWidgets.QFormLayout()
         layout.addRow(_('Wait for Slideshow time [s]:'), box_start_slideshow_time)
         layout.addRow(_('Wait for change pictures time [s]:'), box_pic_slideshow_time)
         layout.addRow(_('Wait for change pictures time [s]:'), fade_slideshow)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
+    def createGallerySettings(self):
+
+        self.init('Gallery')
+        
+        gallery_columns = QtWidgets.QSpinBox()
+        gallery_columns.setRange(1, 18)
+        gallery_columns.setValue(self._cfg.getInt('Gallery', 'columns'))
+        self.add('Gallery', 'columns', gallery_columns)
+
+        size_x = QtWidgets.QSpinBox()
+        size_x.setRange(1, 999999)
+        size_x.setValue(self._cfg.getInt('Gallery', 'size_x'))
+        self.add('Gallery', 'size_x', size_x)
+
+        size_y = QtWidgets.QSpinBox()
+        size_y.setRange(1, 999999)
+        size_y.setValue(self._cfg.getInt('Gallery', 'size_y'))
+        self.add('Gallery', 'size_y', size_y)
+
+        lay_size = QtWidgets.QHBoxLayout()
+        lay_size.addWidget(size_x)
+        lay_size.addWidget(QtWidgets.QLabel('x'))
+        lay_size.addWidget(size_y)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Columns to show in gallery:'), gallery_columns)
+        layout.addRow(_('Size of assembled picture [px]:'), lay_size)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -1339,8 +1373,15 @@ class Settings(QtWidgets.QFrame):
                       str(self.get('Slideshow', 'start_slideshow_time').text()))
         self._cfg.set('Slideshow', 'pic_slideshow_time',
                       str(self.get('Slideshow', 'pic_slideshow_time').text()))
-        self._cfg.set('Slideshow', 'fade_slideshow',
+        self._cfg.set('Slideshow', 'fade',
                       str(self.get('Slideshow', 'fade').isChecked()))
+
+        self._cfg.set('Gallery', 'columns',
+                      str(self.get('Gallery', 'columns').text()))
+        self._cfg.set('Gallery', 'size_x',
+                      str(self.get('Gallery', 'size_x').text()))
+        self._cfg.set('Gallery', 'size_y',
+                      str(self.get('Gallery', 'size_y').text()))
 
         self._cfg.set('Storage', 'basedir',
                       self.get('Storage', 'basedir').text())
