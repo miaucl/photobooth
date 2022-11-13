@@ -33,9 +33,8 @@ ExecStop=/usr/bin/killall -9 $DIR/$LAUNCH_SCRIPT
 WantedBy=multi-user.target
 EOF
 
-systemctl stop photobooth.service
-systemctl enable photobooth.service
-systemctl daemon-reload photobooth.service
-systemctl start photobooth.service
-
+echo "Enable: 'sudo systemctl enable photobooth.service'"
+echo "Start: 'sudo systemctl start photobooth.service'"
+echo "Restart: 'sudo systemctl restart photobooth.service'"
+echo "Reload config: 'sudo systemctl daemon-reload'"
 echo "Show logs: 'journalctl -xefu photobooth.service -b'"

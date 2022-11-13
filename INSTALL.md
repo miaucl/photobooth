@@ -30,23 +30,6 @@ Afterwards, open the configuration utility to adapt everything to your needs (e.
 sudo raspi-config
 ```
 
-### Disable screensaver/screen blanking
-
-By default, Raspbian blanks the screen after ten minutes of idle time.
-You probably do not want that for a photobooth, thus it is best to disable this.
-
-Option 1:
-
-Do it either in the GUI or with `raspi-config`. [source](https://pimylifeup.com/raspberry-pi-disable-screen-blanking/)
-
-Option 2:
-
-For that, edit  `/etc/lightdm/lightdm.conf` and change the startup command to the following:
-
-```txt
-xserver-command=X -s 0 -dpms
-```
-
 ### Configure touch screen, printer etc
 
 Configure any not working hardware, e.g., my touch screen needs some additional steps since some of the latest Raspbian releases.
@@ -72,14 +55,12 @@ sudo apt install gettext # to add other languages
 
 #### Additional requirements for picamera2 on bullseye
 
-The [picamera2](https://github.com/raspberrypi/picamera2) is currently in alpha state but will replace the `picamera` module from buster in the future.
+The [picamera2](https://github.com/raspberrypi/picamera2) is currently in beta state but will replace the `picamera` module from buster in the future. It already installed on OS later than 2022-11-01.
 
 To use `picamera2` enter following commands:
 
 ```bash
-pip install --upgrade numpy
-sudo apt install -y python3-libcamera python3-kms++
-sudo apt install -y python3-pyqt5 python3-prctl libatlas-base-dev ffmpeg python3-pip
+sudo apt install -y python3-picamera2
 ```
 
 #### Additional requirements for gphoto2
@@ -157,7 +138,9 @@ source .venv/bin/activate
 Run the following command to download and install all dependencies and the photobooth:
 
 ```bash
+cd photobooth
 pip install -r requirements.txt
+cd ..
 ```
 
 ## Run Photobooth from Terminal

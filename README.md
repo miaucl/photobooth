@@ -2,7 +2,7 @@
 
 Disclaimer:
 
-_The original `README.md` can be found [here](./README.old.md) with credits to @reuterbal for the original development of this software and to @andyboeh, @tammtimmer, @t0mmo for additional features. As of `2022-07-31`, there has not been any changes since 3 years and I therefore regard it as abandoned._
+_The original [`README.md`](./archive/README.md) with credits to @reuterbal for the original development of this software and to @andyboeh, @tammtimmer, @t0mmo for additional features. As of `2022-07-31`, there has not been any changes since 3 years and I therefore regard it as abandoned._
 
 A flexible Photobooth software.
 
