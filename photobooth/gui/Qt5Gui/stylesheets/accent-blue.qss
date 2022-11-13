@@ -134,10 +134,6 @@ QFrame#GalleryMessage QLabel {
 
 QWidget#GallerySelectOverlay {
     background-color: #ffffff;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 30px;
-    border-color: #eeeeee;
     padding: 40px;
 }
 
@@ -198,13 +194,7 @@ QFrame#GreeterMessage QLabel#message {
 /* Countdown Screen */
 
 QFrame#CountdownMessage {
-    background-color: #eeeeee;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 30px;
-    border-color: #eeeeee;
-    margin: 20px;
-    padding: 30px;
+    background-color: #000000;
 }
 
 /* Pose Screen */
@@ -227,11 +217,7 @@ QFrame#PictureMessage {
 /* Overlay message */
 
 QWidget#TransparentOverlay {
-    background-color: #33ffffff;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 30px;
-    border-color: #eeeeee;
+    background-color: transparent;
     padding: 40px;
 }
 

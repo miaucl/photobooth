@@ -160,7 +160,7 @@ Run the following command to download and install all dependencies and the photo
 pip install -r requirements.txt
 ```
 
-## Run Photobooth
+## Run Photobooth from Terminal
 
 If not yet done, activate your virtual environment
 
@@ -193,3 +193,13 @@ You can directly startup the photobooth to the idle screen (skipping the welcome
 If you want to run from `ssh`, you need to set `export DISPLAY=:0` for it to work.
 
 If you want to use another language, change it either in your machine or prepend `LANG=ex python...` before the start command.
+
+## Autorun Photobooth with systemd
+
+Use the installation script:
+
+```bash
+./install-systemd.sh
+```
+
+The photobooth should now auto-start on launch and restart when crashing.

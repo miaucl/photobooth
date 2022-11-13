@@ -1,0 +1,1 @@
+export DISPLAY=:0 && cd photobooth/ && source .venv/bin/activate && ./autousb.sh

@@ -24,7 +24,7 @@
 *Manufacturer: "Canon"
 *NickName: "Canon SELPHY CP1300 HTTP-AirPrint"
 *Throughput: 1
-*APSupplies: "http://CP130016eeb1.local:8008/supply/ink_content.html"
+*APSupplies: "http://192.168.1.108:8008/supply/ink_content.html"
 *cupsSingleFile: True
 *cupsFilter2: "image/urf image/urf 10 -"
 *cupsFilter: "image/urf 10 -"
@@ -34,8 +34,8 @@
 *ColorDevice: True
 *APColorSpaces: true
 *DefaultColorSpace: RGB
-*cupsICCProfile Gray../Grayscale: "/System/Library/ColorSync/Profiles/Generic Gray Gamma 2.2 Profile.icc"
-*cupsICCProfile RGB../Color: "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
+*%cupsICCProfile Gray../Grayscale: "/System/Library/ColorSync/Profiles/Generic Gray Gamma 2.2 Profile.icc"
+*%cupsICCProfile RGB../Color: "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 *OpenUI *ColorModel/Color Mode: PickOne
 *OrderDependency: 10 AnySetup *ColorModel
 *DefaultColorModel: RGB

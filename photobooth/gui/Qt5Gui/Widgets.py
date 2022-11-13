@@ -192,7 +192,6 @@ class TransparentOverlay(QtWidgets.QWidget):
         self.setObjectName('TransparentOverlay')
 
         rect = parent.rect()
-        rect.adjust(20, 20, -20, -20)
         self.setGeometry(rect)
 
         if timeout is not None:
@@ -324,7 +323,7 @@ class GallerySelectOverlay(QtWidgets.QWidget):
         self.setObjectName('GallerySelectOverlay')
 
         rect = parent.rect()
-        rect.adjust(20, 20, -20, -20)
+        rect.adjust(16, 16, -16, -16)
         self.setGeometry(rect)
 
         self.show()

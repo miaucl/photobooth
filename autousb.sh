@@ -81,7 +81,7 @@ def find_and_ensure_mounted():
     if storage_path:
         print('Found storage path: ' + storage_path)
     elif devices:
-        print('Could not find mounted drive,  attempting to mount drive: ' + usb_devices[0])
+        print('Could not find mounted drive, attempting to mount drive: ' + usb_devices[0])
         storage_path = mount_drive(usb_devices[0])
         if storage_path:
             print('USB device mounted at ' + storage_path)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     
     #splash_pix = QPixmap('loading.gif')
     splash_pix = QPixmap(width, height)
-    splash_pix.fill(Qt.white)
+    splash_pix.fill(Qt.black)
     splash = QSplashScreen(splash_pix) #, Qt.WindowStaysOnTopHint)
     splash.setEnabled(False)
     if fs:
@@ -116,21 +116,22 @@ if __name__ == "__main__":
         splash.setFixedWidth(width)
         splash.setFixedHeight(height)
         splash.show()
-    splash.showMessage("<h1>Loading...</h1>", Qt.AlignTop | Qt.AlignCenter, Qt.black)
+    app.processEvents()
+    splash.showMessage("<h1 style='color: white'>Loading...</h1>", Qt.AlignTop | Qt.AlignCenter, color=Qt.white)
 
 
     storage_path = find_and_ensure_mounted()
     while not storage_path:
-        splash.showMessage("<h1>USB Drive not found. Please connect it to start the Photobooth</h1>", Qt.AlignTop | Qt.AlignCenter, Qt.black)
+        splash.showMessage("<h1 style='color: white'>USB Drive not found. Please connect it to start the Photobooth</h1>", Qt.AlignTop | Qt.AlignCenter, Qt.white)
         t = time.time()
         while time.time() < t + 1:
             app.processEvents()
             time.sleep(0.01)
         storage_path = find_and_ensure_mounted()
-    splash.showMessage("<h1>USB Drive found.<br>Loading...</h1>", Qt.AlignTop | Qt.AlignCenter, Qt.black)
+    splash.showMessage("<h1 style='color: white'>USB Drive found.<br>Loading...</h1>", Qt.AlignTop | Qt.AlignCenter, color=Qt.white)
     print('Found storage path: ' + storage_path)
     
-    print(os.path.abspath(os.path.join(storage_path, 'photobooth.cfg')))
+    print("Set path to:", os.path.abspath(os.path.join(storage_path, 'photobooth.cfg')))
     
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'photobooth.cfg'))):
         mergeconfig = configparser.ConfigParser(interpolation=None)
@@ -139,8 +140,6 @@ if __name__ == "__main__":
         for section in mergeconfig:
             for key in mergeconfig[section]:
                 config[section][key] = mergeconfig[section][key]
-                    
-    storage_path = os.path.abspath(os.path.join(storage_path, '%Y-%m-%d'))
     
     config['Storage']['basedir'] = storage_path
 

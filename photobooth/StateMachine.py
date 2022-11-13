@@ -427,6 +427,8 @@ class GallerySelectState(State):
         if (isinstance(event, GuiEvent) and
            event.name == 'close'):
             context.state = GalleryState()
+        elif (isinstance(event, GuiEvent) and event.name == 'galleryselect'):
+            pass # Might be a double tap behind the popup
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 

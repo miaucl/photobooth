@@ -41,9 +41,9 @@ Screenshots produced using `CameraDummy` that produces unicolor images.
 
 Credits to @tammtimmer.
 
-The templates are defined in XML. The XML file descibes size&color of the background. On top each XML tag adds an element on top of the others:
+The templates are defined in XML. The XML file describes size&color of the background. On top each XML tag adds an element on top of the others:
 
-* `Image` can be PNG (incl transparency if required) or JPG etc and should be the same size like defined in the background. Can be used for a picture background or final overlay ontop of photos.
+* `Image` can be PNG (incl transparency if required) or JPG etc and should be the same size like defined in the background. Can be used for a picture background or final overlay on top of photos.
 * `Photo` refers to a shot taken by the camera. Positioning, resizing, rotation are supported currently. Make sure shots are numbered correctly!
 
 Currently, three examples are provided:
