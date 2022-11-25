@@ -323,7 +323,7 @@ class GallerySelectOverlay(QtWidgets.QWidget):
         self.setObjectName('GallerySelectOverlay')
 
         rect = parent.rect()
-        rect.adjust(16, 16, -16, -16)
+        rect.adjust(8, 8, -8, -8)
         self.setGeometry(rect)
 
         self.show()

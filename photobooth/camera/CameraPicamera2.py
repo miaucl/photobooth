@@ -44,6 +44,7 @@ class CameraPicamera2(CameraInterface):
         logging.info('Using PiCamera2')
 
         self._cap = None
+        
 
         self.setActive()
         self.setIdle()
@@ -52,11 +53,14 @@ class CameraPicamera2(CameraInterface):
 
         if self._cap is None:
             self._cap = Picamera2()
-            self._picture_config = self._cap.create_still_configuration()
-            self._preview_config = self._cap.create_preview_configuration({ "size": (self._cap.still_configuration.size[0] // 4, self._cap.still_configuration.size[1] // 4) }, buffer_count=4)
+            self._picture_config = self._cap.create_still_configuration({ "size": (self._cap.still_configuration.size[0] // 2, self._cap.still_configuration.size[1] // 2) }, buffer_count=1)
+            self._preview_config = self._cap.create_still_configuration({ "size": (self._cap.still_configuration.size[0] // 4, self._cap.still_configuration.size[1] // 4) }, buffer_count=2)
             self._cap.align_configuration(self._preview_config)
-            self._cap.configure(self._preview_config)
-        if self._running and config and config != self._activeConfig:
+            self._activeConfig = self._preview_config 
+            self._cap.configure(self._activeConfig)
+            logging.info('Set active configuration: {}'.format(self._activeConfig['main']))
+        if not self._running and config and config != self._activeConfig:
+            logging.info('Switch active configuration: {} -> {}'.format(self._activeConfig['main'], config['main']))
             self._cap.stop()
             self._running = False
             self._cap.configure(config)
@@ -87,7 +91,7 @@ class CameraPicamera2(CameraInterface):
 
     def getPicture(self):
 
-        self.setActive(self._preview_config)
+        self.setActive(self._picture_config)
         stream = io.BytesIO()
         self._cap.capture_file(stream, format='jpeg')
         stream.seek(0)

@@ -65,18 +65,27 @@ class Camera:
             'with' if self._is_preview else 'without'))
 
         # Take a test picture to determine size of pictures taken
+        self.setIdle()
         test_picture = self._cap.getPicture()
         if self._rotation is not None:
             test_picture = test_picture.transpose(self._rotation)
+        self._pictureCaptureSize = test_picture.size
+        logging.info('Picture size: {}'.format(self._pictureCaptureSize))
 
-        self._captureSize = test_picture.size
-        self._previewSize = self._computePreviewDimensions(self._captureSize)
+        # Take a test preview picture to determine size of previews taken
+        self.setIdle()
+        test_picture = self._cap.getPreview()
+        if self._rotation is not None:
+            test_picture = test_picture.transpose(self._rotation)
+        self._previewCaptureSize = test_picture.size
+
+        self._previewDisplaySize = self._computePreviewDimensions(self._previewCaptureSize)
+        logging.info('Preview size: {} -> {}'.format(self._previewCaptureSize, self._previewDisplaySize))
         self._is_preview = self._is_preview and self._cap.hasPreview
 
         # Initialize template with size of test picture
-        self._template.startup(self._captureSize)
+        self._template.startup(self._previewCaptureSize)
 
-        self.setIdle()
         # starting up and passing total number of pictures to make it available in overall context for later states
         self._comm.send(Workers.MASTER, StateMachine.CameraEvent('ready', num_pictures=self._template.totalNumPics))
 
@@ -129,19 +138,24 @@ class Camera:
         gui_size = (self._cfg.getInt('Gui', 'width'),
                     self._cfg.getInt('Gui', 'height'))
 
-        resize_factor = min(min((gui_size[i] / size[i]
-                                 for i in range(2))), 1)
+        resize_factor = min((gui_size[i] / size[i] 
+                            for i in range(2)))
+        if resize_factor > 1:
+            logging.warn('Resize factor {} of preview'
+            ' to gui is greater than 1!'.format(
+            resize_factor))
 
         return tuple(int(size[i] * resize_factor)
                                    for i in range(2))
 
     def capturePreview(self):
         if self._is_preview:
+            self.setIdle()
             while self._comm.empty(Workers.CAMERA):
                 picture = self._cap.getPreview()
                 if self._rotation is not None:
                     picture = picture.transpose(self._rotation)
-                picture = picture.resize(self._previewSize)
+                picture = picture.resize(self._previewDisplaySize, resample=Image.BOX)
                 picture = ImageOps.mirror(picture)
                 byte_data = BytesIO()
                 picture.save(byte_data, format='jpeg')

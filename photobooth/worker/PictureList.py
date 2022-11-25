@@ -70,7 +70,7 @@ class PictureList:
                      self.count_width * 'X', 'jpg')
 
     def findExistingFiles(self):
-        """Count number of existing files matchin the given basename
+        """Count number of existing files matching the given basename
         """
         # Find existing files
         count_pattern = '[0-9]' * self.count_width
