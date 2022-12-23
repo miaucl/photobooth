@@ -150,6 +150,7 @@ if __name__ == "__main__":
 
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'language.txt'))):
         with open(os.path.abspath(os.path.join(storage_path, 'language.txt'))) as f:
-         env["LANG"] = f.read()
-       
+            env["LANG"] = f.read()
+            print('LANG: ' + env["LANG"])
+
     subprocess.run(["./autorun.sh"], cwd=pb, env=env)
