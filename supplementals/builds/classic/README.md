@@ -5,9 +5,14 @@ This is a classic using a raspberry pi zero 2 which the 7inch QLED Integrated Di
 ## Hardware
 
 - Raspberry Pi Zero 2
-- 7inch QLED Integrated Display ([Docs](https://www.waveshare.com/wiki/70H-1024600#CAD_Drawing))
 - Raspberry Pi Camera v2
-- Einbau-Gerätedose C13, F-Typ, 250V ([Docs](https://www.distrelec.ch/de/einbau-geraetedose-c13-typ-250v-schurter-6600-3300/p/14349919))
+- 7inch QLED Integrated Display ([Docs](https://www.waveshare.com/wiki/70H-1024600#CAD_Drawing))
+- Switch [link](https://www.digikey.com/en/products/detail/zf-electronics/CRE22F2BBBNE/446064)
+- IRM 30 5ST [link](https://www.meanwell-web.com/en-gb/ac-dc-single-output-encapsulated-power-supply-irm--30--5st)
+- LogiLink Smile [link](https://www.digitec.ch/de/s1/product/logilink-smile-usb-a-dockingstation-usb-hub-12776233?dbq=1&gclid=Cj0KCQiAsoycBhC6ARIsAPPbeLuSqziMTKka5bsK8nV0Phmgn8bYfRX4SiDYr0Et2__k1bhvytIP0LkaAnqcEALw_wcB&gclsrc=aw.ds)
+- IEC Gerätestecker C14, 250V [link](https://ch.schurter.com/de/datasheet/6100-3#)
+- GU10 Fassung [link](https://www.distrelec.ch/de/fassung-gu10-2a-250v-keramik-weiss-bailey-lights-141234/p/30148723?trackQuery=gu10+fassung&pos=1&origPos=1&origPageSize=50&track=true)
+- LED spot VLE D 4.9-50W GU10 [link](https://www.lighting.philips.ch/prof/led-lampen-und-roehren/led-reflektorlampen/master-ledspot-value-gu10-hochvolt-reflektorlampen/929001349102_EU/product) 
 
 ## OS: Raspbian Bullseye
 
@@ -94,3 +99,7 @@ Disable popup when inserting a usb stick: <https://ubuntuforums.org/showthread.p
 Hide volumes and wastebasket on the desktop by right clicking on desktop and go to desktop preferences.
 
 Rotate the default orientation to portrait in the settings. (left)
+
+Connect raspberry to printer network
+
+TODO: stats

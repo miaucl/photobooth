@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 import logging
 import os
 
-from .WorkerTask import WorkerTask
+from .PictureWorkerTask import PictureWorkerTask
 
 
-class PictureSaver(WorkerTask):
+class PictureSaver(PictureWorkerTask):
 
     def __init__(self):
 

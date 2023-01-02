@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -167,15 +167,21 @@ class TeardownEvent(Event):
 
 class GuiEvent(Event):
 
-    def __init__(self, name, picture=None):
+    def __init__(self, name, pictureId=None, postprocessAction=None):
 
         super().__init__(name)
-        self._picture = picture
+        self._pictureId = pictureId
+        self._postprocessAction = postprocessAction
 
     @property
-    def picture(self):
+    def pictureId(self):
 
-        return self._picture
+        return self._pictureId
+
+    @property
+    def postprocessAction(self):
+
+        return self._postprocessAction
 
 class GpioEvent(Event):
 
@@ -411,31 +417,41 @@ class GalleryState(State):
            event.name == 'trigger'):
             context.state = IdleState()
         elif (isinstance(event, GuiEvent) and event.name == 'galleryselect'):
-            context.state = GallerySelectState(event.picture)
+            context.state = GallerySelectState(event.pictureId)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 class GallerySelectState(State):
 
-    def __init__(self, picture=None):
+    def __init__(self, pictureId=None, action=None):
 
         super().__init__()
-        self._picture = picture
+        self._pictureId = pictureId
+        self._action = action
+
+    @property
+    def pictureId(self):
+
+        return self._pictureId
+
+    @property
+    def action(self):
+
+        return self._action
+
 
     def handleEvent(self, event, context):
 
         if (isinstance(event, GuiEvent) and
            event.name == 'close'):
             context.state = GalleryState()
+        elif (isinstance(event, GuiEvent) and
+           event.name == 'postprocess'):
+            context.state = GallerySelectState(event.pictureId, event.postprocessAction)
         elif (isinstance(event, GuiEvent) and event.name == 'galleryselect'):
             pass # Might be a double tap behind the popup
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
-
-    @property
-    def picture(self):
-
-        return self._picture
 
 class GreeterState(State):
 
@@ -557,14 +573,30 @@ class ReviewState(State):
 
 class PostprocessState(State):
 
-    def __init__(self):
+    def __init__(self, pictureId=None, action=None):
 
         super().__init__()
+        self._pictureId = pictureId
+        self._action = action
+
+    @property
+    def pictureId(self):
+
+        return self._pictureId
+
+    @property
+    def action(self):
+
+        return self._action
+
 
     def handleEvent(self, event, context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'idle'):
             context.state = IdleState()
+        elif (isinstance(event, GuiEvent) and
+           event.name == 'postprocess'):
+            context.state = PostprocessState(event.pictureId, event.postprocessAction)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))

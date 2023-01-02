@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -17,9 +17,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from .. import printer
-from ..util import lookup_and_import
-
 
 class GuiPostprocessor:
 
@@ -27,44 +24,25 @@ class GuiPostprocessor:
 
         super().__init__()
 
-        self._get_task_list = []
-        self._do_task_list = []
+        self._optionalItems = []
+        self._automItems = []
 
         if config.getBool('Printer', 'enable'):
-            module = config.get('Printer', 'module')
-            paper_size = (config.getInt('Printer', 'width'),
-                          config.getInt('Printer', 'height'))
-            pdf = config.getBool('Printer', 'pdf')
             if config.getBool('Printer', 'confirmation'):
-                self._get_task_list.append(
-                    PrintPostprocess(module, paper_size, pdf))
+                self._optionalItems.append(
+                    PostprocessItem(_('Print'), 'print'))
             else:
-                self._do_task_list.append(
-                    PrintPostprocess(module, paper_size, pdf))
+                self._automItems.append(
+                    PostprocessItem(_('Print'), 'print'))
 
-    def get(self, picture):
-
-        return [task.get(picture) for task in self._get_task_list]
-
-    def do(self, picture):
-
-        for task in self._do_task_list:
-            task.get(picture).action()
-
-    def getAll(self, picture):
-
-        return [task.get(picture) for task in self._get_task_list + self._do_task_list] 
+    def getOptionalItems(self):
+        """Get all optional postprocessing items"""
+        return [task for task in self._optionalItems]
 
 
-class PostprocessTask:
-
-    def __init__(self):
-
-        super().__init__()
-
-    def get(self, picture):
-
-        raise NotImplementedError()
+    def getAllItems(self):
+        """Get all postprocessing items"""
+        return [task for task in self._optionalItems + self._automItems] 
 
 
 class PostprocessItem:
@@ -96,21 +74,7 @@ class PostprocessItem:
     @action.setter
     def action(self, action):
 
-        if not callable(action):
-            raise TypeError('Action must be callable')
+        if not isinstance(action, str):
+            raise TypeError('Action must be a string')
 
         self._action = action
-
-
-class PrintPostprocess(PostprocessTask):
-
-    def __init__(self, printer_module, paper_size, is_pdf, **kwargs):
-
-        super().__init__(**kwargs)
-
-        Printer = lookup_and_import(printer.modules, printer_module, 'printer')
-        self._printer = Printer(paper_size, is_pdf)
-
-    def get(self, picture):
-
-        return PostprocessItem(_('Print'), lambda: self._printer.print(picture))

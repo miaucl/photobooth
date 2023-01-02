@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -119,14 +119,15 @@ class WaitMessage(QtWidgets.QFrame):
 
 class IdleMessage(QtWidgets.QFrame):
 
-    def __init__(self, trigger_action, gallery_action):
+    def __init__(self, pictureCount, printCount, trigger_action, gallery_action):
 
         super().__init__()
         self.setObjectName('IdleMessage')
 
-        self._gallery_button = _('Gallery')
+        self._gallery_button = _('Gallery ({})'.format(pictureCount))
         self._message_label = _('Hit the')
         self._message_button = _('Button!')
+        self._print_label = _('Pictures printed: {}'.format(printCount))
         
         ############
         # Enable for picture in idle frame
@@ -156,15 +157,19 @@ class IdleMessage(QtWidgets.QFrame):
         galleryBtn = QtWidgets.QPushButton(self._gallery_button)
         galleryBtn.clicked.connect(gallery_action)
         galleryBtn.setObjectName('GalleryButton')
-        lbl = QtWidgets.QLabel(self._message_label)
+        btnHeaderLbl = QtWidgets.QLabel(self._message_label)
+        btnHeaderLbl.setObjectName('GalleryButtonHeaderLabel')
         btn = QtWidgets.QPushButton(self._message_button)
         btn.clicked.connect(trigger_action)
+        printCountLbl = QtWidgets.QLabel(self._print_label)
+        printCountLbl.setObjectName('PrintLabel')
 
         lay = QtWidgets.QVBoxLayout()
-        lay.addWidget(lbl)
+        lay.addWidget(btnHeaderLbl)
         lay.addWidget(btn)
         lay.addStretch(1)
         lay.addWidget(galleryBtn)
+        lay.addWidget(printCountLbl)
         self.setLayout(lay)
 
     ############
@@ -412,35 +417,34 @@ class GalleryMessage(QtWidgets.QFrame):
 
 class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
-    def __init__(self, parent, tasks, worker, picture, close_handle):
+    def __init__(self, parent, items, worker, pictureId, postprocess_handle, close_handle):
 
 
         super().__init__(parent)
         self.setObjectName('GallerySelectMessage')
 
-        self._picture = picture
+        self._pictureId = pictureId
+        self._info = ""
 
-        self.initFrame(tasks, close_handle, worker)
+        self.initFrame(items, postprocess_handle, close_handle, worker)
 
-    def initFrame(self, tasks, close_handle, worker):
+    def initFrame(self, items, postprocess_handle, close_handle, worker):
 
-        def disableAndCall(button, handle):
-            for i, button in enumerate(self._buttons):
-                logging.info('Button {}'.format(button.text()) )
-                button.setEnabled(False)
-                button.update()
-            self._label.setText(_('Print in progress'))
+        def disableAndCall(button, action):
+            for i, b in enumerate(self._buttons[:-1]):
+                logging.info('Disable button {}'.format(b.text()) )
+                b.setEnabled(False)
+                b.update()
+            self._label.setText(_('{} in progress'.format(button.text())))
             self._label.update()
-            worker.put(handle)
-            worker.put(close_handle)
-            worker.put(self.close)
+            worker.put(lambda: postprocess_handle(action))
 
-        def createButton(task):
-            button = QtWidgets.QPushButton(task.label)
-            button.clicked.connect(lambda: disableAndCall(button, task.action))
+        def createButton(item):
+            button = QtWidgets.QPushButton(item.label)
+            button.clicked.connect(lambda: disableAndCall(button, item.action))
             return button
 
-        self._buttons = [createButton(task) for task in tasks]
+        self._buttons = [createButton(item) for item in items]
         self._buttons.append(QtWidgets.QPushButton(_('Close')))
         self._buttons[-1].clicked.connect(close_handle)
         self._buttons[-1].clicked.connect(self.close)
@@ -451,7 +455,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
             button_lay.addWidget(button, *pos)
 
         layout = QtWidgets.QVBoxLayout()
-        self._label = QtWidgets.QLabel("Options")
+        self._label = QtWidgets.QLabel(self._info)
         layout.addWidget(self._label, stretch=0)
         layout.addStretch(1)
         layout.addLayout(button_lay)
@@ -463,14 +467,17 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
         painter = QtGui.QPainter(self)
 
-        image = ImageQt.ImageQt(self._picture)
-        image = image.scaled(self.contentsRect().size(),
-                             QtCore.Qt.KeepAspectRatio,
-                             QtCore.Qt.FastTransformation)
+        try:
+            image = ImageQt.ImageQt(Image.open(self._pictureId))
+            image = image.scaled(self.contentsRect().size(),
+                                QtCore.Qt.KeepAspectRatio,
+                                QtCore.Qt.FastTransformation)
 
-        origin = ((self.width() - image.width()) // 2,
-                  (self.height() - image.height()) // 2)
-        painter.drawImage(QtCore.QPoint(*origin), image)
+            origin = ((self.width() - image.width()) // 2,
+                    (self.height() - image.height()) // 2)
+            painter.drawImage(QtCore.QPoint(*origin), image)
+        except:
+            return None
             
         painter.end()
 
@@ -563,7 +570,7 @@ class CountdownMessage(QtWidgets.QFrame):
 
 class PostprocessMessage(Widgets.TransparentOverlay):
 
-    def __init__(self, parent, tasks, worker, idle_handle,
+    def __init__(self, parent, items, worker, postprocess_handle, idle_handle,
                  timeout=None, timeout_handle=None):
 
         if timeout_handle is None:
@@ -571,27 +578,27 @@ class PostprocessMessage(Widgets.TransparentOverlay):
 
         super().__init__(parent, timeout, timeout_handle)
         self.setObjectName('PostprocessMessage')
-        self.initFrame(tasks, idle_handle, worker)
+        self.initFrame(items, postprocess_handle, idle_handle, worker)
 
-    def initFrame(self, tasks, idle_handle, worker):
+    def initFrame(self, items, postprocess_handle, idle_handle, worker):
 
-        def disableAndCall(button, handle):
-            for i, button in enumerate(self._buttons):
-                logging.info('Button {}'.format(button.text()) )
-                button.setEnabled(False)
-                button.update()
-            self._label.setText(_('Print in progress'))
+        def disableAndCall(button, action):
+            for i, b in enumerate(self._buttons):
+                logging.info('Disable button {}'.format(b.text()) )
+                b.setEnabled(False)
+                b.update()
+            self._label.setText(_('{} in progress'.format(button.text())))
             self._label.update()
-            worker.put(handle)
+            worker.put(lambda: postprocess_handle(action))
             worker.put(idle_handle)
-            worker.put(self.close)
+            # worker.put(self.close)
 
-        def createButton(task):
-            button = QtWidgets.QPushButton(task.label)
-            button.clicked.connect(lambda: disableAndCall(button, task.action))
+        def createButton(item):
+            button = QtWidgets.QPushButton(item.label)
+            button.clicked.connect(lambda: disableAndCall(button, item.action))
             return button
 
-        self._buttons = [createButton(task) for task in tasks]
+        self._buttons = [createButton(item) for item in items]
         self._buttons.append(QtWidgets.QPushButton(_('Start over')))
         self._buttons[-1].clicked.connect(idle_handle)
 

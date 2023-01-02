@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@ from email import encoders
 
 from pathlib import Path
 
-from .WorkerTask import WorkerTask
+from .PictureWorkerTask import PictureWorkerTask
 
 
 def send_mail(send_from, send_to, subject, message, picture, picturename,
@@ -75,7 +75,7 @@ def send_mail(send_from, send_to, subject, message, picture, picturename,
     smtp.quit()
 
 
-class PictureMailer(WorkerTask):
+class PictureMailer(PictureWorkerTask):
 
     def __init__(self, config):
 

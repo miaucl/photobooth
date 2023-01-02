@@ -71,10 +71,10 @@ QFrame#WaitMessage QLabel {
 /* Idle Screen */
 
 QFrame#IdleMessage {
-    padding: 80px 40px 60px 40px;
+    padding: 80px 40px 20px 40px;
 }
 
-QFrame#IdleMessage QLabel {
+QFrame#IdleMessage QLabel#GalleryButtonHeaderLabel {
     font-size: 80px;
     qproperty-alignment: AlignCenter;
     color: #76b5c5;
@@ -98,6 +98,12 @@ QFrame#IdleMessage QPushButton#GalleryButton {
 
 QFrame#IdleMessage QPushButton#GalleryButton:pressed {
     background-color: #76b5c5;
+}
+
+QFrame#IdleMessage QLabel#PrintLabel {
+    font-size: 24px;
+    qproperty-alignment: AlignCenter;
+    color: #154c79;
 }
 
 

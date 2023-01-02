@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -218,6 +218,7 @@ class TransparentOverlay(QtWidgets.QWidget):
 thumbnailData = namedtuple("preview", "id label image")
 
 PrintRole = QtCore.Qt.DisplayRole + 100
+SelectRole = QtCore.Qt.DisplayRole + 101
 
 LabelColor = QtGui.QColor(30, 30, 30)
 LabelBackgroundColor = QtGui.QColor(255, 255, 255, 70)
@@ -270,8 +271,8 @@ class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
 
     def editorEvent(self, event, model, option, index):
         if event.type() == QtCore.QEvent.MouseButtonPress and self._gallery_select_action:
-            data = index.model().data(index, PrintRole)
-            self._gallery_select_action(data.image)
+            pictureId = index.model().data(index, SelectRole)
+            self._gallery_select_action(pictureId)
             return True
         else:
             return False
@@ -287,27 +288,38 @@ class GalleryThumbnailModel(QtCore.QAbstractTableModel):
         if not index.isValid():
             return None
 
-        id = self._pictureList.counter - ((self._columns * index.row()) + index.column()) # Pictures are 1-indexed
+        id = self.indexToID(index)
         if role == QtCore.Qt.DisplayRole:
             f = self._pictureList.getThumbnail(id)
             if (not os.path.isfile(f)):
                 return None
 
-            image = Image.open(f)
+            try:
+                image = Image.open(f)
+            except:
+                return None
             return thumbnailData(id, f, image)
         elif role == PrintRole:
             f = self._pictureList.getFilename(id)
             if (not os.path.isfile(f)):
                 return None
 
-            image = Image.open(f)
+            try:
+                image = Image.open(f)
+            except:
+                return None
             return thumbnailData(id, f, image)
+        elif role == SelectRole:
+            f = self._pictureList.getFilename(id)
+            return f
         elif role == QtCore.Qt.ToolTipRole:
             f = self._pictureList.getThumbnail(id)
             return f
         else: 
             return None
 
+    def indexToID(self, index):
+        return self._pictureList.counter - ((self._columns * index.row()) + index.column()) # Pictures are 1-indexed
 
     def rowCount(self, index):
         return self._pictureList.counter // self._columns + 1 if self._pictureList is not None else 0

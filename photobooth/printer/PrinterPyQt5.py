@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+from time import sleep
 
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtPrintSupport import QPrinter
@@ -31,6 +32,7 @@ class PrinterPyQt5(Printer):
 
         super().__init__(page_size)
 
+        self._app = QtCore.QCoreApplication([]) # Separate QApplication for the printer
         self._printer = QPrinter(QPrinter.HighResolution)
         self._printer.setFullPage(True)
         self._printer.setPageSize(QtGui.QPageSize(QtCore.QSizeF(*page_size),

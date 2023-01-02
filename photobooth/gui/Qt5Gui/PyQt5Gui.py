@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
+# Copyright (C) 2023  <photobooth-lausanne at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,7 @@ from time import localtime, strftime
 from ...StateMachine import GuiEvent, TeardownEvent
 from ...Threading import Workers
 from ...worker.PictureList import PictureList
+from ...worker.Count import Count
 
 from ..GuiSkeleton import GuiSkeleton
 from ..GuiPostprocessor import GuiPostprocessor
@@ -53,8 +54,10 @@ class PyQt5Gui(GuiSkeleton):
         self._initReceiver()
         self._initWorker()
 
+        self._pictureId = None
         self._picture = None
         self._postprocess = GuiPostprocessor(self._cfg)
+
 
         self._createTimer()
 
@@ -62,7 +65,9 @@ class PyQt5Gui(GuiSkeleton):
         path = os.path.join(config.get('Storage', 'basedir'),
                             config.get('Storage', 'basename'))
         basename = strftime(path, localtime())
-        self._pic_list = PictureList(basename)
+        self._pictureList = PictureList(basename)
+        self._pictureCount = Count(config, 'picture')
+        self._printCount = Count(config, 'print')
 
         self._default_size = (640,440)
         self._lastslide = None
@@ -142,13 +147,13 @@ class PyQt5Gui(GuiSkeleton):
 
     def _newslideshowPicture(self):
         
-        if (self._pic_list.counter == 0) :
+        if (self._pictureList.counter == 0) :
             picture = Image.new('RGBA',self._default_size,(128,128,128,0))
             text = _('No slideshow yet...')
         else :
-            picturename = self._pic_list.getRandomPic()
+            picturename = self._pictureList.getRandomPic()
             while (not os.path.isfile(picturename)):
-                picturename = self._pic_list.getRandomPic()
+                picturename = self._pictureList.getRandomPic()
             logging.debug('Picture name for slideshow {}'.format(picturename))
             picture = Image.open(picturename)
             text = ('')
@@ -219,6 +224,8 @@ class PyQt5Gui(GuiSkeleton):
         slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
 
         self._setWidget(Frames.IdleMessage(
+            self._pictureCount.get(),
+            self._printCount.get(),
             lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')), 
             lambda: self._comm.send(Workers.MASTER, GuiEvent('gallery'))))
         
@@ -259,24 +266,28 @@ class PyQt5Gui(GuiSkeleton):
         self._timerStartSlideshow.stop()
 
         if not isinstance(self._gui.centralWidget(), Frames.GalleryMessage):
-            logging.info('Skip Reinitialisating Gallery')
-            self._setWidget(Frames.GalleryMessage(self._pic_list, self._cfg.getInt("Gallery", "columns"),
+            self._setWidget(Frames.GalleryMessage(self._pictureList, self._cfg.getInt("Gallery", "columns"),
                                                     lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')),
-                                                    lambda x: self._comm.send(Workers.MASTER, GuiEvent('galleryselect', picture=x))))
+                                                    lambda x: self._comm.send(Workers.MASTER, GuiEvent('galleryselect', pictureId=x))))
+        else:
+            logging.info('Skip Reinitialisating Gallery')
 
 
     def showGallerySelect(self, state):
 
-        tasks = self._postprocess.getAll(ImageQt.ImageQt(state.picture))
+        if state.action is None:
+            items = self._postprocess.getAllItems()
 
-        Frames.GallerySelectMessage(
-            self._gui.centralWidget(), tasks, self._worker, state.picture,
-            lambda: self._comm.send(Workers.MASTER, GuiEvent('close')))
-
+            Frames.GallerySelectMessage(
+                self._gui.centralWidget(), items, self._worker, state.pictureId,
+                lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=state.pictureId, postprocessAction=x)),
+                lambda: self._comm.send(Workers.MASTER, GuiEvent('close')))
+        else:
+            logging.info('Skip Reinitialisating Gallery Select')
       
     def showGreeter(self, state):
 
-        logging.info('Timer Remainig time"{}" '.format(self._timerStartSlideshow.remainingTime()))
+        logging.info('Timer Remaining time"{}" '.format(self._timerStartSlideshow.remainingTime()))
         self._timerStartSlideshow.stop()
         self._enableEscape()
         self._disableTrigger()
@@ -318,15 +329,15 @@ class PyQt5Gui(GuiSkeleton):
         QtCore.QTimer.singleShot(
             review_time,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('postprocess')))
-        self._postprocess.do(self._picture)
 
     def showPostprocess(self, state):
 
-        tasks = self._postprocess.get(self._picture)
+        item = self._postprocess.getOptionalItems()
         postproc_t = self._cfg.getInt('Photobooth', 'postprocess_time')
 
         Frames.PostprocessMessage(
-            self._gui.centralWidget(), tasks, self._worker,
+            self._gui.centralWidget(), item, self._worker,
+            lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=self._pictureList.getLast(), postprocessAction=x)),
             lambda: self._comm.send(Workers.MASTER, GuiEvent('idle')),
             postproc_t * 1000)
 
