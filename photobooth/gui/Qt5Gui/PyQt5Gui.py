@@ -231,7 +231,7 @@ class PyQt5Gui(GuiSkeleton):
         
         self._timerStartSlideshow.setSingleShot(True)
         self._timerStartSlideshow.start(slideshow_time)
-
+    
     def showSlideshow(self, state):
 
         logging.info('Start Slideshow')
@@ -263,27 +263,36 @@ class PyQt5Gui(GuiSkeleton):
 
         self._enableEscape()
         self._enableTrigger()
-        self._timerStartSlideshow.stop()
+
+        slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
+
+        self._timerStartSlideshow.setSingleShot(True)
+        self._timerStartSlideshow.start(slideshow_time)
 
         if not isinstance(self._gui.centralWidget(), Frames.GalleryMessage):
             self._setWidget(Frames.GalleryMessage(self._pictureList, self._cfg.getInt("Gallery", "columns"),
                                                     lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')),
                                                     lambda x: self._comm.send(Workers.MASTER, GuiEvent('galleryselect', pictureId=x))))
         else:
-            logging.info('Skip Reinitialisating Gallery')
+            logging.info('Skip Reinitializing Gallery')
 
 
     def showGallerySelect(self, state):
+
+        slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
+
+        self._timerStartSlideshow.setSingleShot(True)
+        self._timerStartSlideshow.start(slideshow_time)
 
         if state.action is None:
             items = self._postprocess.getAllItems()
 
             Frames.GallerySelectMessage(
-                self._gui.centralWidget(), items, self._worker, state.pictureId,
+                self._gui.centralWidget(), self._pictureList, items, self._worker, state.pictureId,
                 lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=state.pictureId, postprocessAction=x)),
                 lambda: self._comm.send(Workers.MASTER, GuiEvent('close')))
         else:
-            logging.info('Skip Reinitialisating Gallery Select')
+            logging.info('Skip Reinitializing Gallery Select')
       
     def showGreeter(self, state):
 
@@ -324,6 +333,7 @@ class PyQt5Gui(GuiSkeleton):
 
         picture = Image.open(state.picture)
         self._picture = ImageQt.ImageQt(picture)
+        self._pictureList.findExistingFiles()
         review_time = self._cfg.getInt('Photobooth', 'display_time') * 1000
         self._setWidget(Frames.PictureMessage(self._picture))
         QtCore.QTimer.singleShot(

@@ -6,6 +6,5 @@ pycups
 requests
 PyQt5
 picamera
-picamera2
 gphoto2
 gphoto2-cffi

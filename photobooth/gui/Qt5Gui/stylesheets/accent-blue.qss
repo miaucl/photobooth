@@ -12,6 +12,7 @@ QWidget {
     color: #eeeeee;
     font-family: AmaticSC, sans-serif;
     font-size: 30px;
+    font-weight: 800;
 }
 
 QMainWindow {
@@ -71,8 +72,16 @@ QFrame#WaitMessage QLabel {
 /* Idle Screen */
 
 QFrame#IdleMessage {
-    padding: 80px 40px 20px 40px;
+    background-color: #000000;
 }
+
+QFrame#IdleMessage QFrame#IdleContainer {
+    margin: 40px 20px 40px 20px;
+    padding: 40px 20px 20px 20px;
+    background: #99ffffff;
+    border-radius: 8px;
+}
+
 
 QFrame#IdleMessage QLabel#GalleryButtonHeaderLabel {
     font-size: 80px;
@@ -113,17 +122,13 @@ QFrame#SlideshowMessage {
     margin: 0px;
 }
 
-QFrame#SlideshowMessage QPushButton {
-    margin: 0px;
-    font-size: 40px;
-    text-align: center;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-QFrame#SlideshowMessage QPushButton:pressed {
-    background-color: transparent;
-    border-color: transparent;
+QFrame#SlideshowMessage QLabel#StartLabel {
+    font-size: 48px;
+    qproperty-alignment: AlignCenter;
+    color: #154c79;
+    background: #ccffffff;
+    padding: 8px;
+    border-radius: 8px;
 }
 
 /** Gallery Message */
@@ -169,11 +174,18 @@ QWidget#GallerySelectMessage QPushButton:disabled {
 /* Greeter Screen */
 
 QFrame#GreeterMessage {
-    padding: 30px;
+    background-color: #000000;
 }
 
-QFrame#GreeterMessage QLabel#title {
-    font-size: 100px;
+QFrame#GreeterMessage QFrame#GreeterContainer {
+    margin: 40px 20px 40px 20px;
+    padding: 20px;
+    background: #99ffffff;
+    border-radius: 8px;
+}
+
+QFrame#GreeterMessage QLabel#message {
+    font-size: 40px;
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
@@ -181,21 +193,13 @@ QFrame#GreeterMessage QLabel#title {
 }
 
 QFrame#GreeterMessage QPushButton#button {
-    border: none;
-    font-size: 100px;
+    font-size: 80px;
     margin: 0;
     min-height: 100px;
     padding: 0;
     text-align: center;
     color: #76b5c5;
-}
-
-QFrame#GreeterMessage QLabel#message {
-    font-size: 80px;
-    margin: 0;
-    padding: 0;
-    qproperty-alignment: AlignCenter;
-    color: #76b5c5;
+    border-color: #76b5c5;
 }
 
 

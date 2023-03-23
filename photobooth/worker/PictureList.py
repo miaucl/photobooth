@@ -124,10 +124,26 @@ class PictureList:
         return self.getFilenameShot(self.counter, self.shot_counter)
 
     def getRandomPic(self):
-        """Return a random filename """
+        """Return a random filename"""
         
         self.findExistingFiles()
         if self.counter == 0:
             return self.getFilename(0)
         else:
             return self.getFilename(random.randrange(self.counter)+1)
+
+    def getNextFilename(self, filename):
+        """Return the next filename or None if not available"""
+        index = int(filename[len(self.basename):-4])
+        if index < self.counter:
+            return self.getFilename(index+1)
+        else:
+            None
+
+    def getPreviousFilename(self, filename):
+        """Return the previous filename or None if not available"""
+        index = int(filename[len(self.basename):-4])
+        if index > 0:
+            return self.getFilename(index-1)
+        else:
+            None

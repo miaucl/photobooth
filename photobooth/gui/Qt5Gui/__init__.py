@@ -19,15 +19,6 @@
 
 # Available style sheets as tuples of (style name, style file)
 styles = (('default', 'stylesheets/default.qss'),
-          ('dark (1920 x 1080 px)', 'stylesheets/dark-1920x1080.qss'),
-          ('dark (1680 x 1050 px)', 'stylesheets/dark-1680x1050.qss'),
-          ('dark (1024 x 600 px)', 'stylesheets/dark-1024x600.qss'),
-          ('dark (800 x 600 px)', 'stylesheets/dark-800x600.qss'),
-          ('dark (800 x 480 px)', 'stylesheets/dark-800x480.qss'),
-          ('pastel (1024 x 768 px)', 'stylesheets/pastel-1024x768.qss'),
-          ('pastel (1024 x 600 px)', 'stylesheets/pastel-1024x600.qss'),
-          ('pastel (800 x 600 px)', 'stylesheets/pastel-800x600.qss'),
-          ('pastel (800 x 480 px)', 'stylesheets/pastel-800x480.qss'),
           ('accent-orange', 'stylesheets/accent-orange.qss'),
           ('accent-blue', 'stylesheets/accent-blue.qss'))
 

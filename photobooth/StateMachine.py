@@ -416,6 +416,8 @@ class GalleryState(State):
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'trigger'):
             context.state = IdleState()
+        elif isinstance(event, GuiEvent) and event.name == 'slideshow':
+            context.state = SlideshowState()
         elif (isinstance(event, GuiEvent) and event.name == 'galleryselect'):
             context.state = GallerySelectState(event.pictureId)
         else:
@@ -445,6 +447,8 @@ class GallerySelectState(State):
         if (isinstance(event, GuiEvent) and
            event.name == 'close'):
             context.state = GalleryState()
+        elif isinstance(event, GuiEvent) and event.name == 'slideshow':
+            context.state = SlideshowState()
         elif (isinstance(event, GuiEvent) and
            event.name == 'postprocess'):
             context.state = GallerySelectState(event.pictureId, event.postprocessAction)

@@ -72,7 +72,14 @@ QFrame#WaitMessage QLabel {
 /* Idle Screen */
 
 QFrame#IdleMessage {
-    padding: 80px 40px 20px 40px;
+    background-color: #000000;
+}
+
+QFrame#IdleMessage QFrame#IdleContainer {
+    margin: 40px 20px 40px 20px;
+    padding: 40px 20px 20px 20px;
+    background: #99ffffff;
+    border-radius: 8px;
 }
 
 QFrame#IdleMessage QLabel#GalleryButtonHeaderLabel {
@@ -114,17 +121,13 @@ QFrame#SlideshowMessage {
     margin: 0px;
 }
 
-QFrame#SlideshowMessage QPushButton {
-    margin: 0px;
-    font-size: 40px;
-    text-align: center;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-QFrame#SlideshowMessage QPushButton:pressed {
-    background-color: transparent;
-    border-color: transparent;
+QFrame#SlideshowMessage QLabel#StartLabel {
+    font-size: 48px;
+    qproperty-alignment: AlignCenter;
+    color: #e28743;
+    background: #ccffffff;
+    padding: 8px;
+    border-radius: 8px;
 }
 
 /** Gallery Message */
@@ -170,11 +173,18 @@ QWidget#GallerySelectMessage QPushButton:disabled {
 /* Greeter Screen */
 
 QFrame#GreeterMessage {
-    padding: 30px;
+    background-color: #000000;
 }
 
-QFrame#GreeterMessage QLabel#title {
-    font-size: 80px;
+QFrame#GreeterMessage QFrame#GreeterContainer {
+    margin: 40px 20px 40px 20px;
+    padding: 20px;
+    background: #99ffffff;
+    border-radius: 8px;
+}
+
+QFrame#GreeterMessage QLabel#message {
+    font-size: 40px;
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
@@ -182,22 +192,15 @@ QFrame#GreeterMessage QLabel#title {
 }
 
 QFrame#GreeterMessage QPushButton#button {
-    border: none;
     font-size: 80px;
     margin: 0;
     min-height: 100px;
     padding: 0;
     text-align: center;
     color: #eab676;
+    border-color: #eab676;
 }
 
-QFrame#GreeterMessage QLabel#message {
-    font-size: 80px;
-    margin: 0;
-    padding: 0;
-    qproperty-alignment: AlignCenter;
-    color: #eab676;
-}
 
 
 /* Countdown Screen */

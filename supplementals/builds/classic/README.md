@@ -12,7 +12,8 @@ This is a classic using a raspberry pi zero 2 which the 7inch QLED Integrated Di
 - LogiLink Smile [link](https://www.digitec.ch/de/s1/product/logilink-smile-usb-a-dockingstation-usb-hub-12776233?dbq=1&gclid=Cj0KCQiAsoycBhC6ARIsAPPbeLuSqziMTKka5bsK8nV0Phmgn8bYfRX4SiDYr0Et2__k1bhvytIP0LkaAnqcEALw_wcB&gclsrc=aw.ds)
 - IEC Gerätestecker C14, 250V [link](https://ch.schurter.com/de/datasheet/6100-3#)
 - GU10 Fassung [link](https://www.distrelec.ch/de/fassung-gu10-2a-250v-keramik-weiss-bailey-lights-141234/p/30148723?trackQuery=gu10+fassung&pos=1&origPos=1&origPageSize=50&track=true)
-- LED spot VLE D 4.9-50W GU10 [link](https://www.lighting.philips.ch/prof/led-lampen-und-roehren/led-reflektorlampen/master-ledspot-value-gu10-hochvolt-reflektorlampen/929001349102_EU/product) 
+- LED spot VLE D 4.9-50W GU10 [link](https://www.lighting.philips.ch/prof/led-lampen-und-roehren/led-reflektorlampen/master-ledspot-value-gu10-hochvolt-reflektorlampen/929001349102_EU/product)
+- Magnets 3.5mm x 6mm
 
 ## OS: Raspbian Bullseye
 
