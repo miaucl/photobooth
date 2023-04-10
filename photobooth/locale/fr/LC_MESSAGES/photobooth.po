@@ -39,7 +39,7 @@ msgstr "Galerie ({})"
 
 #: photobooth/gui/Qt5Gui/Frames.py:128
 msgid "Take a"
-msgstr "Prendre un"
+msgstr "Prenez un"
 
 #: photobooth/gui/Qt5Gui/Frames.py:129
 msgid "Photo!"

@@ -65,7 +65,7 @@ QFrame#IdleMessage QFrame#IdleContainer {
 
 QFrame#IdleMessage QLabel#GalleryButtonHeaderLabel {
     font-size: 80px;
-    color: #000000;
+    color: #ffffff;
 }
 
 QFrame#IdleMessage QPushButton {
@@ -82,7 +82,7 @@ QFrame#IdleMessage QPushButton#GalleryButton {
 
 QFrame#IdleMessage QLabel#PrintLabel {
     font-size: 30px;
-    color: #000000;
+    color: #ffffff;
 }
 
 
