@@ -183,7 +183,7 @@ QFrame#GreeterMessage QFrame#GreeterContainer {
     border-radius: 8px;
 }
 
-QFrame#GreeterMessage QLabel#message {
+QFrame#GreeterMessage QLabel#Message {
     font-size: 40px;
     margin: 0;
     padding: 0;
@@ -191,7 +191,7 @@ QFrame#GreeterMessage QLabel#message {
     color: #eab676;
 }
 
-QFrame#GreeterMessage QPushButton#button {
+QFrame#GreeterMessage QPushButton#Button {
     font-size: 80px;
     margin: 0;
     min-height: 100px;

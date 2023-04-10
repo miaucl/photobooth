@@ -20,6 +20,20 @@
 # Available style sheets as tuples of (style name, style file)
 styles = (('default', 'stylesheets/default.qss'),
           ('accent-orange', 'stylesheets/accent-orange.qss'),
-          ('accent-blue', 'stylesheets/accent-blue.qss'))
+          ('accent-blue', 'stylesheets/accent-blue.qss'),
+          ('plain-orange', 'stylesheets/plain-orange.qss'),
+
+          ('plain-800x480-Maroon', 'stylesheets/plain/800x480/plain-Maroon.qss'),
+          ('plain-800x480-Salmon', 'stylesheets/plain/800x480/plain-Salmon.qss'),
+          ('plain-800x480-HotCinnamon', 'stylesheets/plain/800x480/plain-HotCinnamon.qss'),
+          ('plain-800x480-GoldenTainoi', 'stylesheets/plain/800x480/plain-GoldenTainoi.qss'),
+          ('plain-800x480-VerdunGreen', 'stylesheets/plain/800x480/plain-VerdunGreen.qss'),
+          ('plain-800x480-PastelGreen', 'stylesheets/plain/800x480/plain-PastelGreen.qss'),
+          ('plain-800x480-Malibu', 'stylesheets/plain/800x480/plain-Malibu.qss'),
+          ('plain-800x480-CongressBlue', 'stylesheets/plain/800x480/plain-CongressBlue.qss'),
+          ('plain-800x480-CornflowerBlue', 'stylesheets/plain/800x480/plain-CornflowerBlue.qss'),
+          ('plain-800x480-Lavender', 'stylesheets/plain/800x480/plain-Lavender.qss'),
+          ('plain-800x480-Flirt', 'stylesheets/plain/800x480/plain-Flirt.qss'),  
+          )
 
 from .PyQt5Gui import PyQt5Gui  # noqa

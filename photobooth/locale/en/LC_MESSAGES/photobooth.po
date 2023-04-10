@@ -51,11 +51,11 @@ msgstr "Pictures printed: {}"
 
 #: photobooth/gui/Qt5Gui/Frames.py:202
 msgid "Get ready"
-msgstr "Get ready!"
+msgstr "Get ready"
 
 #: photobooth/gui/Qt5Gui/Frames.py:203
 msgid "Go!"
-msgstr ""
+msgstr "Go!"
 
 #: photobooth/gui/Qt5Gui/Frames.py:208
 msgid "for {} photos..."
@@ -63,7 +63,7 @@ msgstr "for {} photos..."
 
 #: photobooth/gui/Qt5Gui/Frames.py:210
 msgid "for the photo"
-msgstr ""
+msgstr "for the photo"
 
 #: photobooth/gui/Qt5Gui/Frames.py:275
 msgid "Photo {} of {}..."

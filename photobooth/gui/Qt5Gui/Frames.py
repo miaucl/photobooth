@@ -228,9 +228,9 @@ class GreeterMessage(QtWidgets.QFrame):
     def initFrame(self, countdown_action):
 
         lbl = QtWidgets.QLabel('{} {}'.format(self._text_label1, self._text_label2))
-        lbl.setObjectName('message')
+        lbl.setObjectName('Message')
         btn = QtWidgets.QPushButton(self._text_button)
-        btn.setObjectName('button')
+        btn.setObjectName('Button')
         btn.clicked.connect(countdown_action)
 
         lay = QtWidgets.QVBoxLayout()
