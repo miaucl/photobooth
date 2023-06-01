@@ -85,7 +85,7 @@ class Camera:
         self._is_preview = self._is_preview and self._cap.hasPreview
 
         # Initialize template with size of test picture
-        self._template.startup(self._previewCaptureSize)
+        self._template.startup(self._pictureCaptureSize)
 
         # starting up and passing total number of pictures to make it available in overall context for later states
         self._comm.send(Workers.MASTER, StateMachine.CameraEvent('ready', num_pictures=self._template.totalNumPics))
@@ -191,8 +191,8 @@ class Camera:
         self.setIdle()
 
         # assemble pictures based on template
-        byte_data, thumbnail_byte_data = self._template.assemblePicture(self._pictures)
+        byte_data, thumbnail_byte_data, watermarked_byte_data = self._template.assemblePicture(self._pictures)
 
         self._comm.send(Workers.MASTER,
-                        StateMachine.CameraEvent('review', byte_data, thumbnail_byte_data))
+                        StateMachine.CameraEvent('review', byte_data, thumbnail_byte_data, watermarked_byte_data))
         self._pictures = []

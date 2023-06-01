@@ -23,6 +23,7 @@ from time import localtime, strftime
 
 from .. import StateMachine
 from ..Threading import Workers
+import logging
 
 from .PictureList import PictureList
 from .PictureMailer import PictureMailer
@@ -62,6 +63,7 @@ class Worker:
 
         self._reviewPictureTasks = []
         self._reviewThumbnailTasks = []
+        self._reviewWatermarkedTasks = []
 
         # Counter for assembled pictures
         self._reviewPictureTasks.append(self._pictureCounter)
@@ -72,6 +74,7 @@ class Worker:
         # PictureSaver for assembled pictures
         self._reviewPictureTasks.append(PictureSaver())
         self._reviewThumbnailTasks.append(PictureSaver())
+        self._reviewWatermarkedTasks.append(PictureSaver())
 
         # PictureMailer for assembled pictures
         if config.getBool('Mailer', 'enable'):
@@ -131,9 +134,10 @@ class Worker:
         if isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
         elif isinstance(state, StateMachine.ReviewState):
-            picturename, thumbnailname = self._pictureList.getNextPic()
+            picturename, thumbnailname, watermarkedname = self._pictureList.getNextPic()
             self.doReviewPictureTasks(state.picture, picturename)
             self.doReviewThumbnailTasks(state.thumbnail, thumbnailname)
+            self.doReviewWatermarkedTasks(state.watermarked, watermarkedname)
         elif isinstance(state, StateMachine.PostprocessState) or isinstance(state, StateMachine.GallerySelectState):
             if not state.action:
                 self.doPostprocessAutomTasks(state.pictureId)
@@ -158,6 +162,11 @@ class Worker:
     def doReviewThumbnailTasks(self, picture, picturename):
 
         for task in self._reviewThumbnailTasks:
+            task.do(picture=picture, filename=picturename)
+
+    def doReviewWatermarkedTasks(self, picture, picturename):
+
+        for task in self._reviewWatermarkedTasks:
             task.do(picture=picture, filename=picturename)
 
     def doPostprocessPrintTasks(self, pictureId):

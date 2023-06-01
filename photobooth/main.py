@@ -33,6 +33,7 @@ import multiprocessing as mp
 from . import camera, gui, template
 from .Config import Config
 from .gpio import Gpio
+from .web import Web
 from .util import lookup_and_import
 from .StateMachine import Context, ErrorEvent
 from .Threading import Communicator, Workers
@@ -147,6 +148,33 @@ class GpioProcess(mp.Process):
         logging.debug('GpioProcess: Exit')
 
 
+class WebProcess(mp.Process):
+
+    def __init__(self, argv, config, comm):
+
+        super().__init__()
+        self.daemon = True
+
+        self._cfg = config
+        self._comm = comm
+
+    def run(self):
+
+        logging.debug('WebProcess: Initializing...')
+
+        while True:
+            try:
+                logging.debug('WebProcess: Running...')
+                if Web(self._cfg, self._comm).run():
+                    break
+            except Exception as e:
+                logging.exception('WebProcess: Exception "{}"'.format(e))
+                self._comm.send(Workers.MASTER, ErrorEvent('Web', str(e)))
+                break # TODO: REMOVE
+
+        logging.debug('WebProcess: Exit')
+
+
 def parseArgs(argv):
 
     # Add parameter for direct startup
@@ -187,7 +215,8 @@ def run(argv, is_run):
     # 3. GUI
     # 4. Postprocessing worker
     # 5. GPIO handler
-    proc_classes = (CameraProcess, WorkerProcess, GuiProcess, GpioProcess)
+    # 6. Web server
+    proc_classes = (CameraProcess, WorkerProcess, GuiProcess, GpioProcess, WebProcess)
     procs = [P(argv, config, comm) for P in proc_classes]
 
     for proc in procs:

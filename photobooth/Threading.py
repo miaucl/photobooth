@@ -69,4 +69,5 @@ class Workers(IntEnum):
     GUI = 1
     CAMERA = 2
     GPIO = 3
-    WORKER = 4
+    WEB = 4
+    WORKER = 5

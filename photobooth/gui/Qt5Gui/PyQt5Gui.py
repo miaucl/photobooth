@@ -342,6 +342,9 @@ class PyQt5Gui(GuiSkeleton):
 
     def showPostprocess(self, state):
 
+        # Refresh list, as here the new image has been saved
+        self._pictureList.findExistingFiles()
+
         item = self._postprocess.getOptionalItems()
         postproc_t = self._cfg.getInt('Photobooth', 'postprocess_time')
 

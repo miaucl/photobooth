@@ -23,6 +23,10 @@ class StandardTemplate(Template):
         self._totalNumPics = self._pic_dims.totalNumPictures
 
         self._background = self._cfg.get('Picture', 'background')
+        self._watermark = self._cfg.get('Picture', 'watermark')
+
+        self._bg_template = None
+        self._wm_template = None
 
 
     def startup(self, capture_size):
@@ -36,6 +40,11 @@ class StandardTemplate(Template):
         else:
             self._bg_template = Image.new('RGB', self._pic_dims.outputSize,
                                        (255, 255, 255))
+            
+        if len(self._watermark) > 0:
+            logging.info('Using watermark "{}"'.format(self._watermark))
+            wm_picture = Image.open(self._watermark)
+            self._wm_template = wm_picture.resize(self._pic_dims.outputSize)
 
 
     def assemblePicture(self, pictures):
@@ -51,9 +60,17 @@ class StandardTemplate(Template):
         byte_data = BytesIO()
         picture.save(byte_data, format='jpeg')
 
-        picture.thumbnail(((self._cfg.getInt("Gallery", "size_x"), self._cfg.getInt("Gallery", "size_y"))) ) 
+        thumbnail = picture.copy()
+        thumbnail.thumbnail(((self._cfg.getInt("Gallery", "size_x"), self._cfg.getInt("Gallery", "size_y")))) 
 
         thumbnail_byte_data = BytesIO()
-        picture.save(thumbnail_byte_data, format='jpeg')
+        thumbnail.save(thumbnail_byte_data, format='jpeg')
 
-        return byte_data, thumbnail_byte_data
+        watermarked = picture.copy()
+        if self._wm_template: 
+            watermarked.paste(self._wm_template, mask=self._wm_template) 
+
+        watermarked_byte_data = BytesIO()
+        watermarked.save(watermarked_byte_data, format='jpeg')
+
+        return byte_data, thumbnail_byte_data, watermarked_byte_data

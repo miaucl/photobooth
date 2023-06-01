@@ -110,6 +110,6 @@ I provide this code under AGPL v3. See [LICENSE](https://github.com/miaucl/photo
 
 ## Todos
 
-* New layout styles
+* Fix webserver relative/absolute path
 * QR download via webserver
 * Show format during preparation phase?

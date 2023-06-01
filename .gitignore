@@ -1,4 +1,6 @@
 /photobooth.cfg
+/background.png
+/watermark.png
 cfgs
 **/*.pyc
 **/__pycache__

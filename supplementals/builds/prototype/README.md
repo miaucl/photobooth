@@ -10,6 +10,8 @@ This is a prototype using a raspberry 4 which the official touch screen and stan
 
 ## OS: Raspbian Bullseye
 
+Change WIFI access permissions: `sudo chmod a+w /etc/wpa_supplicant/wpa_supplicant.conf`
+
 Setup cups with the printer: <https://www.elektronik-kompendium.de/sites/raspberry-pi/2007081.htm>
 
 Set desktop background to: `./media/desktop-bg.png`

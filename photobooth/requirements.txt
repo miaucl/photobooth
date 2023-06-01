@@ -8,3 +8,4 @@ PyQt5
 picamera
 gphoto2
 gphoto2-cffi
+Flask

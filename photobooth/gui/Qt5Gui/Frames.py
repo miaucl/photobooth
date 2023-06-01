@@ -234,7 +234,9 @@ class GreeterMessage(QtWidgets.QFrame):
         btn.clicked.connect(countdown_action)
 
         lay = QtWidgets.QVBoxLayout()
+        lay.addStretch(1)
         lay.addWidget(lbl)
+        lay.addStretch(1)
         lay.addWidget(btn)
 
         container = QtWidgets.QFrame()
@@ -340,9 +342,8 @@ class SlideshowMessage(QtWidgets.QFrame):
         startLbl.setObjectName('StartLabel')
 
         lay = QtWidgets.QVBoxLayout()
-        lay.addStretch(5)
+        lay.addStretch(1)
         lay.addWidget(startLbl)
-        lay.addStretch(2)
         self.setLayout(lay)
 
     def mousePressEvent(self, event):
@@ -657,7 +658,7 @@ class PostprocessMessage(Widgets.TransparentOverlay):
 
         def disableAndCall(button, action):
             for i, b in enumerate(self._buttons):
-                logging.info('Disable button {}'.format(b.text()) )
+                logging.info('Disable button {}'.format(b.text()))
                 b.setEnabled(False)
                 b.update()
             self._label.setText(_('{} in progress'.format(button.text())))

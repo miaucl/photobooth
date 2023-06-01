@@ -94,7 +94,12 @@ class PictureList:
     def basename(self, basename):
         logging.info('New basename is {}'.format(basename))
         self._basename = basename
-        
+
+    def count(self):
+        """Return the count"""
+        return self.counter
+
+
     def getFilename(self, count):
         """Return the file name for a given file number"""
         return self.basename + str(count).zfill(self.count_width) + self.suffix
@@ -102,6 +107,10 @@ class PictureList:
     def getThumbnail(self, count):
         """Return the thumbnail name for a given file number"""
         return self.basename + str(count).zfill(self.count_width) + ".thumbnail" + self.suffix
+
+    def getWatermarked(self, count):
+        """Return the watermarked name for a given file number"""
+        return self.basename + str(count).zfill(self.count_width) + ".watermark" + self.suffix
 
     def getFilenameShot(self, count, shotCount):
         """Return the file name for a given shot & file number"""
@@ -116,7 +125,7 @@ class PictureList:
         """Update counter and return the next filename and thumbnail"""
         self.counter += 1
         self.shot_counter = 0
-        return self.getFilename(self.counter), self.getThumbnail(self.counter)
+        return self.getFilename(self.counter), self.getThumbnail(self.counter), self.getWatermarked(self.counter)
 
     def getNextPicShot(self):
         """Update counter and return the next filename"""

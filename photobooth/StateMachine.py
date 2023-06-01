@@ -187,14 +187,19 @@ class GpioEvent(Event):
 
     pass
 
+class WebEvent(Event):
+
+    pass
+
 
 class CameraEvent(Event):
 
-    def __init__(self, name, picture=None, thumbnail=None, num_pictures=None):
+    def __init__(self, name, picture=None, thumbnail=None, watermarked=None, num_pictures=None):
 
         super().__init__(name)
         self._picture = picture
         self._thumbnail = thumbnail
+        self._watermarked = watermarked
         self._num_pictures = num_pictures
 
     @property
@@ -206,6 +211,11 @@ class CameraEvent(Event):
     def thumbnail(self):
 
         return self._thumbnail
+
+    @property
+    def watermarked(self):
+
+        return self._watermarked
 
     @property
     def num_pictures(self):
@@ -544,18 +554,19 @@ class AssembleState(State):
     def handleEvent(self, event, context):
 
         if isinstance(event, CameraEvent) and event.name == 'review':
-            context.state = ReviewState(event.picture, event.thumbnail)
+            context.state = ReviewState(event.picture, event.thumbnail, event.watermarked)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 
 class ReviewState(State):
 
-    def __init__(self, picture, thumbnail):
+    def __init__(self, picture, thumbnail, watermarked):
 
         super().__init__()
         self._picture = picture
         self._thumbnail = thumbnail
+        self._watermarked = watermarked
 
     @property
     def picture(self):
@@ -566,6 +577,11 @@ class ReviewState(State):
     def thumbnail(self):
 
         return self._thumbnail
+
+    @property
+    def watermarked(self):
+
+        return self._watermarked
 
     def handleEvent(self, event, context):
 

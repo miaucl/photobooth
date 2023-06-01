@@ -190,8 +190,7 @@ class FancyTemplate(Template):
         thumbnail_byte_data = BytesIO()
         image.save(thumbnail_byte_data, format='jpeg')
 
-
-        return byte_data, thumbnail_byte_data
+        return byte_data, thumbnail_byte_data, byte_data
 
 
 def testassemble(argv):

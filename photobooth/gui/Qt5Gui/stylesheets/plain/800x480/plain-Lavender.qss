@@ -93,10 +93,10 @@ QFrame#SlideshowMessage {
 }
 
 QFrame#SlideshowMessage QLabel#StartLabel {
-    font-size: 48px;
-    background: #ccffffff;
-    padding: 8px;
-    border-radius: 8px;
+    font-size: 24px;
+    background: #eebff0;
+    color: #000000;
+    padding: 4px;
 }
 
 /** Gallery Message */
@@ -144,6 +144,10 @@ QFrame#GreeterMessage QFrame#GreeterContainer {
 
 QFrame#GreeterMessage QLabel#Message {
     font-size: 40px;
+    background: #eebff0;
+    color: #000000;
+    padding: 4px;
+    border-radius: 8px;
 }
 
 QFrame#GreeterMessage QPushButton#Button {

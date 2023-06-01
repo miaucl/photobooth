@@ -23,7 +23,10 @@
 This adds a supplemental script to use instead of autostart.sh that waits for a USB drive to be plugged in. The configuration is adapted so that all pictures are stored on the thumb drive.
 
 If a photobooth.cfg file is present, all keys are merged with the photobooth.cfg file present on the system.
+If a watermark.png file is present, is is used instead.
+If a background.png file is present, is is used instead.
 If a language.txt file is present, us it to set the language env var.
+If a setup.py file is present, it is run just before the photobooth is launched.
 
 Attention: The files are saved, I use it with a read-only root filesystem that uses a temporary unionfs for storing files.
 It also adds a simple splash screen while loading.
@@ -138,7 +141,7 @@ if __name__ == "__main__":
 
     storage_path = find_and_ensure_mounted()
     while not storage_path:
-        splash.showMessage("<h1 style='color: white'>USB Drive not found. Please connect it to start the Photobooth</h1>", Qt.AlignTop | Qt.AlignCenter, Qt.white)
+        splash.showMessage("<h1 style='color: white'>Waiting for USB drive ...</h1>", Qt.AlignTop | Qt.AlignCenter, Qt.white)
         t = time.time()
         while time.time() < t + 1:
             app.processEvents()
@@ -157,6 +160,12 @@ if __name__ == "__main__":
             for key in mergeconfig[section]:
                 config[section][key] = mergeconfig[section][key]
     
+    if os.path.exists(os.path.abspath(os.path.join(storage_path, 'background.png'))):
+        config['Picture']['background'] = os.path.abspath(os.path.join(storage_path, 'background.png'))
+    
+    if os.path.exists(os.path.abspath(os.path.join(storage_path, 'watermark.png'))):
+        config['Picture']['watermark'] = os.path.abspath(os.path.join(storage_path, 'watermark.png'))
+    
     config['Storage']['basedir'] = storage_path
 
     with open(cfg, 'w') as configfile:
@@ -168,5 +177,8 @@ if __name__ == "__main__":
         with open(os.path.abspath(os.path.join(storage_path, 'language.txt'))) as f:
             env["LANG"] = f.read()
             print('LANG: ' + env["LANG"])
+
+    if os.path.exists(os.path.abspath(os.path.join(storage_path, 'setup.py'))):
+        subprocess.run(["python", os.path.abspath(os.path.join(storage_path, 'setup.py'))])
 
     subprocess.run(["./autorun.sh"], cwd=pb, env=env)

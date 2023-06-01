@@ -53,6 +53,8 @@ Section "InputClass"
 EndSection
 ```
 
+Change WIFI access permissions: `sudo chmod a+w /etc/wpa_supplicant/wpa_supplicant.conf`
+
 Setup cups with the printer: <https://www.elektronik-kompendium.de/sites/raspberry-pi/2007081.htm>
 
 Set desktop background to: `./media/desktop-bg.png`
@@ -102,5 +104,3 @@ Hide volumes and wastebasket on the desktop by right clicking on desktop and go 
 Rotate the default orientation to portrait in the settings. (left)
 
 Connect raspberry to printer network
-
-TODO: stats
