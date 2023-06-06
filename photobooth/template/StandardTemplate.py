@@ -23,6 +23,7 @@ class StandardTemplate(Template):
         self._totalNumPics = self._pic_dims.totalNumPictures
 
         self._background = self._cfg.get('Picture', 'background')
+        self._foreground = self._cfg.get('Picture', 'foreground')
         self._watermark = self._cfg.get('Picture', 'watermark')
 
         self._bg_template = None
@@ -41,6 +42,11 @@ class StandardTemplate(Template):
             self._bg_template = Image.new('RGB', self._pic_dims.outputSize,
                                        (255, 255, 255))
             
+        if len(self._foreground) > 0:
+            logging.info('Using foreground "{}"'.format(self._foreground))
+            fg_picture = Image.open(self._foreground)
+            self._fg_template = fg_picture.resize(self._pic_dims.outputSize)
+
         if len(self._watermark) > 0:
             logging.info('Using watermark "{}"'.format(self._watermark))
             wm_picture = Image.open(self._watermark)
@@ -56,6 +62,9 @@ class StandardTemplate(Template):
             shot = Image.open(pictures[i])
             resized = shot.resize(self._pic_dims.thumbnailSize, Image.BICUBIC)
             picture.paste(resized, self._pic_dims.thumbnailOffset[i])
+
+        if self._fg_template: 
+            picture.paste(self._fg_template, mask=self._fg_template) 
 
         byte_data = BytesIO()
         picture.save(byte_data, format='jpeg')

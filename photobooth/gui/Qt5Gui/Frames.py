@@ -464,7 +464,7 @@ class GalleryMessage(QtWidgets.QFrame):
 
 class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
-    def __init__(self,  parent, pictureList, items, worker, pictureId, postprocess_handle, close_handle):
+    def __init__(self,  parent, pictureList, items, worker, pictureId, postprocess_handle, close_handle, show_picture_handle):
 
 
         super().__init__(parent)
@@ -476,10 +476,9 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         self._nextPictureId = None
         self._info = ""
 
-        self.initFrame(items, postprocess_handle, close_handle, worker)
-        # self.updatePicture(pictureId)
+        self.initFrame(items, postprocess_handle, close_handle, show_picture_handle, worker)
 
-    def initFrame(self, items, postprocess_handle, close_handle, worker):
+    def initFrame(self, items, postprocess_handle, close_handle, show_picture_handle, worker):
 
         def disableAndCall(button, action):
             for i, b in enumerate(self._buttons[:-1]):
@@ -511,18 +510,18 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         self._label = QtWidgets.QLabel(self._info)
 
         def updatePicture(newPictureId):
-            self._pictureId = newPictureId
-            self._previousPictureId = self._pictureList.getPreviousFilename(newPictureId)
-            self._nextPictureId = self._pictureList.getNextFilename(newPictureId)
-            nextBtn.setEnabled(self._nextPictureId != None)
-            previousBtn.setEnabled(self._previousPictureId != None)
-            self.update()
+            if newPictureId:
+                self._pictureId = newPictureId
+                self._previousPictureId = self._pictureList.getPreviousFilename(newPictureId)
+                self._nextPictureId = self._pictureList.getNextFilename(newPictureId)
+                nextBtn.setEnabled(self._nextPictureId != None)
+                previousBtn.setEnabled(self._previousPictureId != None)
+                self.update()
+                show_picture_handle(newPictureId)
         updatePicture(self._pictureId)
 
-        if self._nextPictureId:
-            nextBtn.clicked.connect(lambda: updatePicture(self._nextPictureId))            
-        if self._previousPictureId:
-            previousBtn.clicked.connect(lambda: updatePicture(self._previousPictureId))
+        nextBtn.clicked.connect(lambda: updatePicture(self._nextPictureId))            
+        previousBtn.clicked.connect(lambda: updatePicture(self._previousPictureId))
 
         headerLayout = QtWidgets.QHBoxLayout()
         headerLayout.addWidget(nextBtn)

@@ -59,6 +59,7 @@ def get_usb():
                     devices.append(device)
     except:
         print("No device found...")
+        sys.stdout.flush()
     return devices
 
 def get_mountpath(device):
@@ -71,6 +72,7 @@ def get_mountpath(device):
             mountpoints.append(bytearray(path).replace(b'\x00', b'').decode('utf-8'))
     except:
         print("Error detecting USB details...")
+        sys.stdout.flush()
     return mountpoints
     
 def mount_drive(device):
@@ -81,6 +83,7 @@ def mount_drive(device):
         path = bd.get_dbus_method('Mount',  dbus_interface='org.freedesktop.UDisks2.Filesystem')([])
     except:
         print('Unable to mount USB device...')
+        sys.stdout.flush()
     return path
 
 def find_and_ensure_mounted():
@@ -99,13 +102,17 @@ def find_and_ensure_mounted():
     
     if storage_path:
         print('Found storage path: ' + storage_path)
+        sys.stdout.flush()
     elif devices:
         print('Could not find mounted drive, attempting to mount drive: ' + usb_devices[0])
+        sys.stdout.flush()
         storage_path = mount_drive(usb_devices[0])
         if storage_path:
             print('USB device mounted at ' + storage_path)
+            sys.stdout.flush()
     else:
         print('No USB device found.')
+        sys.stdout.flush()
     
     return storage_path
 
@@ -118,23 +125,14 @@ if __name__ == "__main__":
     config = configparser.ConfigParser(interpolation=None)
     config.read(cfgr)
     
-    width = config.getint('Gui','width')
-    height = config.getint('Gui','height')
-    fs = config.getboolean('Gui', 'fullscreen')
-    
     app = QApplication(sys.argv)
     
     #splash_pix = QPixmap('loading.gif')
-    splash_pix = QPixmap(width, height)
+    splash_pix = QPixmap(420, 120)
     splash_pix.fill(Qt.black)
     splash = QSplashScreen(splash_pix) #, Qt.WindowStaysOnTopHint)
     splash.setEnabled(False)
-    if fs:
-        splash.showFullScreen()
-    else:
-        splash.setFixedWidth(width)
-        splash.setFixedHeight(height)
-        splash.show()
+    splash.show()
     app.processEvents()
     splash.showMessage("<h1 style='color: white'>Loading...</h1>", Qt.AlignTop | Qt.AlignCenter, color=Qt.white)
 
@@ -149,19 +147,25 @@ if __name__ == "__main__":
         storage_path = find_and_ensure_mounted()
     splash.showMessage("<h1 style='color: white'>USB Drive found.<br>Loading...</h1>", Qt.AlignTop | Qt.AlignCenter, color=Qt.white)
     print('Found storage path: ' + storage_path)
+    sys.stdout.flush()
     
     print("Set path to:", os.path.abspath(os.path.join(storage_path, 'photobooth.cfg')))
-    
+    sys.stdout.flush()
+ 
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'photobooth.cfg'))):
         mergeconfig = configparser.ConfigParser(interpolation=None)
         mergeconfig.read(os.path.abspath(os.path.join(storage_path, 'photobooth.cfg')))
         print(mergeconfig.sections())
+        sys.stdout.flush()
         for section in mergeconfig:
             for key in mergeconfig[section]:
                 config[section][key] = mergeconfig[section][key]
     
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'background.png'))):
         config['Picture']['background'] = os.path.abspath(os.path.join(storage_path, 'background.png'))
+    
+    if os.path.exists(os.path.abspath(os.path.join(storage_path, 'foreground.png'))):
+        config['Picture']['foreground'] = os.path.abspath(os.path.join(storage_path, 'foreground.png'))
     
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'watermark.png'))):
         config['Picture']['watermark'] = os.path.abspath(os.path.join(storage_path, 'watermark.png'))
@@ -177,6 +181,7 @@ if __name__ == "__main__":
         with open(os.path.abspath(os.path.join(storage_path, 'language.txt'))) as f:
             env["LANG"] = f.read()
             print('LANG: ' + env["LANG"])
+            sys.stdout.flush()
 
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'setup.py'))):
         subprocess.run(["python", os.path.abspath(os.path.join(storage_path, 'setup.py'))])

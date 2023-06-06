@@ -287,10 +287,13 @@ class PyQt5Gui(GuiSkeleton):
         if state.action is None:
             items = self._postprocess.getAllItems()
 
+            # self._pictureList.findExistingFiles()
+
             Frames.GallerySelectMessage(
                 self._gui.centralWidget(), self._pictureList, items, self._worker, state.pictureId,
                 lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=state.pictureId, postprocessAction=x)),
-                lambda: self._comm.send(Workers.MASTER, GuiEvent('close')))
+                lambda: self._comm.send(Workers.MASTER, GuiEvent('close')),
+                lambda: self._timerStartSlideshow.start(slideshow_time))
         else:
             logging.info('Skip Reinitializing Gallery Select')
       
@@ -302,9 +305,11 @@ class PyQt5Gui(GuiSkeleton):
         self._disableTrigger()
         greeter_time = self._cfg.getInt('Photobooth', 'greeter_time') * 1000
         num_pics = state.num_pictures
-        self._setWidget(Frames.GreeterMessage(
-            num_pics,
-            lambda: self._comm.send(Workers.MASTER, GuiEvent('countdown'))))
+        # Only show something for greeter time > 0
+        if greeter_time > 0: 
+            self._setWidget(Frames.GreeterMessage(
+                num_pics,
+                lambda: self._comm.send(Workers.MASTER, GuiEvent('countdown'))))
         QtCore.QTimer.singleShot(
             greeter_time,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('countdown')))
