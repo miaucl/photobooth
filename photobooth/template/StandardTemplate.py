@@ -26,6 +26,7 @@ class StandardTemplate(Template):
         self._foreground = self._cfg.get('Picture', 'foreground')
         self._watermark = self._cfg.get('Picture', 'watermark')
 
+        self._fg_template = None
         self._bg_template = None
         self._wm_template = None
 

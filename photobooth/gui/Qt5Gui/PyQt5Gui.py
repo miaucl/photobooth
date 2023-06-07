@@ -293,7 +293,7 @@ class PyQt5Gui(GuiSkeleton):
                 self._gui.centralWidget(), self._pictureList, items, self._worker, state.pictureId,
                 lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=state.pictureId, postprocessAction=x)),
                 lambda: self._comm.send(Workers.MASTER, GuiEvent('close')),
-                lambda: self._timerStartSlideshow.start(slideshow_time))
+                lambda x: self._timerStartSlideshow.start(slideshow_time))
         else:
             logging.info('Skip Reinitializing Gallery Select')
       
