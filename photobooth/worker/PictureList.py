@@ -139,7 +139,8 @@ class PictureList:
         if self.counter == 0:
             return self.getFilename(0)
         else:
-            return self.getFilename(random.randrange(self.counter)+1)
+            r = random.randrange(self.counter)+1
+            return self.getFilename(random.randrange(self.counter)+1), r
 
     def getNextFilename(self, filename):
         """Return the next filename or None if not available"""

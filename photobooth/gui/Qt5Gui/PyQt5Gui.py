@@ -151,9 +151,9 @@ class PyQt5Gui(GuiSkeleton):
             picture = Image.new('RGBA',self._default_size,(128,128,128,0))
             text = _('No slideshow yet...')
         else :
-            picturename = self._pictureList.getRandomPic()
+            picturename, _ = self._pictureList.getRandomPic()
             while (not os.path.isfile(picturename)):
-                picturename = self._pictureList.getRandomPic()
+                picturename, _ = self._pictureList.getRandomPic()
             logging.debug('Picture name for slideshow {}'.format(picturename))
             picture = Image.open(picturename)
             text = ('')

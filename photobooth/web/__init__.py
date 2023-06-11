@@ -20,7 +20,7 @@
 import logging
 from flask import Flask, request, render_template, send_file
 import os.path
-from time import localtime, strftime
+from time import localtime, strftime, time
 
 from ..worker.PictureList import PictureList
 from .. import StateMachine
@@ -100,10 +100,26 @@ def index():
     index_data['count'] = picture_list.count()
     return render_template('index.html', **index_data)
 
+@app.route('/slideshow')
+def slideshow():
+    logging.info('GET slideshow page')
+    picture_list.findExistingFiles()
+    index_data['r'] = time()
+    return render_template('slideshow.html', **index_data)
+
 @app.route('/thumbnail/<int:index>')
 def thumbnail(index):
     filepath = picture_list.getThumbnail(index)
     logging.info(f'GET picture thumbnail { index }: { filepath }')
+    # For local paths, we need to go back to the cwd it has been based on, otherwise, just use the global path
+    return send_file(filepath if filepath.startswith('/') else f'../../{ filepath }')
+
+@app.route('/r')
+def rpicture():
+    _, r = picture_list.getRandomPic()
+    filepath = picture_list.getWatermarked(r)
+    _, filename = os.path.split(filepath)
+    logging.info(f'GET random picture: { filepath }')
     # For local paths, we need to go back to the cwd it has been based on, otherwise, just use the global path
     return send_file(filepath if filepath.startswith('/') else f'../../{ filepath }')
 
