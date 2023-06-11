@@ -44,6 +44,9 @@ class CameraPicamera2(CameraInterface):
         logging.info('Using PiCamera2')
 
         self._cap = None
+
+        self._picture_modulo = 1
+        self._preview_modulo = 4
         
 
         self.setActive()
@@ -54,8 +57,8 @@ class CameraPicamera2(CameraInterface):
         if self._cap is None:
             self._cap = Picamera2()
             # CAREFUL, for the modulo division // 2, no aspect ratio changes, but for the preview module division // 4, the picture  get another aspect ratio. Currently, this does not impact the process as long as the previews are only used for live preview and are not considered in the templates!
-            self._picture_config = self._cap.create_still_configuration({ "size": (self._cap.still_configuration.size[0] // 2, self._cap.still_configuration.size[1] // 2) }, buffer_count=1)
-            self._preview_config = self._cap.create_still_configuration({ "size": (self._cap.still_configuration.size[0] // 4, self._cap.still_configuration.size[1] // 4) }, buffer_count=2)
+            self._picture_config = self._cap.create_still_configuration({ "size": (self._cap.still_configuration.size[0] // self._picture_modulo, self._cap.still_configuration.size[1] // self._picture_modulo) }, buffer_count=1)
+            self._preview_config = self._cap.create_still_configuration({ "size": (self._cap.still_configuration.size[0] // self._preview_modulo, self._cap.still_configuration.size[1] // self._preview_modulo) }, buffer_count=4)
             self._cap.align_configuration(self._preview_config)
             self._activeConfig = self._preview_config 
             self._cap.configure(self._activeConfig)

@@ -34,6 +34,7 @@ modules = (
     ('opencv', 'CameraOpenCV', 'CameraOpenCV'),
     ('picamera', 'CameraPicamera', 'CameraPicamera'),
     ('picamera2', 'CameraPicamera2', 'CameraPicamera2'),
+    ('picamera2_zero', 'CameraPicamera2_zero', 'CameraPicamera2_zero'),
     ('dummy', 'CameraDummy', 'CameraDummy'),
     ('fake', 'CameraFake', 'CameraFake'))
 
