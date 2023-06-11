@@ -28,9 +28,6 @@ class CameraPicamera2_zero(CameraPicamera2):
 
     def __init__(self):
 
-        super().__init__()
-
-        self._picture_modulo = 2
-        self._preview_modulo = 4
+        super().__init__(picture_modulo=2, preview_modulo=4)
 
         logging.info('Modify PiCamera2 for RPI Zero')

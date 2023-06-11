@@ -167,6 +167,7 @@ QFrame#CountdownMessage {
 /* Pose Screen */
 
 QFrame#PoseMessage {
+    background-color: #ffffff;
 }
 
 QFrame#PoseMessage QLabel {

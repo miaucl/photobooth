@@ -31,7 +31,7 @@ from .CameraInterface import CameraInterface
 
 class CameraPicamera2(CameraInterface):
 
-    def __init__(self):
+    def __init__(self, picture_modulo=1, preview_modulo=4):
 
         super().__init__()
 
@@ -45,8 +45,8 @@ class CameraPicamera2(CameraInterface):
 
         self._cap = None
 
-        self._picture_modulo = 1
-        self._preview_modulo = 4
+        self._picture_modulo = picture_modulo
+        self._preview_modulo = preview_modulo
         
 
         self.setActive()
