@@ -179,8 +179,8 @@ if __name__ == "__main__":
 
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'language.txt'))):
         with open(os.path.abspath(os.path.join(storage_path, 'language.txt'))) as f:
-            env["LANG"] = f.read()
-            print('LANG: ' + env["LANG"])
+            env["LANG"] = f.read().strip()
+            print('LANG: "{}"'.format(env["LANG"]))
             sys.stdout.flush()
 
     if os.path.exists(os.path.abspath(os.path.join(storage_path, 'setup.py'))):

@@ -95,7 +95,7 @@ msgstr "Fermer"
 
 #: photobooth/gui/Qt5Gui/Frames.py:675
 msgid "Next photo"
-msgstr ""
+msgstr "Prochaine photo"
 
 #: photobooth/gui/Qt5Gui/Frames.py:684
 msgid "Happy with your picture?"
