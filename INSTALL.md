@@ -47,7 +47,7 @@ You might be able to skip some packages if you plan on not using gphoto2.
 In a terminal, enter the following commands
 
 ```bash
-sudo apt install python3-dev python3-pip virtualenv 
+sudo apt install python3-dev python3-pip venv 
 sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools pyqt5-dev pyqt5-dev-tools # for PyQt5-GUI
 sudo apt install libcups2-dev # to use pycups
 sudo apt install gettext # to add other languages
@@ -111,7 +111,7 @@ git clone https://github.com/miaucl/photobooth.git
 
 This will create a folder `photobooth` with all necessary files.
 
-### Initialize `virtualenv`
+### Initialize `venv`
 
 To avoid installing everything on a system level, I recommend to initialize a virtual environment.
 For that, enter the folder created in the previous step
@@ -123,7 +123,7 @@ cd photobooth
 and run the following command
 
 ```bash
-virtualenv -p python3 --system-site-packages .venv
+python3 -m venv .venv
 ```
 
 Activate the virtual environment.

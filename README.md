@@ -107,9 +107,3 @@ I am also happy to hear any success stories! Feel free to [submit them here](htt
 ## License
 
 I provide this code under AGPL v3. See [LICENSE](https://github.com/miaucl/photobooth/blob/master/LICENSE.txt).
-
-## Todos
-
-* Fix webserver relative/absolute path
-* QR download via webserver
-* Show format during preparation phase?

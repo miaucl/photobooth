@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 22:30+0100\n"
+"POT-Creation-Date: 2023-08-23 20:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,23 +73,23 @@ msgstr ""
 msgid "for the photo"
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/Frames.py:275
+#: photobooth/gui/Qt5Gui/Frames.py:277
 msgid "Photo {} of {}..."
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/Frames.py:278
+#: photobooth/gui/Qt5Gui/Frames.py:280
 msgid "Taking a photo..."
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/Frames.py:326
+#: photobooth/gui/Qt5Gui/Frames.py:328
 msgid "Touch to exit slideshow"
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/Frames.py:417 photobooth/gui/Qt5Gui/Frames.py:813
+#: photobooth/gui/Qt5Gui/Frames.py:418 photobooth/gui/Qt5Gui/Frames.py:813
 msgid "Gallery"
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/Frames.py:418
+#: photobooth/gui/Qt5Gui/Frames.py:419
 msgid "← Back"
 msgstr ""
 
@@ -382,14 +382,14 @@ msgstr ""
 msgid "Starting the photobooth..."
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/PyQt5Gui.py:330
+#: photobooth/gui/Qt5Gui/PyQt5Gui.py:335
 msgid "Processing picture..."
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/PyQt5Gui.py:404
+#: photobooth/gui/Qt5Gui/PyQt5Gui.py:412
 msgid "Confirmation"
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/PyQt5Gui.py:405
+#: photobooth/gui/Qt5Gui/PyQt5Gui.py:413
 msgid "Quit Photobooth?"
 msgstr ""

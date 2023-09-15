@@ -4,16 +4,35 @@ This is a classic using a raspberry pi zero 2 which the 7inch QLED Integrated Di
 
 ## Hardware
 
-- Raspberry Pi Zero 2
-- Raspberry Pi Camera v2
-- 7inch QLED Integrated Display ([Docs](https://www.waveshare.com/wiki/70H-1024600#CAD_Drawing))
-- Switch [link](https://www.digikey.com/en/products/detail/zf-electronics/CRE22F2BBBNE/446064)
-- IRM 30 5ST [link](https://www.meanwell-web.com/en-gb/ac-dc-single-output-encapsulated-power-supply-irm--30--5st)
-- LogiLink Smile [link](https://www.digitec.ch/de/s1/product/logilink-smile-usb-a-dockingstation-usb-hub-12776233?dbq=1&gclid=Cj0KCQiAsoycBhC6ARIsAPPbeLuSqziMTKka5bsK8nV0Phmgn8bYfRX4SiDYr0Et2__k1bhvytIP0LkaAnqcEALw_wcB&gclsrc=aw.ds)
-- IEC Gerätestecker C14, 250V [link](https://ch.schurter.com/de/datasheet/6100-3#)
-- GU10 Fassung [link](https://www.distrelec.ch/de/fassung-gu10-2a-250v-keramik-weiss-bailey-lights-141234/p/30148723?trackQuery=gu10+fassung&pos=1&origPos=1&origPageSize=50&track=true)
-- LED spot VLE D 4.9-50W GU10 [link](https://www.lighting.philips.ch/prof/led-lampen-und-roehren/led-reflektorlampen/master-ledspot-value-gu10-hochvolt-reflektorlampen/929001349102_EU/product)
+=> ~ CHF 200
+
+- Raspberry Pi Zero 2 Kit (CHF 44.90) [link](https://www.pi-shop.ch/raspberry-pi-zero-2-w-starter-kit)
+- Raspberry Pi Camera v2 (CHF 27.90) [link](https://www.pi-shop.ch/raspberry-pi-kamera-module-v2)
+- 7inch QLED Integrated Display (CHF 64.90) ([Docs](https://www.waveshare.com/wiki/70H-1024600#CAD_Drawing))
+- Switch ($ 1.80) [link](https://www.digikey.com/en/products/detail/zf-electronics/CRE22F2BBBNE/446064)
+- IRM 30 5ST (€ 15.60) [link](https://www.meanwell-web.com/en-gb/ac-dc-single-output-encapsulated-power-supply-irm--30--5st)
+- LogiLink Smile (CHF 9.55) [link](https://www.digitec.ch/de/s1/product/logilink-smile-usb-a-dockingstation-usb-hub-12776246)
+- SanDisk (CHF 9.85) [link](https://www.digitec.ch/de/s1/product/sandisk-ultra-flair-16-gb-usb-a-usb-30-usb-stick-5751581?supplier=406802)
+- IEC Gerätestecker C14, 250V (CHF 5.90) [link](https://ch.schurter.com/de/datasheet/6100-3#) or [link](https://www.digitec.ch/de/s1/product/iec-euro-male-chassis-kabel-zubehoer-7513443?dbq=1&gclid=CjwKCAjwyeujBhA5EiwA5WD7_Q1jJYOi5diIhUWeIenjA4d_eLO3U_euTVlX-1x6Z90KP7QMtQx0pxoCHEEQAvD_BwE&gclsrc=aw.ds)
+- GU10 Fassung (CHF 2.70) [link](https://www.distrelec.ch/de/fassung-gu10-2a-250v-keramik-weiss-bailey-lights-141234/p/30148723?trackQuery=gu10+fassung&pos=1&origPos=1&origPageSize=50&track=true)
+- LED spot VLE D 4.9-50W GU10 (CHF 6.60) [link](https://www.lighting.philips.ch/prof/led-lampen-und-roehren/led-reflektorlampen/master-ledspot-value-gu10-hochvolt-reflektorlampen/929001349102_EU/product) or [link](https://www.brack.ch/philips-professional-lampe-mas-led-spot-vle-d-4-9-50w-gu10-927-60d-574777?utm_source=google&utm_medium=cpc&utm_campaign=%21cc-pssh%21l-d%21e-g%21t-pla%21t2-css%21k1-bh%21z-baumarkt_hobby_pmax&utm_term=&adgroup_id=&ad_position=&ad_type=pla&campaign_id=19707784704&gclid=CjwKCAjwyeujBhA5EiwA5WD7_UYegTR-qRt3Yse91xTHNmFo6cAL2rDo7CU9bKm8LOzs3knHJ-nDHBoC24AQAvD_BwE)
 - Magnets 3.5mm x 6mm
+
+TEMP NEXT VERSION:
+
+- Raspberry Pi 4 Model B 2GB (CHF 59.90) [link](https://www.pi-shop.ch/raspberry-pi-4-model-b-2gb)
+- Raspberry Pi HQ Camera (CHF 60.90) [link](https://www.pi-shop.ch/hq-camera)
+- Raspberry Pi Lens (CHF 26.20) [link](https://www.digitec.ch/de/s1/product/raspberry-pi-camera-diverse-elektronikmodul-13191781)
+- Raspberry Pi Cable (CHF 9.00) [link](https://www.pi-shop.ch/flex-kabel-fuer-das-raspberry-pi-kamera-modul-46cm)
+- SanDisk (CHF 9.85) [link](https://www.digitec.ch/de/s1/product/sandisk-ultra-flair-16-gb-usb-a-usb-30-usb-stick-5751581?supplier=406802)
+- 10.1inch (CHF 88.90) [link](https://www.pi-shop.ch/10-1inch-capacitive-touch-display-for-raspberry-pi)
+- 10.1inch QLED (CHF 139.90) [link](https://www.pi-shop.ch/10-1inch-qled-quantum-dot-display-capacitive-touch-1280-720)
+
+videoleuchte
+- https://www.digitec.ch/de/s1/product/streamplify-light-14-streaming-ringleuchte-dauerlicht-18323288
+- https://www.apfelkiste.ch/2er-set-usb-led-video-beleuchtung-stativ-3200k-5600k.html?gclid=CjwKCAjwyeujBhA5EiwA5WD7_WR9hpFc20tWn1vZfp3WETTWzr69BU6Uc7EH6fwbLTIeqycFeaGChxoC7vYQAvD_BwE
+- https://www.fotichaestli.ch/godox-c5r-knowled-rgb-kreativ-led-leuchte/
+- https://www.digitec.ch/de/s1/product/godox-ledp260-videoleuchte-dauerlicht-13322634?gclid=CjwKCAjw4ZWkBhA4EiwAVJXwqcu6ubdLQLuHwkxQlFz0nWcbN9pH_qmDPc7eAncr-PbEVkV8JSeFIRoC9-QQAvD_BwE&gclsrc=aw.ds
 
 ## OS: Raspbian Bullseye
 
