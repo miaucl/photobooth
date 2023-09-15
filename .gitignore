@@ -1,6 +1,6 @@
-/photobooth.cfg
-/background.png
-/watermark.png
+/*.cfg
+/*.png
+/*.png
 cfgs
 **/*.pyc
 **/__pycache__
@@ -14,3 +14,4 @@ print_*.pdf
 build
 dist
 dbe_*
+data
