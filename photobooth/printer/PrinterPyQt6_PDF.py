@@ -17,35 +17,31 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import logging
 
-from PyQt6 import QtCore, QtGui
 from PyQt6.QtPrintSupport import QPrinter
 
-from . import Printer
+from .PrinterPyQt6 import PrinterPyQt6
 
 
-class PrinterPyQt6(Printer):
+class PrinterPyQt6_PDF(PrinterPyQt6):
 
     def __init__(self, page_size, storage_dir):
 
         super().__init__(page_size, storage_dir)
 
-        self._app = QtCore.QCoreApplication([]) # Separate QApplication for the printer
-        self._printer = QPrinter(QPrinter.PrinterMode.HighResolution)
-        self._printer.setFullPage(True)
-        self._printer.setPageSize(QtGui.QPageSize(QtCore.QSizeF(*page_size), QtGui.QPageSize.Unit.Millimeter))
-        self._printer.setColorMode(QPrinter.ColorMode.Color)
-
         logging.info('Using printer "%s"', self._printer.printerName())
+
+        self._counter = 0
+        self._printer.setOutputFormat(QPrinter.OutputFormat.PdfFormat)
 
     def print(self, picture):
 
-        logging.info('Printing picture')
-        logging.debug('Page Size: {}, PictureSize: {}'.format(
-            self._printer.pageLayout().paintRectPixels(self._printer.resolution()),
-            picture.rect()))
+        outputFileName = os.path.join(self.storageDir, 'print_{}.pdf'.format(self._counter))
+        self._printer.setOutputFileName(outputFileName)
+        logging.info('Save as PDF: %s' % outputFileName)
+        self._counter += 1
 
-        painter = QtGui.QPainter(self._printer)
-        painter.drawImage(self._printer.pageLayout().paintRectPixels(self._printer.resolution()), QtGui.QImage(picture), QtGui.QImage(picture).rect())
-        painter.end()
+        super().print(picture)
+

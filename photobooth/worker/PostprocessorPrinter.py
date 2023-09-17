@@ -25,12 +25,12 @@ from .PostprocessorWorkerTask import PostprocessorWorkerTask
 
 class PostprocessorPrinter(PostprocessorWorkerTask):
 
-    def __init__(self, printer_module, paper_size, is_pdf, **kwargs):
+    def __init__(self, printer_module, paper_size, storage_dir, **kwargs):
 
         super().__init__(**kwargs)
 
         Printer = lookup_and_import(printer.modules, printer_module, 'printer')
-        self._printer = Printer(paper_size, is_pdf)
+        self._printer = Printer(paper_size, storage_dir)
 
     def do(self, pictureId):
         self._printer.print(ImageQt.ImageQt(Image.open(pictureId)))

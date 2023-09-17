@@ -20,14 +20,17 @@
 # Available printer modules as tuples of (config name, module name, class name)
 modules = (
     ('PyQt6', 'PrinterPyQt6', 'PrinterPyQt6'),
+    ('PyQt6_PDF', 'PrinterPyQt6_PDF', 'PrinterPyQt6_PDF'),
     ('PyCUPS', 'PrinterPyCups', 'PrinterPyCups'))
 
+import os
 
 class Printer:
 
-    def __init__(self, page_size):
+    def __init__(self, page_size, storage_dir):
 
         self.pageSize = page_size
+        self.storageDir = storage_dir
 
     @property
     def pageSize(self):
@@ -41,6 +44,19 @@ class Printer:
             raise ValueError('page_size must be a list/tuple of length 2')
 
         self._page_size = page_size
+
+    @property
+    def storageDir(self):
+
+        return self._storage_dir
+
+    @storageDir.setter
+    def storageDir(self, storage_dir):
+
+        if not os.path.isdir(storage_dir):
+            raise ValueError("'storage_dir' must exist")
+
+        self._storage_dir = storage_dir
 
     def print(self, picture):
 

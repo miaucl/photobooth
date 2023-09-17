@@ -26,13 +26,8 @@ Option to disable/enable it and provide values for single pictures
 
 - Add camera module for native mac webcam
 
-## Printer
-
-- Add printer module for windows: https://stackoverflow.com/a/22550163/3740732
-- Add printer module for mac (pycups can also be used on mac): https://stackoverflow.com/a/53778069/3740732
-
 ## Bugs
 
 - Hide "Pictures printed" counter when printer deactivated
 - Make counter more clear and away from the center
-- Printer PDF PyQt to out dir
+- Make front button more botton-y
