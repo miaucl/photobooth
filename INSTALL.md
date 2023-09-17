@@ -48,7 +48,7 @@ In a terminal, enter the following commands
 
 ```bash
 sudo apt install python3-dev python3-pip venv 
-sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools pyqt5-dev pyqt5-dev-tools # for PyQt5-GUI
+sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools PyQt6-dev PyQt6-dev-tools # for PyQt6-GUI
 sudo apt install libcups2-dev # to use pycups
 sudo apt install gettext # to add other languages
 ```

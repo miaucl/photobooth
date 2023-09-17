@@ -20,10 +20,9 @@
 import math
 import os
 
-from PyQt5 import Qt
-from PyQt5 import QtCore
-from PyQt5 import QtGui
-from PyQt5 import QtWidgets
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
 
 from collections import namedtuple
 from PIL import Image, ImageQt
@@ -63,8 +62,8 @@ class SpinningWaitClock(QtWidgets.QWidget):
     def paintEvent(self, event):
 
         painter = QtGui.QPainter(self)
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
-        painter.setPen(QtGui.QPen(QtCore.Qt.NoPen))
+        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
+        painter.setPen(QtGui.QPen(QtCore.Qt.PenStyle.NoPen))
 
         dots = self._num_dots
         center = (self.width() / 2, self.height() / 2)
@@ -76,9 +75,9 @@ class SpinningWaitClock(QtWidgets.QWidget):
                       180 / dots * math.sin(2 * math.pi * dot / dots) - 20)
 
             color = (distance + 1) / (dots + 1) * 255
-            painter.setBrush(QtGui.QBrush(QtGui.QColor(color, color, color)))
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(int(color), int(color), int(color))))
 
-            painter.drawEllipse(center[0] + offset[0], center[1] + offset[1],
+            painter.drawEllipse(int(center[0] + offset[0]), int(center[1] + offset[1]),
                                 15, 15)
 
         painter.end()
@@ -142,23 +141,23 @@ class RoundProgressBar(QtWidgets.QWidget):
 
         painter.setPen(QtGui.QPen(self.palette().text().color(),
                                   self._data_pen_width))
-        painter.setBrush(Qt.Qt.NoBrush)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
         painter.drawArc(base_rect.adjusted(self._outline_pen_width // 2,
                                            self._outline_pen_width // 2,
                                            -self._outline_pen_width // 2,
                                            -self._outline_pen_width // 2),
-                        self._null_position * 16, -arc_length * 16)
+                        int(self._null_position * 16), int(-arc_length * 16))
 
     def _drawText(self, painter, inner_rect, inner_radius):
 
         text = '{}'.format(math.ceil(self.value))
 
         f = self.font()
-        f.setPixelSize(inner_radius * 0.8 / len(text))
+        f.setPixelSize(int(inner_radius * 0.8 / len(text)))
         painter.setFont(f)
         painter.setPen(self.palette().text().color())
 
-        painter.drawText(inner_rect, Qt.Qt.AlignCenter, text)
+        painter.drawText(inner_rect, QtCore.Qt.AlignmentFlag.AlignCenter, text)
 
     def paintEvent(self, event):
 
@@ -170,7 +169,7 @@ class RoundProgressBar(QtWidgets.QWidget):
         inner_rect = QtCore.QRectF(delta, delta, inner_radius, inner_radius)
 
         painter = QtGui.QPainter(self)
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
 
         # base circle
         self._drawBase(painter, base_rect)
@@ -205,7 +204,7 @@ class TransparentOverlay(QtWidgets.QWidget):
         opt = QtWidgets.QStyleOption()
         opt.initFrom(self)
         painter = QtGui.QPainter(self)
-        self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, opt, painter,
+        self.style().drawPrimitive(QtWidgets.QStyle.PrimitiveElement.PE_Widget, opt, painter,
                                    self)
         painter.end()
 
@@ -217,8 +216,8 @@ class TransparentOverlay(QtWidgets.QWidget):
 # Create a custom namedtuple class to hold our data.
 thumbnailData = namedtuple("preview", "id label image")
 
-PrintRole = QtCore.Qt.DisplayRole + 100
-SelectRole = QtCore.Qt.DisplayRole + 101
+PrintRole = QtCore.Qt.ItemDataRole.DisplayRole + 100
+SelectRole = QtCore.Qt.ItemDataRole.DisplayRole + 101
 
 LabelColor = QtGui.QColor(30, 30, 30)
 LabelBackgroundColor = QtGui.QColor(255, 255, 255, 70)
@@ -233,14 +232,14 @@ class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
 
     def paint(self, painter, option, index):
         # data is our preview object
-        data = index.model().data(index, QtCore.Qt.DisplayRole)
+        data = index.model().data(index, QtCore.Qt.ItemDataRole.DisplayRole)
         if data is None:
             return
             
         image = ImageQt.ImageQt(data.image)
         image = image.scaled(option.rect.size(),
-                             QtCore.Qt.KeepAspectRatio,
-                             QtCore.Qt.FastTransformation)
+                             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                             QtCore.Qt.TransformationMode.FastTransformation)
 
         origin = ((option.rect.width() - image.width()) // 2,
                   (option.rect.height() - image.height()) // 2)
@@ -261,16 +260,16 @@ class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
         painter.drawText(option.rect.x() + 6, option.rect.y() + 21, idLabel)
         
     def sizeHint(self, option, index):
-        data = index.model().data(index, QtCore.Qt.DisplayRole)
+        data = index.model().data(index, QtCore.Qt.ItemDataRole.DisplayRole)
         if data is None:
             return QtCore.QSize(0, 0)
 
         width, height = data.image.size
             
-        return QtCore.QSize(option.rect.width(), option.rect.width() * (height / width))
+        return QtCore.QSize(int(option.rect.width()), int(option.rect.width() * (height / width)))
 
     def editorEvent(self, event, model, option, index):
-        if event.type() == QtCore.QEvent.MouseButtonPress and self._gallery_select_action:
+        if event.type() == QtCore.QEvent.Type.MouseButtonPress and self._gallery_select_action:
             pictureId = index.model().data(index, SelectRole)
             self._gallery_select_action(pictureId)
             return True
@@ -289,7 +288,7 @@ class GalleryThumbnailModel(QtCore.QAbstractTableModel):
             return None
 
         id = self.indexToID(index)
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
             f = self._pictureList.getThumbnail(id)
             if (not os.path.isfile(f)):
                 return None
@@ -312,7 +311,7 @@ class GalleryThumbnailModel(QtCore.QAbstractTableModel):
         elif role == SelectRole:
             f = self._pictureList.getFilename(id)
             return f
-        elif role == QtCore.Qt.ToolTipRole:
+        elif role == QtCore.Qt.ItemDataRole.ToolTipRole:
             f = self._pictureList.getThumbnail(id)
             return f
         else: 
@@ -345,6 +344,6 @@ class GallerySelectOverlay(QtWidgets.QWidget):
         opt = QtWidgets.QStyleOption()
         opt.initFrom(self)
         painter = QtGui.QPainter(self)
-        self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, opt, painter,
+        self.style().drawPrimitive(QtWidgets.QStyle.PrimitiveElement.PE_Widget, opt, painter,
                                    self)
         painter.end()

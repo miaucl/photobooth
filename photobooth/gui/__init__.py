@@ -18,4 +18,4 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # Available gui modules as tuples of (config name, module name, class name)
-modules = (('PyQt5', 'Qt5Gui', 'PyQt5Gui'), )
+modules = (('PyQt6', 'Qt6Gui', 'PyQt6Gui'), )

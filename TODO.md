@@ -35,3 +35,4 @@ Option to disable/enable it and provide values for single pictures
 
 - Hide "Pictures printed" counter when printer deactivated
 - Make counter more clear and away from the center
+- Printer PDF PyQt to out dir

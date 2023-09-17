@@ -20,9 +20,9 @@
 import logging
 import os
 
-from PyQt5 import QtCore
-from PyQt5 import QtGui
-from PyQt5 import QtWidgets
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
 
 from PIL import Image, ImageQt
 
@@ -42,7 +42,7 @@ from . import Receiver
 from . import Worker
 
 
-class PyQt5Gui(GuiSkeleton):
+class PyQt6Gui(GuiSkeleton):
 
     def __init__(self, argv, config, comm):
 
@@ -74,7 +74,7 @@ class PyQt5Gui(GuiSkeleton):
         
     def run(self):
 
-        exit_code = self._app.exec_()
+        exit_code = self._app.exec()
         self._gui = None
         return exit_code
 
@@ -91,14 +91,15 @@ class PyQt5Gui(GuiSkeleton):
         # Create application and main window
         self._app = QtWidgets.QApplication(argv)
         self._app.setStyleSheet(stylesheet)
-        self._gui = PyQt5MainWindow(self._cfg, self._handleKeypressEvent)
+        self._gui = PyQt6MainWindow(self._cfg, self._handleKeypressEvent)
 
         # Load additional fonts
-        fonts = ['photobooth/gui/Qt5Gui/fonts/AmaticSC-Regular.ttf',
-                 'photobooth/gui/Qt5Gui/fonts/AmaticSC-Bold.ttf']
-        self._fonts = QtGui.QFontDatabase()
+        fonts = [os.path.join(os.path.dirname(__file__), 'fonts/AmaticSC-Regular.ttf'),
+                 os.path.join(os.path.dirname(__file__), 'fonts/AmaticSC-Bold.ttf')]
         for font in fonts:
-            self._fonts.addApplicationFont(font)
+            id = QtGui.QFontDatabase.addApplicationFont(font)
+            if id < 0:
+                logging.warning(f"Font '{font}' not loaded")
 
     def _initReceiver(self):
 
@@ -185,10 +186,10 @@ class PyQt5Gui(GuiSkeleton):
 
         reply = QtWidgets.QMessageBox.critical(
             self._gui, state.origin, message,
-            QtWidgets.QMessageBox.Retry | QtWidgets.QMessageBox.Cancel,
-            QtWidgets.QMessageBox.Cancel)
+            QtWidgets.QMessageBox.StandardButton.Retry | QtWidgets.QMessageBox.StandardButton.Cancel,
+            QtWidgets.QMessageBox.StandardButton.Cancel)
 
-        if reply == QtWidgets.QMessageBox.Retry:
+        if reply == QtWidgets.QMessageBox.StandardButton.Retry:
             self._comm.send(Workers.MASTER, GuiEvent('retry'))
         else:
             self._comm.send(Workers.MASTER, GuiEvent('abort'))
@@ -386,7 +387,7 @@ class PyQt5Gui(GuiSkeleton):
                                     TeardownEvent(TeardownEvent.RESTART))))
 
 
-class PyQt5MainWindow(QtWidgets.QMainWindow):
+class PyQt6MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, config, keypress_handler):
 
@@ -411,11 +412,11 @@ class PyQt5MainWindow(QtWidgets.QMainWindow):
 
         reply = QtWidgets.QMessageBox.question(self, _('Confirmation'),
                                                _('Quit Photobooth?'),
-                                               QtWidgets.QMessageBox.Yes |
-                                               QtWidgets.QMessageBox.No,
-                                               QtWidgets.QMessageBox.No)
+                                               QtWidgets.QMessageBox.StandardButton.Yes |
+                                               QtWidgets.QMessageBox.StandardButton.No,
+                                               QtWidgets.QMessageBox.StandardButton.No)
 
-        if reply == QtWidgets.QMessageBox.Yes:
+        if reply == QtWidgets.QMessageBox.StandardButton.Yes:
             e.accept()
         else:
             e.ignore()

@@ -1,40 +1,41 @@
 /* Color Accent */
 
-/* strong: #014398 */
-/* light: #71aefe */
+/* primary strong: #154c79 */
+/* primary light: #76b5c5 */
+/* primary faded: #abdbe3 */
+/* complementary faded: #f5e1c9 */
 
 /* Outer items */
 
 QWidget {
     background-color: transparent;
-    font-family: AmaticSC, sans-serif;
+    color: #eeeeee;
+    font-family: "Amatic SC", AmaticSC, sans-serif;
     font-size: 30px;
     font-weight: 800;
 }
 
 QMainWindow {
-    background: #000000;
-    color: #ffffff;
+    background: #ffffff qlineargradient(x1:0 y1:1, x2:1, y2:0, stop:0 #76b5c5, stop:0.6 #abdbe3, stop:1 #f5e1c9);
+    color: #eeeeee;
 }
 
 /* General controls */
 
 QPushButton {
-    background-color: #014398;
+    background-color: transparent;
+    border-style: solid;
+    border-width: 4px;
     border-radius: 8px;
-    color: #000000;
+    color: #154c79;
+    border-color: #154c79;
     padding: 8px;
-    text-align: center;
 }
 
 QPushButton:pressed {
-    background-color: #71aefe;
-    color: #000000;
-}
-
-QLabel {
-    qproperty-alignment: AlignCenter;
-    color: #014398;
+    background-color: #154c79;
+    color: #eeeeee;
+    border-color: #eeeeee;
 }
 
 /* Welcome Screen */
@@ -45,27 +46,47 @@ QFrame#WelcomeMessage {
 
 QFrame#WelcomeMessage QLabel {
     font-size: 40px;
+    qproperty-alignment: AlignCenter;
+    color: #154c79;
 }
 
 QFrame#WelcomeMessage QLabel#WelcomeMessageLink {
     font-size: 20px;
+    qproperty-alignment: AlignLeft;
 }
+
+/* Wait Screen */
+
+QFrame#WaitMessage {
+    padding: 350px 80px 80px 80px;
+}
+
+QFrame#WaitMessage QLabel {
+    font-size: 40px;
+    color: #154c79;
+    qproperty-alignment: AlignCenter;
+}
+
 
 
 /* Idle Screen */
 
 QFrame#IdleMessage {
+    background-color: #000000;
 }
 
 QFrame#IdleMessage QFrame#IdleContainer {
-    margin: 60px 20px 60px 20px;
+    margin: 40px 20px 40px 20px;
     padding: 40px 20px 20px 20px;
+    background: #99ffffff;
     border-radius: 8px;
 }
 
+
 QFrame#IdleMessage QLabel#GalleryButtonHeaderLabel {
     font-size: 80px;
-    color: #ffffff;
+    qproperty-alignment: AlignCenter;
+    color: #76b5c5;
 }
 
 QFrame#IdleMessage QPushButton {
@@ -77,12 +98,21 @@ QFrame#IdleMessage QPushButton:pressed {
 }
 
 QFrame#IdleMessage QPushButton#GalleryButton {
-    font-size: 60px;
+    font-size: 80px;
+    text-align: center;
+
+    border-color: #76b5c5;
+
+}
+
+QFrame#IdleMessage QPushButton#GalleryButton:pressed {
+    background-color: #76b5c5;
 }
 
 QFrame#IdleMessage QLabel#PrintLabel {
-    font-size: 30px;
-    color: #ffffff;
+    font-size: 24px;
+    qproperty-alignment: AlignCenter;
+    color: #154c79;
 }
 
 
@@ -93,10 +123,12 @@ QFrame#SlideshowMessage {
 }
 
 QFrame#SlideshowMessage QLabel#StartLabel {
-    font-size: 24px;
-    background: #71aefe;
-    color: #000000;
-    padding: 4px;
+    font-size: 48px;
+    qproperty-alignment: AlignCenter;
+    color: #154c79;
+    background: #ccffffff;
+    padding: 8px;
+    border-radius: 8px;
 }
 
 /** Gallery Message */
@@ -107,47 +139,57 @@ QFrame#GalleryMessage {
 
 QFrame#GalleryMessage QLabel {
     font-size: 40px;
+    color: #154c79;
 }
 
 /* Gallery Select overlay */
 
 QWidget#GallerySelectOverlay {
     background-color: #ffffff;
-    padding: 8px;
+    padding: 40px;
 }
 
 /* Gallery Select message */
 
 QWidget#GallerySelectMessage QLabel {
+    color: #154c79;
     font-size: 40px;
+    qproperty-alignment: AlignCenter;
 }
 
 QWidget#GallerySelectMessage QPushButton {
-    padding: 8px 16px 8px 16px;
+    margin: 20px;
+    background-color: #abdbe3;
+}
+
+QWidget#GallerySelectMessage QPushButton:pressed {
 }
 
 QWidget#GallerySelectMessage QPushButton:disabled {
     background-color: #eeeeee;
-    color: #666666;
+    color: #f5e1c9;
+    border-color: #f5e1c9;
 }
 
 /* Greeter Screen */
 
 QFrame#GreeterMessage {
+    background-color: #000000;
 }
 
 QFrame#GreeterMessage QFrame#GreeterContainer {
-    margin: 60px 20px 60px 20px;
-    padding: 40px 20px 20px 20px;
+    margin: 40px 20px 40px 20px;
+    padding: 20px;
+    background: #99ffffff;
     border-radius: 8px;
 }
 
 QFrame#GreeterMessage QLabel#Message {
     font-size: 40px;
-    background: #71aefe;
-    color: #000000;
-    padding: 4px;
-    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+    qproperty-alignment: AlignCenter;
+    color: #76b5c5;
 }
 
 QFrame#GreeterMessage QPushButton#Button {
@@ -155,33 +197,28 @@ QFrame#GreeterMessage QPushButton#Button {
     margin: 0;
     min-height: 100px;
     padding: 0;
+    text-align: center;
+    color: #76b5c5;
+    border-color: #76b5c5;
 }
-
 
 
 /* Countdown Screen */
 
 QFrame#CountdownMessage {
+    background-color: #000000;
 }
 
 /* Pose Screen */
 
 QFrame#PoseMessage {
-    background-color: #ffffff;
+    padding: 280px 80px 80px 80px;
 }
 
 QFrame#PoseMessage QLabel {
+    color: #154c79;
     font-size: 60px;
-}
-
-/* Wait Screen */
-
-QFrame#WaitMessage {
-    padding: 350px 80px 80px 80px;
-}
-
-QFrame#WaitMessage QLabel {
-    font-size: 40px;
+    qproperty-alignment: AlignCenter;
 }
 
 /* Picture Screen */
@@ -200,23 +237,35 @@ QWidget#TransparentOverlay {
 /* Postprocess message */
 
 QWidget#PostprocessMessage QLabel {
+    color: #154c79;
     font-size: 60px;
+    qproperty-alignment: AlignCenter;
+}
+
+QWidget#PostprocessMessage QPushButton {
+    margin: 20px;
+    background-color: #abdbe3;
+}
+
+QWidget#PostprocessMessage QPushButton:pressed {
 }
 
 QWidget#PostprocessMessage QPushButton:disabled {
     background-color: #eeeeee;
-    color: #666666;
+    color: #f5e1c9;
+    border-color: #f5e1c9;
 }
 
 
 /* Customizing settings */
 
 QTabWidget::pane {
+    background-color: #abdbe3;
     border-style: solid;
     border-width: 1px;
     border-radius: 15px;
-    border-color: #014398;
-    color: #014398;
+    border-color: #154c79;
+    color: #154c79;
     padding: 10px;
     margin: 0; 
 }
@@ -231,13 +280,12 @@ QTabBar::tab {
     border-width: 2px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    border-color: #014398;
+    border-color: #154c79;
     padding: 8px;
 }
 
 QTabBar::tab:selected {
-    background-color: #71aefe;
-    color: #000000;
+    background-color: #76b5c5;
 }
 
 QGroupBox {
@@ -245,13 +293,13 @@ QGroupBox {
     border-style: solid;
     border-width: 1px;
     border-radius: 15px;
-    border-color: #014398;
+    border-color: #abdbe3;
     margin: 0px;
     padding: 4px;
 }
 
 QTabWidget QWidget {
-    color: #014398;
+    color: #154c79;
     font-size: 30px;
 }
 
@@ -262,25 +310,25 @@ QCheckBox::indicator {
     border-style: solid;
     border-width: 2px;
     border-radius: 5px;
-    border-color: #014398;
+    border-color: #154c79;
 }
 
 QCheckBox::indicator::checked {
-    background-image: url(photobooth/gui/Qt5Gui/images/checkmark.png);
+    background-image: url(photobooth/gui/Qt6Gui/images/checkmark.png);
     background-repeat: no-repeat;
 }
 
 QComboBox, QDateEdit, QLineEdit, QSpinBox, QTimeEdit {
-    background-color: #000000;
-    color: #014398;
+    background-color: #abdbe3;
+    color: #154c79;
     font-size: 30px;
 }
 
 QComboBox QAbstractItemView {
-    background-color: #000000;
-    color: #014398;
-    selection-background-color: #71aefe;
-    selection-color: #014398;
+    background-color: #abdbe3;
+    color: #154c79;
+    selection-background-color: #76b5c5;
+    selection-color: #154c79;
 }
 
 QComboBox QAbstractItemView::item {

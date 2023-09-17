@@ -217,6 +217,7 @@ def run(argv, is_run):
     # 5. GPIO handler
     # 6. Web server
     proc_classes = (CameraProcess, WorkerProcess, GuiProcess, GpioProcess, WebProcess)
+    #proc_classes = (CameraProcess, GuiProcess, GpioProcess, WebProcess)
     procs = [P(argv, config, comm) for P in proc_classes]
 
     for proc in procs:

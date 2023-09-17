@@ -4,8 +4,9 @@ Pillow
 gpiozero
 pycups
 requests
-PyQt5
+PyQt6
 picamera
+picamera2
 gphoto2
 gphoto2-cffi
 Flask

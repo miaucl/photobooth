@@ -17,36 +17,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import queue
+from PyQt6 import QtCore
 
-from PyQt5 import QtCore
+from ...Threading import Workers
 
 
-class Worker(QtCore.QThread):
+class Receiver(QtCore.QThread):
+
+    notify = QtCore.pyqtSignal(object)
 
     def __init__(self, comm):
 
         super().__init__()
         self._comm = comm
-        self._queue = queue.Queue()
 
-    def put(self, task):
+    def handle(self, state):
 
-        self._queue.put(task)
-
-    def get(self):
-
-        return self._queue.get()
-
-    def done(self):
-
-        self._queue.task_done()
+        self.notify.emit(state)
 
     def run(self):
 
-        while True:
-            task = self.get()
-            if task is None:
-                break
-            task()
-            self.done()
+        for state in self._comm.iter(Workers.GUI):
+            self.handle(state)

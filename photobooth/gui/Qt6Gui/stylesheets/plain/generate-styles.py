@@ -62,5 +62,5 @@ for colorPair in colorPairs:
         writefile.write(template)
 
 # Print output
-print("Add following lines to the '../Qt5Gui/__init__.py' file:")
+print("Add following lines to the '../Qt6Gui/__init__.py' file:")
 print('\n'.join(output))

@@ -3,7 +3,7 @@
 QWidget {
     background-color: transparent;
     color: #eeeeee;
-    font-family: AmaticSC, sans-serif;
+    font-family: "Amatic SC", AmaticSC, sans-serif;
     font-size: 30px;
 }
 
@@ -30,7 +30,7 @@ QPushButton:pressed {
 /* Idle Screen */
 
 QFrame#IdleMessage {
-    background-image: url(photobooth/gui/Qt5Gui/images/arrow-800x480.png);
+    background-image: url(photobooth/gui/Qt6Gui/images/arrow-800x480.png);
     background-repeat: no-repeat;
     padding: 80px 40px 60px 40px;
 }
@@ -107,7 +107,7 @@ QFrame#CountdownMessage {
 /* Pose Screen */
 
 QFrame#PoseMessage {
-    background-image: url(photobooth/gui/Qt5Gui/images/camera-800x480.png);
+    background-image: url(photobooth/gui/Qt6Gui/images/camera-800x480.png);
     background-repeat: no-repeat;
     padding: 280px 80px 80px 80px;
 }
@@ -227,7 +227,7 @@ QCheckBox::indicator {
 }
 
 QCheckBox::indicator::checked {
-    background-image: url(photobooth/gui/Qt5Gui/images/checkmark.png);
+    background-image: url(photobooth/gui/Qt6Gui/images/checkmark.png);
     background-repeat: no-repeat;
 }
 

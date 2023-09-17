@@ -22,9 +22,9 @@ import os
 import subprocess
 import sys
 
-from PyQt5 import QtCore
-from PyQt5 import QtGui
-from PyQt5 import QtWidgets
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
 
 from PIL import Image, ImageQt
 
@@ -114,7 +114,7 @@ class WaitMessage(QtWidgets.QFrame):
         painter = QtGui.QPainter(self)
         self._clock.render(painter, QtCore.QPoint(*offset),
                            self._clock.visibleRegion(),
-                           QtWidgets.QWidget.DrawChildren)
+                           QtWidgets.QWidget.RenderFlag.DrawChildren)
         painter.end()
 
 class IdleMessage(QtWidgets.QFrame):
@@ -182,8 +182,8 @@ class IdleMessage(QtWidgets.QFrame):
 
             pix = QtGui.QPixmap.fromImage(self.picture)
             pix = pix.scaled(self.contentsRect().size(),
-                             QtCore.Qt.KeepAspectRatio,
-                             QtCore.Qt.FastTransformation)
+                             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                             QtCore.Qt.TransformationMode.FastTransformation)
             origin = ((self.width() - pix.width()) // 2,
                   (self.height() - pix.height()) // 2)
 
@@ -256,8 +256,8 @@ class GreeterMessage(QtWidgets.QFrame):
 
             pix = QtGui.QPixmap.fromImage(self.picture)
             pix = pix.scaled(self.contentsRect().size(),
-                             QtCore.Qt.KeepAspectRatio,
-                             QtCore.Qt.FastTransformation)
+                             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                             QtCore.Qt.TransformationMode.FastTransformation)
             origin = ((self.width() - pix.width()) // 2,
                   (self.height() - pix.height()) // 2)
 
@@ -304,8 +304,8 @@ class PictureMessage(QtWidgets.QFrame):
             pix = QtGui.QPixmap.fromImage(self._picture)
         else:
             pix = QtGui.QPixmap(self._picture)
-        pix = pix.scaled(self.contentsRect().size(), QtCore.Qt.KeepAspectRatio,
-                         QtCore.Qt.SmoothTransformation)
+        pix = pix.scaled(self.contentsRect().size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                         QtCore.Qt.TransformationMode.SmoothTransformation)
 
         origin = ((self.width() - pix.width()) // 2,
                   (self.height() - pix.height()) // 2)
@@ -396,8 +396,8 @@ class SlideshowMessage(QtWidgets.QFrame):
         if self._newslide:
             slide = ImageQt.ImageQt(self._newslide)
             slide = slide.scaled(self.contentsRect().size(),
-                                QtCore.Qt.KeepAspectRatio,
-                                QtCore.Qt.FastTransformation)
+                             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                             QtCore.Qt.TransformationMode.FastTransformation)
 
             origin = ((self.width() - slide.width()) // 2,
                     (self.height() - slide.height()) // 2)
@@ -426,16 +426,16 @@ class GalleryMessage(QtWidgets.QFrame):
     def initFrame(self, trigger_action, gallery_select_action):
 
         tbl = QtWidgets.QTableView()
-        tbl.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        tbl.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        tbl.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        tbl.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        tbl.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        tbl.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        tbl.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        tbl.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollMode.ScrollPerPixel)
         tbl.verticalScrollBar().setSingleStep(5)
-        tbl.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        tbl.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
         tbl.horizontalHeader().hide()
-        tbl.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        tbl.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         tbl.verticalHeader().hide()
-        QtWidgets.QScroller.grabGesture(tbl.viewport(), QtWidgets.QScroller.LeftMouseButtonGesture)
+        QtWidgets.QScroller.grabGesture(tbl.viewport(), QtWidgets.QScroller.ScrollerGestureType.LeftMouseButtonGesture)
 
         dlgt = Widgets.GalleryThumbnailDelegate(gallery_select_action=gallery_select_action)
 
@@ -482,7 +482,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
         def disableAndCall(button, action):
             for i, b in enumerate(self._buttons[:-1]):
-                logging.info('Disable button {}'.format(b.text()) )
+                logging.info('Disable button {}'.format(b.text()))
                 b.setEnabled(False)
                 b.update()
             self._label.setText(_('{} in progress'.format(button.text())))
@@ -542,8 +542,8 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         try:
             image = ImageQt.ImageQt(Image.open(self._pictureId))
             image = image.scaled(self.contentsRect().size(),
-                                QtCore.Qt.KeepAspectRatio,
-                                QtCore.Qt.FastTransformation)
+                             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                             QtCore.Qt.TransformationMode.FastTransformation)
 
             origin = ((self.width() - image.width()) // 2,
                     (self.height() - image.height()) // 2)
@@ -626,8 +626,8 @@ class CountdownMessage(QtWidgets.QFrame):
 
             pix = QtGui.QPixmap.fromImage(self.picture)
             pix = pix.scaled(self.contentsRect().size(),
-                             QtCore.Qt.KeepAspectRatio,
-                             QtCore.Qt.FastTransformation)
+                             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                             QtCore.Qt.TransformationMode.FastTransformation)
             origin = ((self.width() - pix.width()) // 2,
                       (self.height() - pix.height()) // 2)
             painter.drawPixmap(QtCore.QPoint(*origin), pix)
@@ -636,7 +636,7 @@ class CountdownMessage(QtWidgets.QFrame):
                   (self.height() - self._bar.height()) // 2)
         self._bar.render(painter, QtCore.QPoint(*offset),
                          self._bar.visibleRegion(),
-                         QtWidgets.QWidget.DrawChildren)
+                         QtWidgets.QWidget.RenderFlag.DrawChildren)
 
         painter.end()
 

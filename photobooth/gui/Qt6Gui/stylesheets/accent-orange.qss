@@ -1,22 +1,22 @@
 /* Color Accent */
 
-/* primary strong: #154c79 */
-/* primary light: #76b5c5 */
-/* primary faded: #abdbe3 */
-/* complementary faded: #f5e1c9 */
+/* primary strong: #e28743 */
+/* primary light: #eab676 */
+/* primary faded: #f5e1c9 */
+/* complementary faded: #abdbe3 */
 
 /* Outer items */
 
 QWidget {
     background-color: transparent;
     color: #eeeeee;
-    font-family: AmaticSC, sans-serif;
+    font-family: "Amatic SC", AmaticSC, sans-serif;
     font-size: 30px;
     font-weight: 800;
 }
 
 QMainWindow {
-    background: #ffffff qlineargradient(x1:0 y1:1, x2:1, y2:0, stop:0 #76b5c5, stop:0.6 #abdbe3, stop:1 #f5e1c9);
+    background: #ffffff qlineargradient(x1:0 y1:1, x2:1, y2:0, stop:0 #eab676, stop:0.6 #f5e1c9, stop:1 #abdbe3);
     color: #eeeeee;
 }
 
@@ -27,13 +27,13 @@ QPushButton {
     border-style: solid;
     border-width: 4px;
     border-radius: 8px;
-    color: #154c79;
-    border-color: #154c79;
+    color: #e28743;
+    border-color: #e28743;
     padding: 8px;
 }
 
 QPushButton:pressed {
-    background-color: #154c79;
+    background-color: #e28743;
     color: #eeeeee;
     border-color: #eeeeee;
 }
@@ -47,7 +47,7 @@ QFrame#WelcomeMessage {
 QFrame#WelcomeMessage QLabel {
     font-size: 40px;
     qproperty-alignment: AlignCenter;
-    color: #154c79;
+    color: #e28743;
 }
 
 QFrame#WelcomeMessage QLabel#WelcomeMessageLink {
@@ -63,7 +63,7 @@ QFrame#WaitMessage {
 
 QFrame#WaitMessage QLabel {
     font-size: 40px;
-    color: #154c79;
+    color: #e28743;
     qproperty-alignment: AlignCenter;
 }
 
@@ -82,11 +82,10 @@ QFrame#IdleMessage QFrame#IdleContainer {
     border-radius: 8px;
 }
 
-
 QFrame#IdleMessage QLabel#GalleryButtonHeaderLabel {
     font-size: 80px;
     qproperty-alignment: AlignCenter;
-    color: #76b5c5;
+    color: #eab676;
 }
 
 QFrame#IdleMessage QPushButton {
@@ -101,18 +100,18 @@ QFrame#IdleMessage QPushButton#GalleryButton {
     font-size: 80px;
     text-align: center;
 
-    border-color: #76b5c5;
+    border-color: #eab676;
 
 }
 
 QFrame#IdleMessage QPushButton#GalleryButton:pressed {
-    background-color: #76b5c5;
+    background-color: #eab676;
 }
 
 QFrame#IdleMessage QLabel#PrintLabel {
     font-size: 24px;
     qproperty-alignment: AlignCenter;
-    color: #154c79;
+    color: #e28743;
 }
 
 
@@ -125,7 +124,7 @@ QFrame#SlideshowMessage {
 QFrame#SlideshowMessage QLabel#StartLabel {
     font-size: 48px;
     qproperty-alignment: AlignCenter;
-    color: #154c79;
+    color: #e28743;
     background: #ccffffff;
     padding: 8px;
     border-radius: 8px;
@@ -139,7 +138,7 @@ QFrame#GalleryMessage {
 
 QFrame#GalleryMessage QLabel {
     font-size: 40px;
-    color: #154c79;
+    color: #e28743;
 }
 
 /* Gallery Select overlay */
@@ -152,14 +151,14 @@ QWidget#GallerySelectOverlay {
 /* Gallery Select message */
 
 QWidget#GallerySelectMessage QLabel {
-    color: #154c79;
+    color: #e28743;
     font-size: 40px;
     qproperty-alignment: AlignCenter;
 }
 
 QWidget#GallerySelectMessage QPushButton {
     margin: 20px;
-    background-color: #abdbe3;
+    background-color: #f5e1c9;
 }
 
 QWidget#GallerySelectMessage QPushButton:pressed {
@@ -167,8 +166,8 @@ QWidget#GallerySelectMessage QPushButton:pressed {
 
 QWidget#GallerySelectMessage QPushButton:disabled {
     background-color: #eeeeee;
-    color: #f5e1c9;
-    border-color: #f5e1c9;
+    color: #abdbe3;
+    border-color: #abdbe3;
 }
 
 /* Greeter Screen */
@@ -189,7 +188,7 @@ QFrame#GreeterMessage QLabel#Message {
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
-    color: #76b5c5;
+    color: #eab676;
 }
 
 QFrame#GreeterMessage QPushButton#Button {
@@ -198,9 +197,10 @@ QFrame#GreeterMessage QPushButton#Button {
     min-height: 100px;
     padding: 0;
     text-align: center;
-    color: #76b5c5;
-    border-color: #76b5c5;
+    color: #eab676;
+    border-color: #eab676;
 }
+
 
 
 /* Countdown Screen */
@@ -216,7 +216,7 @@ QFrame#PoseMessage {
 }
 
 QFrame#PoseMessage QLabel {
-    color: #154c79;
+    color: #e28743;
     font-size: 60px;
     qproperty-alignment: AlignCenter;
 }
@@ -237,14 +237,14 @@ QWidget#TransparentOverlay {
 /* Postprocess message */
 
 QWidget#PostprocessMessage QLabel {
-    color: #154c79;
+    color: #e28743;
     font-size: 60px;
     qproperty-alignment: AlignCenter;
 }
 
 QWidget#PostprocessMessage QPushButton {
     margin: 20px;
-    background-color: #abdbe3;
+    background-color: #f5e1c9;
 }
 
 QWidget#PostprocessMessage QPushButton:pressed {
@@ -252,20 +252,20 @@ QWidget#PostprocessMessage QPushButton:pressed {
 
 QWidget#PostprocessMessage QPushButton:disabled {
     background-color: #eeeeee;
-    color: #f5e1c9;
-    border-color: #f5e1c9;
+    color: #abdbe3;
+    border-color: #abdbe3;
 }
 
 
 /* Customizing settings */
 
 QTabWidget::pane {
-    background-color: #abdbe3;
+    background-color: #f5e1c9;
     border-style: solid;
     border-width: 1px;
     border-radius: 15px;
-    border-color: #154c79;
-    color: #154c79;
+    border-color: #e28743;
+    color: #e28743;
     padding: 10px;
     margin: 0; 
 }
@@ -280,12 +280,12 @@ QTabBar::tab {
     border-width: 2px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    border-color: #154c79;
+    border-color: #e28743;
     padding: 8px;
 }
 
 QTabBar::tab:selected {
-    background-color: #76b5c5;
+    background-color: #eab676;
 }
 
 QGroupBox {
@@ -293,13 +293,13 @@ QGroupBox {
     border-style: solid;
     border-width: 1px;
     border-radius: 15px;
-    border-color: #abdbe3;
+    border-color: #f5e1c9;
     margin: 0px;
     padding: 4px;
 }
 
 QTabWidget QWidget {
-    color: #154c79;
+    color: #e28743;
     font-size: 30px;
 }
 
@@ -310,25 +310,25 @@ QCheckBox::indicator {
     border-style: solid;
     border-width: 2px;
     border-radius: 5px;
-    border-color: #154c79;
+    border-color: #e28743;
 }
 
 QCheckBox::indicator::checked {
-    background-image: url(photobooth/gui/Qt5Gui/images/checkmark.png);
+    background-image: url(photobooth/gui/Qt6Gui/images/checkmark.png);
     background-repeat: no-repeat;
 }
 
 QComboBox, QDateEdit, QLineEdit, QSpinBox, QTimeEdit {
-    background-color: #abdbe3;
-    color: #154c79;
+    background-color: #f5e1c9;
+    color: #e28743;
     font-size: 30px;
 }
 
 QComboBox QAbstractItemView {
-    background-color: #abdbe3;
-    color: #154c79;
-    selection-background-color: #76b5c5;
-    selection-color: #154c79;
+    background-color: #f5e1c9;
+    color: #e28743;
+    selection-background-color: #eab676;
+    selection-color: #e28743;
 }
 
 QComboBox QAbstractItemView::item {

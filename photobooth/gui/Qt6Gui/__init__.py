@@ -36,4 +36,4 @@ styles = (('default', 'stylesheets/default.qss'),
           ('plain-800x480-Flirt', 'stylesheets/plain/800x480/plain-Flirt.qss'),  
           )
 
-from .PyQt5Gui import PyQt5Gui  # noqa
+from .PyQt6Gui import PyQt6Gui  # noqa
