@@ -212,6 +212,7 @@ QWidget#PostprocessMessage QPushButton:disabled {
 /* Customizing settings */
 
 QTabWidget::pane {
+    font-size: 12px;
     border-style: solid;
     border-width: 1px;
     border-radius: 15px;
@@ -228,11 +229,13 @@ QTabWidget::tab-bar {
 QTabBar::tab {
     background-color: transparent;
     border-style: solid;
-    border-width: 2px;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-width: 1px;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
     border-color: #014398;
-    padding: 8px;
+    padding: 2px;
+    font-size: 12px;
 }
 
 QTabBar::tab:selected {
@@ -248,19 +251,20 @@ QGroupBox {
     border-color: #014398;
     margin: 0px;
     padding: 4px;
+    font-size: 12px;
 }
 
 QTabWidget QWidget {
     color: #014398;
-    font-size: 30px;
+    font-size: 12px;
 }
 
 QCheckBox::indicator {
-    width: 30px;
-    height: 30px;
+    width: 18px;
+    height: 18px;
     background-color: transparent;
     border-style: solid;
-    border-width: 2px;
+    border-width: 1px;
     border-radius: 5px;
     border-color: #014398;
 }
@@ -273,7 +277,7 @@ QCheckBox::indicator::checked {
 QComboBox, QDateEdit, QLineEdit, QSpinBox, QTimeEdit {
     background-color: #000000;
     color: #014398;
-    font-size: 30px;
+    font-size: 12px;
 }
 
 QComboBox QAbstractItemView {
