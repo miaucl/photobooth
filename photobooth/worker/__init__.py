@@ -23,7 +23,6 @@ from time import localtime, strftime
 
 from .. import StateMachine
 from ..Threading import Workers
-import logging
 
 from .PictureList import PictureList
 from .PictureMailer import PictureMailer
