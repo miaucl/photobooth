@@ -18,5 +18,10 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 cd "$(dirname "$0")"
-.venv/bin/python -m photobooth --run
+if [ -d ".venv" ]
+then
+  .venv/bin/python -m photobooth --run
+else
+  python -m photobooth --run
+fi
 

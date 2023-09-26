@@ -19,8 +19,8 @@
 
 # Available printer modules as tuples of (config name, module name, class name)
 modules = (
-    ('PyQt6', 'PrinterPyQt6', 'PrinterPyQt6'),
-    ('PyQt6_PDF', 'PrinterPyQt6_PDF', 'PrinterPyQt6_PDF'),
+    ('PyQt', 'PrinterPyQt', 'PrinterPyQt'),
+    ('PyQt_PDF', 'PrinterPyQt_PDF', 'PrinterPyQt_PDF'),
     ('PyCUPS', 'PrinterPyCups', 'PrinterPyCups'))
 
 import os

@@ -93,7 +93,7 @@ class Worker:
             module = config.get('Printer', 'module')
             paper_size = (config.getInt('Printer', 'width'),
                           config.getInt('Printer', 'height'))
-            storage_dir = os.path.join(config.get('Storage', 'basedir'), 'pdf')
+            storage_dir = config.get('Storage', 'basedir')
             if config.getBool('Printer', 'confirmation'):
                 # Print with confirmation
                 self._postprocessPrintTasks.append(

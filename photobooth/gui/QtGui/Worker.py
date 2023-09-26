@@ -17,5 +17,45 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# Available gui modules as tuples of (config name, module name, class name)
-modules = (('PyQt', 'QtGui', 'PyQtGui'), )
+import queue
+import logging
+
+try:
+    from PyQt6 import QtCore
+except ImportError:
+    logging.info("PyQt6 not found, fallback to PyQt5")
+    try:
+        from PyQt5 import QtCore
+    except ImportError:
+        print("PyQt5 not found, no fallback available")
+        raise ImportError("No supported PyQt found")
+
+
+class Worker(QtCore.QThread):
+
+    def __init__(self, comm):
+
+        super().__init__()
+        self._comm = comm
+        self._queue = queue.Queue()
+
+    def put(self, task):
+
+        self._queue.put(task)
+
+    def get(self):
+
+        return self._queue.get()
+
+    def done(self):
+
+        self._queue.task_done()
+
+    def run(self):
+
+        while True:
+            task = self.get()
+            if task is None:
+                break
+            task()
+            self.done()
