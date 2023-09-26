@@ -26,7 +26,6 @@ If a photobooth.cfg file is present, all keys are merged with the photobooth.cfg
 If a watermark.png file is present, is is used instead.
 If a background.png file is present, is is used instead.
 If a language.txt file is present, us it to set the language env var.
-If a setup.py file is present, it is run just before the photobooth is launched.
 
 Attention: The files are saved, I use it with a read-only root filesystem that uses a temporary unionfs for storing files.
 It also adds a simple splash screen while loading.
@@ -182,8 +181,5 @@ if __name__ == "__main__":
             env["LANG"] = f.read().strip()
             print('LANG: "{}"'.format(env["LANG"]))
             sys.stdout.flush()
-
-    if os.path.exists(os.path.abspath(os.path.join(storage_path, 'setup.py'))):
-        subprocess.run(["python", os.path.abspath(os.path.join(storage_path, 'setup.py'))])
 
     subprocess.run(["./autorun.sh"], cwd=pb, env=env)

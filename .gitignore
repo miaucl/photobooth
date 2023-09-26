@@ -1,6 +1,6 @@
 /*.cfg
-/background.png
-/watermark.png
+/*.png
+/*.png
 cfgs
 **/*.pyc
 **/__pycache__
@@ -14,3 +14,4 @@ print_*.pdf
 build
 dist
 dbe_*
+test_data
