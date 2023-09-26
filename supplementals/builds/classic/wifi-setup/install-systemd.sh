@@ -40,11 +40,10 @@ After=multi-user.target
 After=graphical.target
 [Service]
 User=pi
-Restart=on-failure
-RestartSec=5s
+Restart=always
+RestartSec=60s
 WorkingDirectory=$DIR
 ExecStart=$DIR/$LAUNCH_SCRIPT
-ExecStop=/usr/bin/killall -9 $DIR/$LAUNCH_SCRIPT
 [Install]
 WantedBy=multi-user.target
 EOF
