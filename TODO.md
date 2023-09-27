@@ -20,7 +20,3 @@ Option to disable/enable it and provide values for single pictures
 - Export all data
 - Clean all data
 - Upload background/foreground/watermark/etc.
-
-## Bugs
-
-- Make front button more botton-y

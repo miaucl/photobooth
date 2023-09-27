@@ -63,7 +63,7 @@ QFrame#IdleMessage QFrame#IdleContainer {
     border-radius: 8px;
 }
 
-QFrame#IdleMessage QLabel#GalleryButtonHeaderLabel {
+QFrame#IdleMessage QLabel#HeaderLabel {
     font-size: 80px;
     color: #ffffff;
 }
@@ -73,11 +73,17 @@ QFrame#IdleMessage QPushButton {
     text-align: center;
 }
 
+QFrame#IdleMessage QPushButton#PhotoButton {
+    border-width: 4px;
+    border-color: #f3bfa2;
+    border-style: solid;
+}
+
 QFrame#IdleMessage QPushButton:pressed {
 }
 
 QFrame#IdleMessage QPushButton#GalleryButton {
-    font-size: 60px;
+    font-size: 30px;
 }
 
 QFrame#IdleMessage QLabel#PrintLabel {

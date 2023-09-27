@@ -164,8 +164,9 @@ class IdleMessage(QtWidgets.QFrame):
         galleryBtn.clicked.connect(gallery_action)
         galleryBtn.setObjectName('GalleryButton')
         btnHeaderLbl = QtWidgets.QLabel(self._message_label)
-        btnHeaderLbl.setObjectName('GalleryButtonHeaderLabel')
+        btnHeaderLbl.setObjectName('HeaderLabel')
         btn = QtWidgets.QPushButton(self._message_button)
+        btn.setObjectName('PhotoButton')
         btn.clicked.connect(trigger_action)
         if self._print_label:
             printCountLbl = QtWidgets.QLabel(self._print_label)
