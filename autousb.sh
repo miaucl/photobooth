@@ -34,12 +34,23 @@ It also adds a simple splash screen while loading.
 import dbus
 import time
 import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 import subprocess
 import os
 import configparser
+
+try:
+    from PyQt6.QtCore import *
+    from PyQt6.QtGui import *
+    from PyQt6.QtWidgets import *
+except ImportError:
+    print("Could not import PyQt6")
+    try:
+        from PyQt5.QtCore import *
+        from PyQt5.QtGui import *
+        from PyQt5.QtWidgets import *
+    except ImportError:
+        print("Could not import PyQt5")
+
 
 ignorelist = ['/dev/mmcblk0p1', '/dev/mmcblk0p2']
 

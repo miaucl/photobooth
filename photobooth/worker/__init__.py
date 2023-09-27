@@ -23,7 +23,6 @@ from time import localtime, strftime
 
 from .. import StateMachine
 from ..Threading import Workers
-import logging
 
 from .PictureList import PictureList
 from .PictureMailer import PictureMailer
@@ -43,7 +42,7 @@ class Worker:
         # Picture naming convention for assembled pictures
         path = os.path.join(config.get('Storage', 'basedir'),
                             config.get('Storage', 'basename'))
-        basename = strftime(path, localtime())
+        basename = strftime(path, localtime()) # Replace time placeholder in the storage path if available
         self._pictureList = PictureList(basename)
 
         # Counters
@@ -94,11 +93,11 @@ class Worker:
             module = config.get('Printer', 'module')
             paper_size = (config.getInt('Printer', 'width'),
                           config.getInt('Printer', 'height'))
-            pdf = config.getBool('Printer', 'pdf')
+            storage_dir = config.get('Storage', 'basedir')
             if config.getBool('Printer', 'confirmation'):
                 # Print with confirmation
                 self._postprocessPrintTasks.append(
-                    PostprocessorPrinter(module, paper_size, pdf))
+                    PostprocessorPrinter(module, paper_size, storage_dir))
                 # Counter for printed pictures
                 self._postprocessPrintTasks.append(self._printCounter)
                 # Event log for printed pictures
@@ -106,7 +105,7 @@ class Worker:
             else:
                 # Print autom. without confirmation
                 self._postProcessAutomTasks.append(
-                    PostprocessorPrinter(module, paper_size, pdf))
+                    PostprocessorPrinter(module, paper_size, storage_dir))
                 # Counter for printed pictures
                 self._postProcessAutomTasks.append(self._printCounter)
                 # Event log for printed pictures

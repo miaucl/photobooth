@@ -18,11 +18,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # Provide installed photobooth version
-from pkg_resources import get_distribution, DistributionNotFound
-try:
-    __version__ = get_distribution('photobooth').version
-except DistributionNotFound:
-    __version__ = 'unknown'
+__version__ = 'unknown'
 
 import argparse
 import gettext
@@ -170,7 +166,6 @@ class WebProcess(mp.Process):
             except Exception as e:
                 logging.exception('WebProcess: Exception "{}"'.format(e))
                 self._comm.send(Workers.MASTER, ErrorEvent('Web', str(e)))
-                break # TODO: REMOVE
 
         logging.debug('WebProcess: Exit')
 
@@ -201,10 +196,11 @@ def mainloop(comm, context):
 
 def run(argv, is_run):
 
-    logging.info('Photobooth version: %s', __version__)
-
     # Load configuration
     config = Config('photobooth.cfg')
+
+    __version__ = config.get('System', 'version')
+    logging.info('Photobooth version: %s', __version__)
 
     comm = Communicator()
     context = Context(comm, is_run)

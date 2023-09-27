@@ -37,13 +37,11 @@ from . import Printer
 
 class PrinterPyCups(Printer):
 
-    def __init__(self, page_size, print_pdf=False):
+    def __init__(self, page_size, storage_dir):
+
+        super().__init__(page_size, storage_dir)
 
         self._conn = cups.Connection() if cups else None
-
-        if print_pdf:
-            logging.error('Printing to PDF not supported with pycups')
-            self._conn = None
 
         if os.access('/dev/shm', os.W_OK):
             self._tmp_filename = '/dev/shm/print.jpg'

@@ -17,39 +17,45 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import queue
 import logging
-from colorsys import hsv_to_rgb
 
-from PIL import Image
+try:
+    from PyQt6 import QtCore
+except ImportError:
+    logging.info("PyQt6 not found, fallback to PyQt5")
+    try:
+        from PyQt5 import QtCore
+    except ImportError:
+        print("PyQt5 not found, no fallback available")
+        raise ImportError("No supported PyQt found")
 
-from .CameraInterface import CameraInterface
 
+class Worker(QtCore.QThread):
 
-class CameraDummy(CameraInterface):
-
-    def __init__(self):
+    def __init__(self, comm):
 
         super().__init__()
+        self._comm = comm
+        self._queue = queue.Queue()
 
-        self.hasPreview = True
-        self.hasIdle = False
-        self._size = (1920, 1280)
+    def put(self, task):
 
-        self._hue = 0
+        self._queue.put(task)
 
-        logging.info('Using CameraDummy')
+    def get(self):
 
-    def getPreview(self):
+        return self._queue.get()
 
-        logging.debug('Get preview')
+    def done(self):
 
-        return self.getPicture()
+        self._queue.task_done()
 
-    def getPicture(self):
+    def run(self):
 
-        logging.debug('Get picture')
-
-        self._hue = (self._hue + 1) % 360
-        r, g, b = hsv_to_rgb(self._hue / 360, .2, .9)
-        return Image.new('RGB', self._size, (int(r * 255), int(g * 255),
-                                             int(b * 255)))
+        while True:
+            task = self.get()
+            if task is None:
+                break
+            task()
+            self.done()

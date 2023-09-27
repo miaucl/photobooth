@@ -16,26 +16,17 @@ This is a Python application to build your own photobooth.
 
 * Capture a single or multiple pictures and assemble them in an m-by-n grid layout
 * Live preview during countdown
+* Slideshow during idle time
 * Store assembled pictures (and optionally the individual shots)
 * Printing of captured pictures (via Qt printing module or pycups)
+* Gallery to print pictures again
 * Highly customizable via settings menu inside the graphical user interface
-* Custom background for assembled pictures
+* Custom background, foreground and watermark for assembled pictures
+* Flask web server to access the gallery from external devices
 * Ability to skip single pictures in the m-by-n grid (e.g., to include a logo in the background image)
 * Support for external buttons and lamps via GPIO interface
 * Rudimentary WebDAV upload functionality (saves pictures to WebDAV storage) and mailer feature (mails pictures to a fixed email address)
 * Theming support using [Qt stylesheets](https://doc.qt.io/qt-5/stylesheet-syntax.html)
-
-### Screenshots
-
-Screenshots produced using `CameraDummy` that produces unicolor images.
-
-#### Theme _pastel_
-
-<img alt="Idle screen" title="Idle screen" src="screenshots/pastel_1.png" width="280" /> <img alt="Greeter screen" title="Greeter screen" src="screenshots/pastel_2.png" width="280" /> <img alt="Countdown screen" title="Countdown screen" src="screenshots/pastel_3.png" width="280" /> <img alt="Postprocessing screen" title="Postprocessing screen" src="screenshots/pastel_4.png" width="280" /> <img alt="Settings screen" title="Settings screen" src="screenshots/pastel_settings.png" width="280" />
-
-#### Theme _dark_
-
-<img alt="Idle screen" title="Idle screen" src="screenshots/dark_1.png" width="280" /> <img alt="Greeter screen" title="Greeter screen" src="screenshots/dark_2.png" width="280" /> <img alt="Countdown screen" title="Countdown screen" src="screenshots/dark_3.png" width="280" /> <img alt="Postprocessing screen" title="Postprocessing screen" src="screenshots/dark_4.png" width="280" />
 
 ### Fancy Templates
 
@@ -68,23 +59,26 @@ The slideshow presents images already taken in a random order after a set idle t
 
 ### Technical specifications
 
-* Many camera models supported, thanks to interfaces to [gPhoto2](http://www.gphoto.org/), [OpenCV](https://opencv.org/),  [Raspberry Pi camera module](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera)
+* Many camera models supported, thanks to interfaces to [gPhoto2](http://www.gphoto.org/), [OpenCV](https://opencv.org/),  [Raspberry Pi camera module 1 + 2](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera)
 * Tested on Standard x86 hardware and [Raspberry Pi](https://raspberrypi.org/) models 1B+, 2B, 3B, 3B+, 4 and 400
 * Flexible, modular design: Easy to add features or customize the appearance
 * Multi-threaded for responsive GUI and fast processing
-* Based on [Python 3](https://www.python.org/), [Pillow](https://pillow.readthedocs.io), and [Qt5](https://www.qt.io/developers/)
+* Based on [Python 3](https://www.python.org/), [Pillow](https://pillow.readthedocs.io), [Qt5/6](https://www.qt.io/developers/), and [Flask](https://flask.palletsprojects.com/en/2.3.x/#)
 
 ## Installation and usage
+
+A selection of working builds are documented in this repo. Use the one closest to your setting and start from there. The rest is up to you ;)
+
+* [Ubuntu](./supplementals/builds/ubuntu/INSTALL.md)
+* [Raspberry](./supplementals/builds/classic/INSTALL.md) + [Raspberry alternative](./supplementals/builds/prototype/INSTALL.md)
+* [Mac](./supplementals/builds/mac/INSTALL.md)
+* [Windows*](./supplementals/builds/windows/INSTALL.md)
 
 ### Hardware requirements
 
 * Some computer/SoC that is able to run Python 3.5+ as well as any of the supported camera libraries
-* Camera supported by gPhoto 2 (see [compatibility list](http://gphoto.org/proj/libgphoto2/support.php)), OpenCV (e.g., most standard webcams), or a Raspberry Pi Camera Module.
+* Camera supported by gPhoto 2 (see [compatibility list](http://gphoto.org/proj/libgphoto2/support.php)), OpenCV (e.g., most standard webcams), or a Raspberry Pi Camera Module (1,2,3,HD).
 * Optional: External buttons and lamps (in combination with gpiozero-compatible hardware)
-
-### Installing and running the photobooth
-
-See [installation instructions](INSTALL.md).
 
 ## Configuration and modifications
 
