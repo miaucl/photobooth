@@ -23,5 +23,4 @@ Option to disable/enable it and provide values for single pictures
 
 ## Bugs
 
-- Make counter more clear and away from the center
 - Make front button more botton-y

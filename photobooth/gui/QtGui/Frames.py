@@ -609,7 +609,7 @@ class CountdownMessage(QtWidgets.QFrame):
     def _initProgressBar(self, time):
 
         self._bar = Widgets.RoundProgressBar(0, time, time)
-        self._bar.setFixedSize(200, 200)
+        self._bar.setFixedSize(160, 160)
 
     def _updateProgressBar(self):
 
@@ -634,7 +634,7 @@ class CountdownMessage(QtWidgets.QFrame):
 
         painter = QtGui.QPainter(self)
 
-        # background image
+        # background image and countdown
         if self.picture is not None:
 
             pix = QtGui.QPixmap.fromImage(self.picture)
@@ -645,11 +645,16 @@ class CountdownMessage(QtWidgets.QFrame):
                       (self.height() - pix.height()) // 2)
             painter.drawPixmap(QtCore.QPoint(*origin), pix)
 
-        offset = ((self.width() - self._bar.width()) // 2,
-                  (self.height() - self._bar.height()) // 2)
-        self._bar.render(painter, QtCore.QPoint(*offset),
-                         self._bar.visibleRegion(),
-                         QtWidgets.QWidget.RenderFlag.DrawChildren)
+            # Center (old implementation)
+            # offset = ((self.width() - self._bar.width()) // 2,
+            #           (self.height() - self._bar.height()) // 2)
+            
+            # Bottom right of the preview
+            offset = ((self.width() - ((self.width() - pix.width()) // 2) - self._bar.width()),
+                      (self.height() - ((self.height() - pix.height()) // 2) - self._bar.height()))
+            self._bar.render(painter, QtCore.QPoint(*offset),
+                            self._bar.visibleRegion(),
+                            QtWidgets.QWidget.RenderFlag.DrawChildren)
 
         painter.end()
 
