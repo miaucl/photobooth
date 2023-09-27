@@ -138,7 +138,7 @@ class IdleMessage(QtWidgets.QFrame):
         self._gallery_button = _('Gallery ({})').format(pictureCount)
         self._message_label = _('Take a')
         self._message_button = _('Photo!')
-        self._print_label = _('Pictures printed: {}').format(printCount)
+        self._print_label = _('Pictures printed: {}').format(printCount) if printCount else None
         
         self._picture = None
 
@@ -167,15 +167,17 @@ class IdleMessage(QtWidgets.QFrame):
         btnHeaderLbl.setObjectName('GalleryButtonHeaderLabel')
         btn = QtWidgets.QPushButton(self._message_button)
         btn.clicked.connect(trigger_action)
-        printCountLbl = QtWidgets.QLabel(self._print_label)
-        printCountLbl.setObjectName('PrintLabel')
+        if self._print_label:
+            printCountLbl = QtWidgets.QLabel(self._print_label)
+            printCountLbl.setObjectName('PrintLabel')
 
         lay = QtWidgets.QVBoxLayout()
         lay.addWidget(btnHeaderLbl)
         lay.addWidget(btn)
         lay.addStretch(1)
         lay.addWidget(galleryBtn)
-        lay.addWidget(printCountLbl)
+        if self._print_label:
+            lay.addWidget(printCountLbl)
 
         container = QtWidgets.QFrame()
         container.setObjectName('IdleContainer')

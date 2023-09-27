@@ -14,20 +14,14 @@ Option to disable/enable it and provide values for single pictures
 
 - Add "event" name to config (party XY)
 - Add "build" name to config (photomaton)
+
 - Press ESC to enter menu
 - Trigger to restart/shutdown
-- Trigger to choose between wifi configs
-- Add page to build config for each build
 - Export all data
 - Clean all data
 - Upload background/foreground/watermark/etc.
 
-## Camera
-
-- Add camera module for native mac webcam
-
 ## Bugs
 
-- Hide "Pictures printed" counter when printer deactivated
 - Make counter more clear and away from the center
 - Make front button more botton-y

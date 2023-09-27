@@ -233,10 +233,11 @@ class PyQtGui(GuiSkeleton):
         self._timerViewSlides.stop()
         
         slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
+        show_printed_counter = self._cfg.getBool('Printer', 'enable')
 
         self._setWidget(Frames.IdleMessage(
             self._pictureCount.get(),
-            self._printCount.get(),
+            self._printCount.get() if show_printed_counter else None,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')), 
             lambda: self._comm.send(Workers.MASTER, GuiEvent('gallery'))))
         
