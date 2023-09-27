@@ -2,6 +2,8 @@
 
 These instructions are tailored towards running the photobooth on a Mac M1X, , using opencv for the camera and qtprinter for printing.
 
+_Hint: Just make sure, you only have one camera available for OpenCV. Continuity Camera using your IPhone might be causing problems._
+
 ## Install homebrew
 
 ```bash

@@ -18,6 +18,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import numpy as np
 
 from PIL import Image
 
@@ -58,9 +59,19 @@ class CameraOpenCV(CameraInterface):
     def getPicture(self):
 
         self.setActive()
-        status, frame = self._cap.read()
-        if not status:
-            raise RuntimeError('Failed to capture picture')
+        # Try multiple times, should the camera not be ready yet
+        for i in range(4):
+          status, frame = self._cap.read()
+          # Check for picture error
+          if not status:
+              raise RuntimeError(f"Failed to capture picture ({ i })")
+          # Check for black image, and try again
+          if np.amax(frame) == 0:
+            logging.info(f"Skip all black image ({ i })")
+            continue
+          # Break out when all good
+          else:
+            break
 
         # OpenCV yields frames in BGR format, conversion to RGB necessary.
         # (See https://stackoverflow.com/a/32270308)
