@@ -24,6 +24,7 @@ from time import localtime, strftime
 from .. import StateMachine
 from ..Threading import Workers
 
+from .AdList import AdList
 from .PictureList import PictureList
 from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
@@ -44,6 +45,7 @@ class Worker:
                             config.get('Storage', 'basename'))
         basename = strftime(path, localtime()) # Replace time placeholder in the storage path if available
         self._pictureList = PictureList(basename)
+        self._adList = AdList(config.get('Storage', 'ad_prefix'), config.get('Storage', 'basedir'))
 
         # Counters
         self._pictureCounter = Counter(config, 'picture')

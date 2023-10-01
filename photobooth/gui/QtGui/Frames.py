@@ -1173,10 +1173,16 @@ class Settings(QtWidgets.QFrame):
         fade_slideshow.setChecked(self._cfg.getBool('Slideshow', 'fade'))
         self.add('Slideshow', 'fade', fade_slideshow)
 
+        ad_every_nth_slide = QtWidgets.QSpinBox()
+        ad_every_nth_slide.setRange(1, 999999)
+        ad_every_nth_slide.setValue(self._cfg.getInt('Slideshow', 'ad_every_nth_slide'))
+        self.add('Slideshow', 'ad_every_nth_slide', ad_every_nth_slide)
+
         layout = QtWidgets.QFormLayout()
         layout.addRow(_('Wait for Slideshow time [s]:'), box_start_slideshow_time)
         layout.addRow(_('Wait for change pictures time [s]:'), box_pic_slideshow_time)
         layout.addRow(_('Wait for change pictures time [s]:'), fade_slideshow)
+        layout.addRow(_('Show an Ad every nth slide (0 = deactivated):'), ad_every_nth_slide)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -1220,8 +1226,10 @@ class Settings(QtWidgets.QFrame):
 
         basedir = QtWidgets.QLineEdit(self._cfg.get('Storage', 'basedir'))
         basename = QtWidgets.QLineEdit(self._cfg.get('Storage', 'basename'))
+        ad_prefix = QtWidgets.QLineEdit(self._cfg.get('Storage', 'ad_prefix'))
         self.add('Storage', 'basedir', basedir)
         self.add('Storage', 'basename', basename)
+        self.add('Storage', 'ad_prefix', ad_prefix)
 
         keep_pictures = QtWidgets.QCheckBox()
         keep_pictures.setChecked(self._cfg.getBool('Storage', 'keep_pictures'))
@@ -1244,6 +1252,7 @@ class Settings(QtWidgets.QFrame):
         layout.addRow(_('Output directory (strftime possible):'), lay_dir)
         layout.addRow(_('Basename of files (strftime possible):'), basename)
         layout.addRow(_('Keep single shots:'), keep_pictures)
+        layout.addRow(_('Ad prefix:'), ad_prefix)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -1450,7 +1459,7 @@ class Settings(QtWidgets.QFrame):
     def storeConfigAndRestart(self):
 
         self._cfg.set('Event', 'event',
-                      self.get('Event', 'event'))
+                      self.get('Event', 'event').text())
         self._cfg.set('Gui', 'fullscreen',
                       str(self.get('Gui', 'fullscreen').isChecked()))
         self._cfg.set('Gui', 'module',
@@ -1509,6 +1518,8 @@ class Settings(QtWidgets.QFrame):
                       str(self.get('Slideshow', 'pic_slideshow_time').text()))
         self._cfg.set('Slideshow', 'fade',
                       str(self.get('Slideshow', 'fade').isChecked()))
+        self._cfg.set('Slideshow', 'ad_every_nth_slide',
+                      self.get('Slideshow', 'ad_every_nth_slide').text())
 
         self._cfg.set('Gallery', 'columns',
                       str(self.get('Gallery', 'columns').text()))
@@ -1523,6 +1534,8 @@ class Settings(QtWidgets.QFrame):
                       self.get('Storage', 'basename').text())
         self._cfg.set('Storage', 'keep_pictures',
                       str(self.get('Storage', 'keep_pictures').isChecked()))
+        self._cfg.set('Storage', 'ad_prefix',
+                      self.get('Storage', 'ad_prefix').text())
 
         self._cfg.set('Gpio', 'enable_button',
                       str(self.get('Gpio', 'enable_button').isChecked()))

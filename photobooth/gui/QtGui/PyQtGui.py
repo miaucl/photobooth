@@ -20,6 +20,8 @@
 import logging
 import os
 
+from photobooth.worker import AdList
+
 try:
     from PyQt6 import QtCore
     from PyQt6 import QtGui
@@ -76,11 +78,14 @@ class PyQtGui(GuiSkeleton):
                             config.get('Storage', 'basename'))
         basename = strftime(path, localtime())
         self._pictureList = PictureList(basename)
+        self._adList = AdList(config.get('Storage', 'ad_prefix'), config.get('Storage', 'basedir'))
         self._pictureCount = Count(config, 'picture')
         self._printCount = Count(config, 'print')
+        self._ad_every_nth_slide = config.getInt('Slideshow', 'ad_every_nth_slide')
 
         self._default_size = (640,440)
         self._lastslide = None
+        self._slides_since_last_ad = self._ad_every_nth_slide
         
     def run(self):
 
@@ -158,15 +163,24 @@ class PyQtGui(GuiSkeleton):
 
     def _newslideshowPicture(self):
         
-        if (self._pictureList.counter == 0) :
+        if (self._pictureList.counter == 0 and self._ad_every_nth_slide == 0):
             picture = Image.new('RGBA',self._default_size,(128,128,128,0))
             text = _('No slideshow yet...')
-        else :
-            picturename, _x = self._pictureList.getRandomPic()
-            while (not os.path.isfile(picturename)):
+        else:
+            if (self._slides_since_last_ad <= self._ad_every_nth_slide and self._pictureList.counter > 0):
+                self._slides_since_last_ad += 1
                 picturename, _x = self._pictureList.getRandomPic()
-            logging.debug('Picture name for slideshow {}'.format(picturename))
-            picture = Image.open(picturename)
+                while (not os.path.isfile(picturename)):
+                    picturename, _x = self._pictureList.getRandomPic()
+                logging.debug('Picture name for slideshow {}'.format(picturename))
+                picture = Image.open(picturename)
+            else:
+                self._slides_since_last_ad = 0
+                adname, _x = self._adList.getRandomAd()
+                while (not os.path.isfile(adname)):
+                    adname, _x = self._adList.getRandomAd()
+                logging.debug('Add name for slideshow {}'.format(adname))
+                picture = Image.open(adname)
             text = ('')
             
         return(picture, text)
