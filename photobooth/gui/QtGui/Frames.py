@@ -50,11 +50,14 @@ from . import styles
 
 class Welcome(QtWidgets.QFrame):
 
-    def __init__(self, start_action, set_date_action, settings_action,
+    def __init__(self, version, build, event, start_action, set_date_action, settings_action,
                  exit_action):
 
         super().__init__()
         self.setObjectName('WelcomeMessage')
+        self.version = version
+        self.build = build
+        self.event = event
 
         self.initFrame(start_action, set_date_action, settings_action,
                        exit_action)
@@ -75,18 +78,28 @@ class Welcome(QtWidgets.QFrame):
         btnQuit.clicked.connect(exit_action)
 
         title = QtWidgets.QLabel(_('photobooth'))
+        title.setObjectName("WelcomeTitle")
+        event = QtWidgets.QLabel(self.event)
+        event.setObjectName("WelcomeEvent")
+        build_and_version = QtWidgets.QLabel("{} ({})".format(self.build, self.version))
+        build_and_version.setObjectName("WelcomeBuildAndVersion")
 
         url = 'https://github.com/miaucl/photobooth'
         link = QtWidgets.QLabel('<a href="{0}">{0}</a>'.format(url))
         link.setObjectName('WelcomeMessageLink')
 
         lay = QtWidgets.QVBoxLayout()
+        lay.addStretch(1)
         lay.addWidget(title)
+        lay.addWidget(event)
+        lay.addWidget(build_and_version)
+        lay.addStretch(1)
         lay.addWidget(btnStart)
         lay.addWidget(btnSetDate)
         lay.addWidget(btnSettings)
         lay.addWidget(btnQuit)
         lay.addWidget(link)
+        lay.addStretch(1)
         self.setLayout(lay)
 
 class WaitMessage(QtWidgets.QFrame):
@@ -130,11 +143,12 @@ class WaitMessage(QtWidgets.QFrame):
 
 class IdleMessage(QtWidgets.QFrame):
 
-    def __init__(self, pictureCount, printCount, trigger_action, gallery_action):
+    def __init__(self, event, pictureCount, printCount, trigger_action, gallery_action):
 
         super().__init__()
         self.setObjectName('IdleMessage')
 
+        self._event_label = event
         self._gallery_button = _('Gallery ({})').format(pictureCount)
         self._message_label = _('Take a')
         self._message_button = _('Photo!')
@@ -160,6 +174,8 @@ class IdleMessage(QtWidgets.QFrame):
 
     def initFrame(self, trigger_action, gallery_action):
 
+        eventLbl = QtWidgets.QLabel(self._event_label)
+        eventLbl.setObjectName('EventLabel')
         galleryBtn = QtWidgets.QPushButton(self._gallery_button)
         galleryBtn.clicked.connect(gallery_action)
         galleryBtn.setObjectName('GalleryButton')
@@ -173,12 +189,14 @@ class IdleMessage(QtWidgets.QFrame):
             printCountLbl.setObjectName('PrintLabel')
 
         lay = QtWidgets.QVBoxLayout()
+        lay.addWidget(eventLbl)
+        lay.addStretch(1)
         lay.addWidget(btnHeaderLbl)
         lay.addWidget(btn)
-        lay.addStretch(1)
-        lay.addWidget(galleryBtn)
+        lay.addStretch(5)
         if self._print_label:
             lay.addWidget(printCountLbl)
+        lay.addWidget(galleryBtn)
 
         container = QtWidgets.QFrame()
         container.setObjectName('IdleContainer')
@@ -823,6 +841,7 @@ class Settings(QtWidgets.QFrame):
     def createTabs(self):
 
         tabs = QtWidgets.QTabWidget()
+        tabs.addTab(self.createEventSettings(), _('Event'))
         tabs.addTab(self.createGuiSettings(), _('Interface'))
         tabs.addTab(self.createPhotoboothSettings(), _('Photobooth'))
         tabs.addTab(self.createCameraSettings(), _('Camera'))
@@ -872,6 +891,20 @@ class Settings(QtWidgets.QFrame):
         cb.setItemDelegate(delegate)
 
         return cb
+
+    def createEventSettings(self):
+
+        self.init('Event')
+
+        event = QtWidgets.QLineEdit()
+        event.setText(self._cfg.get("Event", "event"))
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Event:'), event)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
 
     def createGuiSettings(self):
 
@@ -1416,6 +1449,8 @@ class Settings(QtWidgets.QFrame):
 
     def storeConfigAndRestart(self):
 
+        self._cfg.set('Event', 'event',
+                      self.get('Event', 'event'))
         self._cfg.set('Gui', 'fullscreen',
                       str(self.get('Gui', 'fullscreen').isChecked()))
         self._cfg.set('Gui', 'module',

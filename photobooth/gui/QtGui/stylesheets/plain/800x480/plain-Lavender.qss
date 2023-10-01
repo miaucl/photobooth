@@ -43,8 +43,16 @@ QFrame#WelcomeMessage {
     padding: 30px;
 }
 
-QFrame#WelcomeMessage QLabel {
-    font-size: 40px;
+QFrame#WelcomeMessage QLabel#WelcomeTitle {
+    font-size: 30px;
+}
+
+QFrame#WelcomeMessage QLabel#WelcomeEvent {
+    font-size: 56px;
+}
+
+QFrame#WelcomeMessage QLabel#WelcomeBuildAndVersion {
+    font-size: 12px;
 }
 
 QFrame#WelcomeMessage QLabel#WelcomeMessageLink {
@@ -58,9 +66,14 @@ QFrame#IdleMessage {
 }
 
 QFrame#IdleMessage QFrame#IdleContainer {
-    margin: 60px 20px 60px 20px;
-    padding: 40px 20px 20px 20px;
+    margin: 8px 8px 8px 8px;
+    padding: 8px 8px 8px 8px;
     border-radius: 8px;
+}
+
+QFrame#IdleMessage QLabel#EventLabel {
+    font-size: 40px;
+    color: #d661dc;
 }
 
 QFrame#IdleMessage QLabel#HeaderLabel {

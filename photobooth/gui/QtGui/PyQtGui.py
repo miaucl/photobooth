@@ -210,7 +210,10 @@ class PyQtGui(GuiSkeleton):
         self._disableEscape()
         self._timerViewSlides.stop()
         self._timerStartSlideshow.stop()
-        self._setWidget(Frames.Welcome(
+        version = self._cfg.get('System', 'version')
+        build = self._cfg.get('System', 'build')
+        event = self._cfg.get('Event', 'event')
+        self._setWidget(Frames.Welcome(version, build, event,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('start')),
             self._showSetDateTime, self._showSettings, self.close))
         if QtWidgets.QApplication.overrideCursor() != 0:
@@ -232,10 +235,12 @@ class PyQtGui(GuiSkeleton):
         self._enableTrigger()
         self._timerViewSlides.stop()
         
+        event = self._cfg.get('Event', 'event')
         slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
         show_printed_counter = self._cfg.getBool('Printer', 'enable')
 
         self._setWidget(Frames.IdleMessage(
+            event,
             self._pictureCount.get(),
             self._printCount.get() if show_printed_counter else None,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')), 

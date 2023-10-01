@@ -12,9 +12,6 @@ Option to disable/enable it and provide values for single pictures
 
 ## Add maintenance screen
 
-- Add "event" name to config (party XY)
-- Add "build" name to config (photomaton)
-
 - Press ESC to enter menu
 - Trigger to restart/shutdown
 - Export all data

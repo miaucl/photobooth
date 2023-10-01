@@ -25,8 +25,7 @@ TEMP NEXT VERSION:
 - Raspberry Pi Lens (CHF 26.20) [link](https://www.digitec.ch/de/s1/product/raspberry-pi-camera-diverse-elektronikmodul-13191781)
 - Raspberry Pi Cable (CHF 9.00) [link](https://www.pi-shop.ch/flex-kabel-fuer-das-raspberry-pi-kamera-modul-46cm)
 - SanDisk (CHF 9.85) [link](https://www.digitec.ch/de/s1/product/sandisk-ultra-flair-16-gb-usb-a-usb-30-usb-stick-5751581?supplier=406802)
-- 10.1inch (CHF 88.90) [link](https://www.pi-shop.ch/10-1inch-capacitive-touch-display-for-raspberry-pi)
-- 10.1inch QLED (CHF 139.90) [link](https://www.pi-shop.ch/10-1inch-qled-quantum-dot-display-capacitive-touch-1280-720)
+- 10.1inch (CHF 88.90) [link](https://www.pi-shop.ch/10-1inch-capacitive-touch-display-for-raspberry-pi) <https://www.waveshare.com/wiki/10.1inch_DSI_LCD_(C)>
 
 videoleuchte
 - https://www.digitec.ch/de/s1/product/streamplify-light-14-streaming-ringleuchte-dauerlicht-18323288
