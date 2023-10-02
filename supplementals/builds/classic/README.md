@@ -122,3 +122,12 @@ Hide volumes and wastebasket on the desktop by right clicking on desktop and go 
 Rotate the default orientation to portrait in the settings. (left)
 
 Connect raspberry to printer network
+
+Disable privileged ports:
+
+```bash
+#save configuration permanently
+echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-unprivileged-ports.conf
+#apply conf
+sysctl --system
+```
