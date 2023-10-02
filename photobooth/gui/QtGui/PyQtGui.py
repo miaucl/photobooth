@@ -167,7 +167,7 @@ class PyQtGui(GuiSkeleton):
             picture = Image.new('RGBA',self._default_size,(128,128,128,0))
             text = _('No slideshow yet...')
         else:
-            if (self._slides_since_last_ad <= self._ad_every_nth_slide and self._pictureList.counter > 0):
+            if (self._ad_every_nth_slide == 0 or self._slides_since_last_ad < self._ad_every_nth_slide and self._pictureList.counter > 0):
                 self._slides_since_last_ad += 1
                 picturename, _x = self._pictureList.getRandomPic()
                 while (not os.path.isfile(picturename)):
