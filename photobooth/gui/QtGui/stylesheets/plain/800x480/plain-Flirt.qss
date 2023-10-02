@@ -227,6 +227,11 @@ QWidget#PostprocessMessage QPushButton:disabled {
     color: #666666;
 }
 
+/* RoundProgressBar color */
+QWidget#RoundProgressBar {
+    background-color: #ffffff;
+    color: #ae0088;
+}
 
 /* Customizing settings */
 

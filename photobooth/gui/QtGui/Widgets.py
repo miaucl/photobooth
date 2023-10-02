@@ -103,12 +103,13 @@ class RoundProgressBar(QtWidgets.QWidget):
     def __init__(self, begin, end, value):
 
         super().__init__()
+        self.setObjectName('RoundProgressBar')
 
         self._begin = begin
         self._end = end
         self._value = value
 
-        self._data_pen_width = 7
+        self._data_pen_width = 10 # Put a "7" < 10 for a border around the moving arc
         self._outline_pen_width = 10
         self._null_position = 90
 
