@@ -852,6 +852,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createStorageSettings(), _('Storage'))
         tabs.addTab(self.createGpioSettings(), _('GPIO'))
         tabs.addTab(self.createPrinterSettings(), _('Printer'))
+        tabs.addTab(self.createWebSettings(), _('Web'))
         tabs.addTab(self.createMailerSettings(), _('Mailer'))
         tabs.addTab(self.createUploadSettings(), _('Upload'))
         return tabs
@@ -1456,6 +1457,33 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createWebSettings(self):
+
+        self.init('Web')
+
+        enable = QtWidgets.QCheckBox()
+        enable.setChecked(self._cfg.getBool('Web', 'enable_server'))
+        self.add('Web', 'enable_server', enable)
+
+        host = QtWidgets.QLineEdit(self._cfg.get('Web', 'host'))
+        self.add('Web', 'host', host)
+
+        port = QtWidgets.QLineEdit(self._cfg.get('Web', 'port'))
+        self.add('Web', 'port', port)
+
+        link = QtWidgets.QLineEdit(self._cfg.get('Web', 'link'))
+        self.add('Web', 'link', link)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Enable Web server:'), enable)
+        layout.addRow(_('Server host (0.0.0.0 for wildcard):'), host)
+        layout.addRow(_('Server port:'), port)
+        layout.addRow(_('Link:'), link)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
     def storeConfigAndRestart(self):
 
         self._cfg.set('Event', 'event',
@@ -1593,6 +1621,15 @@ class Settings(QtWidgets.QFrame):
                       self.get('UploadWebdav', 'user').text())
         self._cfg.set('UploadWebdav', 'password',
                       self.get('UploadWebdav', 'password').text())
+
+        self._cfg.set('Web', 'enable_server',
+                      str(self.get('Web', 'enable_server').isChecked()))
+        self._cfg.set('Web', 'host',
+                      self.get('Web', 'host').text())
+        self._cfg.set('Web', 'port',
+                      self.get('Web', 'port').text())
+        self._cfg.set('Web', 'link',
+                      self.get('Web', 'link').text())
 
         self._cfg.write()
         self._restartAction()

@@ -63,7 +63,7 @@ class Web:
             picture_list = self._pictureList
 
             index_data = {
-                "name": config.get('Web', 'name'),
+                "name": config.get('Event', 'event'),
                 "link": config.get('Web', 'link'),
                 "count": self._pictureList.count(),
             }
