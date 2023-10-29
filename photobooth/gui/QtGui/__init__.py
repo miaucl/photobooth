@@ -34,6 +34,18 @@ styles = (('default', 'stylesheets/default.qss'),
           ('plain-800x480-CornflowerBlue', 'stylesheets/plain/800x480/plain-CornflowerBlue.qss'),
           ('plain-800x480-Lavender', 'stylesheets/plain/800x480/plain-Lavender.qss'),
           ('plain-800x480-Flirt', 'stylesheets/plain/800x480/plain-Flirt.qss'),  
+
+          ('plain-1280x800-Maroon', 'stylesheets/plain/1280x800/plain-Maroon.qss'),
+          ('plain-1280x800-Salmon', 'stylesheets/plain/1280x800/plain-Salmon.qss'),
+          ('plain-1280x800-HotCinnamon', 'stylesheets/plain/1280x800/plain-HotCinnamon.qss'),
+          ('plain-1280x800-GoldenTainoi', 'stylesheets/plain/1280x800/plain-GoldenTainoi.qss'),
+          ('plain-1280x800-VerdunGreen', 'stylesheets/plain/1280x800/plain-VerdunGreen.qss'),
+          ('plain-1280x800-PastelGreen', 'stylesheets/plain/1280x800/plain-PastelGreen.qss'),
+          ('plain-1280x800-Malibu', 'stylesheets/plain/1280x800/plain-Malibu.qss'),
+          ('plain-1280x800-CongressBlue', 'stylesheets/plain/1280x800/plain-CongressBlue.qss'),
+          ('plain-1280x800-CornflowerBlue', 'stylesheets/plain/1280x800/plain-CornflowerBlue.qss'),
+          ('plain-1280x800-Lavender', 'stylesheets/plain/1280x800/plain-Lavender.qss'),
+          ('plain-1280x800-Flirt', 'stylesheets/plain/1280x800/plain-Flirt.qss'),  
           )
 
 from .PyQtGui import PyQtGui  # noqa
