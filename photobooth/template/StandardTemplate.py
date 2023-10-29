@@ -5,7 +5,7 @@ import logging
 
 from . import Template
 
-from PIL import Image, ImageOps
+from PIL import Image
 from io import BytesIO
 
 from .PictureDimensions import PictureDimensions
