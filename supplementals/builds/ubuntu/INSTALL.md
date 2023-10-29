@@ -28,7 +28,7 @@ These dependencies are required to run the application.
 In a terminal, enter the following commands
 
 ```bash
-sudo apt install python3-dev python3-pip venv 
+sudo apt install python3-dev python3-pip virtualenv 
 sudo apt install gphoto2 libgphoto2-dev # to use gphoto2
 sudo apt install libffi6 libffi-dev # for gphoto2-cffi bindings
 sudo apt install libcups2-dev # to use pycups

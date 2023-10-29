@@ -45,10 +45,10 @@ These dependencies are required to run the application.
 In a terminal, enter the following commands
 
 ```bash
-sudo apt install python3-dev python3-pip venv 
-sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools PyQt5-dev PyQt5-dev-tools # for PyQt5-GUI
+sudo apt install python3-dev python3-pip virtualenv 
+sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools python3-pyqt5 # for PyQt5-GUI
 sudo apt install libcups2-dev # to use pycups
-sudo apt install -y python3-picamera2 # to use picamera2
+sudo apt install python3-picamera2 # to use picamera2
 sudo apt install gettext # to add other languages
 ```
 
