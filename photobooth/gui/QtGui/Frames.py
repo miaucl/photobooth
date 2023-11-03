@@ -1286,25 +1286,6 @@ class Settings(QtWidgets.QFrame):
         lamp_pin.setValue(self._cfg.getInt('Gpio', 'lamp_pin'))
         self.add('Gpio', 'lamp_pin', lamp_pin)
 
-        chan_r_pin = QtWidgets.QSpinBox()
-        chan_r_pin.setRange(1, 40)
-        chan_r_pin.setValue(self._cfg.getInt('Gpio', 'chan_r_pin'))
-        self.add('Gpio', 'chan_r_pin', chan_r_pin)
-
-        chan_g_pin = QtWidgets.QSpinBox()
-        chan_g_pin.setRange(1, 40)
-        chan_g_pin.setValue(self._cfg.getInt('Gpio', 'chan_g_pin'))
-        self.add('Gpio', 'chan_g_pin', chan_g_pin)
-
-        chan_b_pin = QtWidgets.QSpinBox()
-        chan_b_pin.setRange(1, 40)
-        chan_b_pin.setValue(self._cfg.getInt('Gpio', 'chan_b_pin'))
-        self.add('Gpio', 'chan_b_pin', chan_b_pin)
-
-        lay_rgb = QtWidgets.QHBoxLayout()
-        lay_rgb.addWidget(chan_r_pin)
-        lay_rgb.addWidget(chan_g_pin)
-        lay_rgb.addWidget(chan_b_pin)
 
         layout = QtWidgets.QFormLayout()
         layout.addRow(_('Enable GPIO buttons:'), enable_button)
@@ -1312,7 +1293,6 @@ class Settings(QtWidgets.QFrame):
         layout.addRow(_('Trigger button pin (BCM numbering):'), trig_pin)
         layout.addRow(_('Enable GPIO light:'), enable_light)
         layout.addRow(_('Idle lamp pin (BCM numbering):'), lamp_pin)
-        layout.addRow(_('RGB LED pins (BCM numbering):'), lay_rgb)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -1574,12 +1554,6 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Gpio', 'enable_light',
                       str(self.get('Gpio', 'enable_light').isChecked()))
         self._cfg.set('Gpio', 'lamp_pin', self.get('Gpio', 'lamp_pin').text())
-        self._cfg.set('Gpio', 'chan_r_pin',
-                      self.get('Gpio', 'chan_r_pin').text())
-        self._cfg.set('Gpio', 'chan_g_pin',
-                      self.get('Gpio', 'chan_g_pin').text())
-        self._cfg.set('Gpio', 'chan_b_pin',
-                      self.get('Gpio', 'chan_b_pin').text())
 
         self._cfg.set('Printer', 'enable',
                       str(self.get('Printer', 'enable').isChecked()))

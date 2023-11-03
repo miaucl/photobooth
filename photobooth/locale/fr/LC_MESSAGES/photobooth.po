@@ -326,10 +326,6 @@ msgstr "Activer les lumières GPIO :"
 msgid "Idle lamp pin (BCM numbering):"
 msgstr "Pin pour lampe de veille (numérotation BCM) :"
 
-#: photobooth/gui/QtGui/Frames.py:1315
-msgid "RGB LED pins (BCM numbering):"
-msgstr "Pins pour LED RGB (numérotation BCM) :"
-
 #: photobooth/gui/QtGui/Frames.py:1352
 msgid "Enable printing:"
 msgstr "Permettre l'impression :"
