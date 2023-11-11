@@ -39,7 +39,7 @@ msgstr "Galerie ({})"
 
 #: photobooth/gui/QtGui/Frames.py:153
 msgid "Take a"
-msgstr "Prenez un"
+msgstr "Prenez une"
 
 #: photobooth/gui/QtGui/Frames.py:154
 msgid "Photo!"
@@ -63,7 +63,7 @@ msgstr "pour {} photos ..."
 
 #: photobooth/gui/QtGui/Frames.py:242
 msgid "for the photo"
-msgstr "pour le photo"
+msgstr "pour la photo"
 
 #: photobooth/gui/QtGui/Frames.py:309
 msgid "Photo {} of {}..."
@@ -71,7 +71,7 @@ msgstr "Photo {} sur {} ..."
 
 #: photobooth/gui/QtGui/Frames.py:312
 msgid "Taking a photo..."
-msgstr "Prendre un photo ..."
+msgstr "Photo en cours ..."
 
 #: photobooth/gui/QtGui/Frames.py:360
 msgid "Touch to exit slideshow"
@@ -99,7 +99,7 @@ msgstr "Prochaine photo"
 
 #: photobooth/gui/QtGui/Frames.py:721
 msgid "Happy with your picture?"
-msgstr "Vous êtes satisfait de votre photo ?"
+msgstr "Étes-vous satisfait de votre photo ?"
 
 #: photobooth/gui/QtGui/Frames.py:755
 msgid "Date:"
@@ -115,7 +115,7 @@ msgstr "Définir la date et l'heure du système :"
 
 #: photobooth/gui/QtGui/Frames.py:768 photobooth/gui/QtGui/Frames.py:865
 msgid "Save and restart"
-msgstr "Sauvegarde et redémarre"
+msgstr "Sauvegarde et redémarrage"
 
 #: photobooth/gui/QtGui/Frames.py:772 photobooth/gui/QtGui/Frames.py:869
 msgid "Cancel"
@@ -123,7 +123,7 @@ msgstr "Annuler"
 
 #: photobooth/gui/QtGui/Frames.py:844
 msgid "Event"
-msgstr "Evenement"
+msgstr "Événement"
 
 #: photobooth/gui/QtGui/Frames.py:845
 msgid "Interface"
