@@ -110,14 +110,18 @@ class Gpio:
 
         if self._is_enabled_button:
             self._is_trigger = True
-            
-        if self._is_enabled_light:
-            self._gpio.lampOn(self._lamp)
 
     def disableTrigger(self):
 
         if self._is_enabled_button:
             self._is_trigger = False
+
+    def enableLamp(self):
+            
+        if self._is_enabled_light:
+            self._gpio.lampOn(self._lamp)
+
+    def disableLamp(self):
             
         if self._is_enabled_light:
             self._gpio.lampOff(self._lamp)
@@ -138,42 +142,52 @@ class Gpio:
     def showIdle(self):
 
         self.enableTrigger()
+        self.disableLamp()
 
     def showSlideshow(self):
 
         self.enableTrigger()
+        self.disableLamp()
 
     def showGallery(self):
 
         self.disableTrigger()
+        self.disableLamp()
 
     def showGallerySelect(self):
 
         self.disableTrigger()
+        self.disableLamp()
 
     def showGreeter(self):
 
         self.disableTrigger()
+        self.disableLamp()
 
     def showCountdown(self):
 
-        pass
+        self.disableTrigger()
+        self.enableLamp()
 
     def showCapture(self):
 
-        pass
+        self.disableTrigger()
+        self.enableLamp()
 
     def showAssemble(self):
 
-        pass
+        self.disableTrigger()
+        self.disableLamp()
 
     def showReview(self):
 
-        pass
+        self.disableTrigger()
+        self.disableLamp()
 
     def showPostprocess(self):
 
-        pass
+        self.disableTrigger()
+        self.disableLamp()
 
 
 class Entities:
@@ -230,8 +244,3 @@ class Entities:
 
         if index is not None:
             self._lamps[index].off()
-
-    def lampToggle(self, index):
-
-        if index is not None:
-            self._lamps[index].toggle()
