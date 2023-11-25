@@ -71,7 +71,7 @@ This will create a folder `photobooth` with all necessary files.
 Run the following command to download and install all dependencies and the photobooth:
 
 ```bash
-pip install numpy Pillow gpiozero pycups requests PyQt5 picamera2 Flask
+pip install numpy Pillow gpiozero pycups requests PyQt5 picamera2 Flask boto3 qrcode
 ```
 
 ## Run Photobooth from Terminal

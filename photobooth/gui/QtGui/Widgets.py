@@ -20,6 +20,7 @@
 import math
 import os
 import logging
+import qrcode
 
 try:
     from PyQt6 import QtCore
@@ -358,4 +359,32 @@ class GallerySelectOverlay(QtWidgets.QWidget):
         painter = QtGui.QPainter(self)
         self.style().drawPrimitive(QtWidgets.QStyle.PrimitiveElement.PE_Widget, opt, painter,
                                    self)
+        painter.end()
+
+class UploadS3Overlay(QtWidgets.QWidget):
+
+    def __init__(self, parent, qr_data):
+
+        super().__init__(parent)
+        self.setObjectName('UploadS3Overlay')
+
+        img = qrcode.make(qr_data, version=3)
+        qim = ImageQt.ImageQt(img)
+        self._pix = QtGui.QPixmap.fromImage(qim)
+
+        self._rect = QtCore.QRect(0, 0, self._pix.rect().width(), self._pix.rect().height())
+        self._rect.moveCenter(parent.rect().center())
+        self.setGeometry(self._rect)
+
+        self.show()
+
+    def paintEvent(self, event):
+
+        painter = QtGui.QPainter(self)
+
+        imgRect = self._pix.rect()
+        devRect = QtCore.QRect(0, 0, painter.device().width(), painter.device().height())
+        imgRect.moveCenter(devRect.center())
+
+        painter.drawPixmap(imgRect.topLeft(), self._pix)
         painter.end()

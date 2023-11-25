@@ -150,6 +150,33 @@ QWidget#GallerySelectMessage QPushButton:disabled {
     color: #666666;
 }
 
+QWidget#GallerySelectMessage QTabWidget::pane {
+    font-size: 24px;
+    margin: 0; 
+    border-style: none;
+    background-color: transparent;
+}
+
+QWidget#GallerySelectMessage QTabWidget::tab-bar {
+    alignment: center;
+}
+
+QWidget#GallerySelectMessage QTabBar::tab {
+    background-color: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    border-color: #5b71f4;
+    padding: 4px;
+    margin: 4px;
+    font-size: 24px;
+}
+
+QWidget#GallerySelectMessage QTabBar::tab:selected {
+    background-color: #bdc6fa;
+    color: #000000;
+}
+
 /* Greeter Screen */
 
 QFrame#GreeterMessage {
@@ -227,6 +254,33 @@ QWidget#PostprocessMessage QPushButton:disabled {
     color: #666666;
 }
 
+QWidget#PostprocessMessage QTabWidget::pane {
+    font-size: 24px;
+    margin: 0; 
+    border-style: none;
+    background-color: transparent;
+}
+
+QWidget#PostprocessMessage QTabWidget::tab-bar {
+    alignment: center;
+}
+
+QWidget#PostprocessMessage QTabBar::tab {
+    background-color: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    border-color: #5b71f4;
+    padding: 4px;
+    margin: 4px;
+    font-size: 24px;
+}
+
+QWidget#PostprocessMessage QTabBar::tab:selected {
+    background-color: #bdc6fa;
+    color: #000000;
+}
+
 /* RoundProgressBar color */
 QWidget#RoundProgressBar {
     background-color: #ffffff;
@@ -235,7 +289,7 @@ QWidget#RoundProgressBar {
 
 /* Customizing settings */
 
-QTabWidget::pane {
+QWidget#Settings QTabWidget::pane {
     font-size: 12px;
     border-style: solid;
     border-width: 1px;
@@ -246,11 +300,11 @@ QTabWidget::pane {
     margin: 0; 
 }
 
-QTabWidget::tab-bar {
+QWidget#Settings QTabWidget::tab-bar {
     alignment: center;
 }
 
-QTabBar::tab {
+QWidget#Settings QTabBar::tab {
     background-color: transparent;
     border-style: solid;
     border-width: 1px;
@@ -262,12 +316,12 @@ QTabBar::tab {
     font-size: 12px;
 }
 
-QTabBar::tab:selected {
+QWidget#Settings QTabBar::tab:selected {
     background-color: #bdc6fa;
     color: #000000;
 }
 
-QGroupBox {
+QWidget#Settings QGroupBox {
     background-color: transparent;
     border-style: solid;
     border-width: 1px;
@@ -278,12 +332,12 @@ QGroupBox {
     font-size: 12px;
 }
 
-QTabWidget QWidget {
+QWidget#Settings QTabWidget QWidget {
     color: #5b71f4;
     font-size: 12px;
 }
 
-QCheckBox::indicator {
+QWidget#Settings QCheckBox::indicator {
     width: 18px;
     height: 18px;
     background-color: transparent;
@@ -298,20 +352,20 @@ QCheckBox::indicator::checked {
     background-repeat: no-repeat;
 }
 
-QComboBox, QDateEdit, QLineEdit, QSpinBox, QTimeEdit {
+QWidget#Settings QWidget#Settings QComboBox, QDateEdit, QLineEdit, QSpinBox, QTimeEdit {
     background-color: #000000;
     color: #5b71f4;
     font-size: 12px;
 }
 
-QComboBox QAbstractItemView {
+QWidget#Settings QComboBox QAbstractItemView {
     background-color: #000000;
     color: #5b71f4;
     selection-background-color: #bdc6fa;
     selection-color: #5b71f4;
 }
 
-QComboBox QAbstractItemView::item {
+QWidget#Settings QComboBox QAbstractItemView::item {
     margin: 5px;
     min-height: 50px;
 }

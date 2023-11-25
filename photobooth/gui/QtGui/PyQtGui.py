@@ -311,6 +311,10 @@ class PyQtGui(GuiSkeleton):
     def showGallerySelect(self, state):
 
         slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
+        uploads3 = {
+            "enable": self._cfg.getBool('UploadS3', 'enable'),
+            "link": os.path.join(self._cfg.get('UploadS3', 'bucket'), self._cfg.get('UploadS3', 'basepath'))
+        }
 
         self._timerStartSlideshow.setSingleShot(True)
         self._timerStartSlideshow.start(slideshow_time)
@@ -318,10 +322,8 @@ class PyQtGui(GuiSkeleton):
         if state.action is None:
             items = self._postprocess.getAllItems()
 
-            # self._pictureList.findExistingFiles()
-
             Frames.GallerySelectMessage(
-                self._gui.centralWidget(), self._pictureList, items, self._worker, state.pictureId,
+                self._gui.centralWidget(), self._pictureList, items, self._worker, state.pictureId, uploads3,
                 lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=state.pictureId, postprocessAction=x)),
                 lambda: self._comm.send(Workers.MASTER, GuiEvent('close')),
                 lambda x: self._timerStartSlideshow.start(slideshow_time))
@@ -381,11 +383,15 @@ class PyQtGui(GuiSkeleton):
         # Refresh list, as here the new image has been saved
         self._pictureList.findExistingFiles()
 
-        item = self._postprocess.getOptionalItems()
+        items = self._postprocess.getOptionalItems()
         postproc_t = self._cfg.getInt('Photobooth', 'postprocess_time')
+        uploads3 = {
+            "enable": self._cfg.getBool('UploadS3', 'enable'),
+            "link": os.path.join(self._cfg.get('UploadS3', 'bucket'), self._cfg.get('UploadS3', 'basepath'))
+        }
 
         Frames.PostprocessMessage(
-            self._gui.centralWidget(), item, self._worker,
+            self._gui.centralWidget(), self._pictureList, items, self._worker, uploads3,
             lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=self._pictureList.getLast(), postprocessAction=x)),
             lambda: self._comm.send(Workers.MASTER, GuiEvent('idle')),
             postproc_t * 1000)

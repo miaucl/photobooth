@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-02 14:51+0200\n"
+"POT-Creation-Date: 2023-11-24 22:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Touch to exit slideshow"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:450 photobooth/gui/QtGui/Frames.py:851
+#: photobooth/gui/QtGui/Frames.py:450 photobooth/gui/QtGui/Frames.py:872
 msgid "Gallery"
 msgstr ""
 
@@ -93,312 +93,341 @@ msgstr ""
 msgid "← Back"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:520 photobooth/gui/QtGui/Frames.py:700
+#: photobooth/gui/QtGui/Frames.py:521 photobooth/gui/QtGui/Frames.py:713
 msgid "{} in progress"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:530
+#: photobooth/gui/QtGui/Frames.py:531
 msgid "Close"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:712
-msgid "Next photo"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:721
-msgid "Happy with your picture?"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:755
-msgid "Date:"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:756
-msgid "Time:"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:759
-msgid "Set system date and time:"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:768 photobooth/gui/QtGui/Frames.py:865
-msgid "Save and restart"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:772 photobooth/gui/QtGui/Frames.py:869
-msgid "Cancel"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:844
-msgid "Event"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:845
-msgid "Interface"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:846
-msgid "Photobooth"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:847
-msgid "Camera"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:848
-msgid "Template"
-msgstr ""
-
-#: photobooth/gui/QtGui/Frames.py:849
+#: photobooth/gui/QtGui/Frames.py:565 photobooth/gui/QtGui/Frames.py:733
+#: photobooth/gui/QtGui/Frames.py:870
 msgid "Picture"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:850
+#: photobooth/gui/QtGui/Frames.py:567 photobooth/gui/QtGui/Frames.py:735
+msgid "QR"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:724
+msgid "Next photo"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:738
+msgid "Happy with your picture?"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:774
+msgid "Date:"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:775
+msgid "Time:"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:778
+msgid "Set system date and time:"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:787 photobooth/gui/QtGui/Frames.py:887
+msgid "Save and restart"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:791 photobooth/gui/QtGui/Frames.py:891
+msgid "Cancel"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:865
+msgid "Event"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:866
+msgid "Interface"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:867
+msgid "Photobooth"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:868
+msgid "Camera"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:869
+msgid "Template"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:871
 msgid "Slideshow"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:852
+#: photobooth/gui/QtGui/Frames.py:873
 msgid "Storage"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:853
+#: photobooth/gui/QtGui/Frames.py:874
 msgid "GPIO"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:854
+#: photobooth/gui/QtGui/Frames.py:875
 msgid "Printer"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:855
+#: photobooth/gui/QtGui/Frames.py:876
 msgid "Web"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:856
+#: photobooth/gui/QtGui/Frames.py:877
 msgid "Mailer"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:857
-msgid "Upload"
+#: photobooth/gui/QtGui/Frames.py:878
+msgid "UploadS3"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:873
+#: photobooth/gui/QtGui/Frames.py:879
+msgid "UploadWebdav"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:895
 msgid "Restore defaults"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:904
+#: photobooth/gui/QtGui/Frames.py:926
 msgid "Event:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:946
+#: photobooth/gui/QtGui/Frames.py:968
 msgid "Enable fullscreen:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:947
+#: photobooth/gui/QtGui/Frames.py:969
 msgid "Gui module:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:948
+#: photobooth/gui/QtGui/Frames.py:970
 msgid "Window size [px]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:949
+#: photobooth/gui/QtGui/Frames.py:971
 msgid "Hide cursor:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:950
+#: photobooth/gui/QtGui/Frames.py:972
 msgid "Appearance:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:990
+#: photobooth/gui/QtGui/Frames.py:1012
 msgid "Show preview during countdown:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:991
+#: photobooth/gui/QtGui/Frames.py:1013
 msgid "Greeter time before countdown [s]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:992
+#: photobooth/gui/QtGui/Frames.py:1014
 msgid "Countdown time [s]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:993
+#: photobooth/gui/QtGui/Frames.py:1015
 msgid "Picture display time [s]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:994
+#: photobooth/gui/QtGui/Frames.py:1016
 msgid "Postprocess timeout [s]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:995
+#: photobooth/gui/QtGui/Frames.py:1017
 msgid "Overwrite displayed error message:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1026
+#: photobooth/gui/QtGui/Frames.py:1048
 msgid "Camera module:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1027
+#: photobooth/gui/QtGui/Frames.py:1049
 msgid "Camera rotation:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1046 photobooth/gui/QtGui/Frames.py:1049
-#: photobooth/gui/QtGui/Frames.py:1136 photobooth/gui/QtGui/Frames.py:1139
+#: photobooth/gui/QtGui/Frames.py:1068 photobooth/gui/QtGui/Frames.py:1071
+#: photobooth/gui/QtGui/Frames.py:1158 photobooth/gui/QtGui/Frames.py:1161
 msgid "Select file"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1057
+#: photobooth/gui/QtGui/Frames.py:1079
 msgid "Template module:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1058
+#: photobooth/gui/QtGui/Frames.py:1080
 msgid "Fancy template file:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1147
+#: photobooth/gui/QtGui/Frames.py:1169
 msgid "Number of shots per picture:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1148 photobooth/gui/QtGui/Frames.py:1218
+#: photobooth/gui/QtGui/Frames.py:1170 photobooth/gui/QtGui/Frames.py:1240
 msgid "Size of assembled picture [px]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1149
+#: photobooth/gui/QtGui/Frames.py:1171
 msgid "Min. distance between shots [px]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1150
+#: photobooth/gui/QtGui/Frames.py:1172
 msgid "Min. distance border to shots [px]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1151
+#: photobooth/gui/QtGui/Frames.py:1173
 msgid "Skip pictures:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1152
+#: photobooth/gui/QtGui/Frames.py:1174
 msgid "Background image:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1183
+#: photobooth/gui/QtGui/Frames.py:1205
 msgid "Wait for Slideshow time [s]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1184 photobooth/gui/QtGui/Frames.py:1185
+#: photobooth/gui/QtGui/Frames.py:1206 photobooth/gui/QtGui/Frames.py:1207
 msgid "Wait for change pictures time [s]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1186
+#: photobooth/gui/QtGui/Frames.py:1208
 msgid "Show an Ad every nth slide (0 = deactivated):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1217
+#: photobooth/gui/QtGui/Frames.py:1239
 msgid "Columns to show in gallery:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1241 photobooth/gui/QtGui/Frames.py:1245
+#: photobooth/gui/QtGui/Frames.py:1263 photobooth/gui/QtGui/Frames.py:1267
 msgid "Select directory"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1253
+#: photobooth/gui/QtGui/Frames.py:1275
 msgid "Output directory (strftime possible):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1254
+#: photobooth/gui/QtGui/Frames.py:1276
 msgid "Basename of files (strftime possible):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1255
+#: photobooth/gui/QtGui/Frames.py:1277
 msgid "Keep single shots:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1256
+#: photobooth/gui/QtGui/Frames.py:1278
 msgid "Ad prefix:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1310
+#: photobooth/gui/QtGui/Frames.py:1313
 msgid "Enable GPIO buttons:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1311
+#: photobooth/gui/QtGui/Frames.py:1314
 msgid "Exit button pin (BCM numbering):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1312
+#: photobooth/gui/QtGui/Frames.py:1315
 msgid "Trigger button pin (BCM numbering):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1313
+#: photobooth/gui/QtGui/Frames.py:1316
 msgid "Enable GPIO light:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1314
+#: photobooth/gui/QtGui/Frames.py:1317
 msgid "Idle lamp pin (BCM numbering):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1352
+#: photobooth/gui/QtGui/Frames.py:1354
 msgid "Enable printing:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1353
+#: photobooth/gui/QtGui/Frames.py:1355
 msgid "Module:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1354
+#: photobooth/gui/QtGui/Frames.py:1356
 msgid "Ask for confirmation before printing:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1355
+#: photobooth/gui/QtGui/Frames.py:1357
 msgid "Paper size [mm]:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1412
+#: photobooth/gui/QtGui/Frames.py:1414
 msgid "Enable Mailer:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1413
+#: photobooth/gui/QtGui/Frames.py:1415
 msgid "Sender mail address:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1414
+#: photobooth/gui/QtGui/Frames.py:1416
 msgid "Recipient mail address:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1415
+#: photobooth/gui/QtGui/Frames.py:1417
 msgid "Mail subject"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1416
+#: photobooth/gui/QtGui/Frames.py:1418
 msgid "Mail message:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1417
+#: photobooth/gui/QtGui/Frames.py:1419
 msgid "SMTP server:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1418 photobooth/gui/QtGui/Frames.py:1454
+#: photobooth/gui/QtGui/Frames.py:1420 photobooth/gui/QtGui/Frames.py:1492
 msgid "Server requires auth:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1452
+#: photobooth/gui/QtGui/Frames.py:1451 photobooth/gui/QtGui/Frames.py:1490
 msgid "Enable WebDAV upload:"
 msgstr ""
 
+#: photobooth/gui/QtGui/Frames.py:1452
+msgid "Region (ex. eu-central-1):"
+msgstr ""
+
 #: photobooth/gui/QtGui/Frames.py:1453
+msgid "Basepath (ex. /download/):"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:1454
+msgid "Bucket (ex. my-bucket, requires PutObject & PutObjectACL permissions):"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:1455
+msgid "Client id:"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:1456
+msgid "Client secret:"
+msgstr ""
+
+#: photobooth/gui/QtGui/Frames.py:1491
 msgid "URL (folder must exist):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1478
+#: photobooth/gui/QtGui/Frames.py:1516
 msgid "Enable Web server:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1479
+#: photobooth/gui/QtGui/Frames.py:1517
 msgid "Server host (0.0.0.0 for wildcard):"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1480
+#: photobooth/gui/QtGui/Frames.py:1518
 msgid "Server port:"
 msgstr ""
 
-#: photobooth/gui/QtGui/Frames.py:1481
+#: photobooth/gui/QtGui/Frames.py:1519
 msgid "Link:"
 msgstr ""
 
@@ -410,14 +439,14 @@ msgstr ""
 msgid "Starting the photobooth..."
 msgstr ""
 
-#: photobooth/gui/QtGui/PyQtGui.py:366
+#: photobooth/gui/QtGui/PyQtGui.py:368
 msgid "Processing picture..."
 msgstr ""
 
-#: photobooth/gui/QtGui/PyQtGui.py:443
+#: photobooth/gui/QtGui/PyQtGui.py:449
 msgid "Confirmation"
 msgstr ""
 
-#: photobooth/gui/QtGui/PyQtGui.py:444
+#: photobooth/gui/QtGui/PyQtGui.py:450
 msgid "Quit Photobooth?"
 msgstr ""

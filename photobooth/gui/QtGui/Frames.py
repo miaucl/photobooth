@@ -496,7 +496,7 @@ class GalleryMessage(QtWidgets.QFrame):
 
 class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
-    def __init__(self,  parent, pictureList, items, worker, pictureId, postprocess_handle, close_handle, show_picture_handle):
+    def __init__(self,  parent, pictureList, items, worker, pictureId, uploads3, postprocess_handle, close_handle, show_picture_handle):
 
 
         super().__init__(parent)
@@ -504,6 +504,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
         self._pictureList = pictureList
         self._pictureId = pictureId
+        self._uploads3 = uploads3
         self._previousPictureId = None
         self._nextPictureId = None
         self._info = ""
@@ -560,9 +561,17 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         headerLayout.addWidget(self._label, stretch=1)
         headerLayout.addWidget(previousBtn)
 
+        tabs = QtWidgets.QTabWidget()
+        tabs.addTab(QtWidgets.QLabel(""), _('Picture'))
+        if self._uploads3["link"]:
+            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureId))), _('QR'))
+
         layout = QtWidgets.QVBoxLayout()
         layout.addLayout(headerLayout, stretch=0)
-        layout.addStretch(1)
+        if self._uploads3["link"]:
+            layout.addWidget(tabs)
+        else:
+            layout.addStretch(1)
         layout.addLayout(button_lay)
         self.setLayout(layout)
 
@@ -680,14 +689,18 @@ class CountdownMessage(QtWidgets.QFrame):
 
 class PostprocessMessage(Widgets.TransparentOverlay):
 
-    def __init__(self, parent, items, worker, postprocess_handle, idle_handle,
+    def __init__(self, parent, pictureList, items, worker, uploads3, postprocess_handle, idle_handle,
                  timeout=None, timeout_handle=None):
-
+        
         if timeout_handle is None:
             timeout_handle = idle_handle
 
         super().__init__(parent, timeout, timeout_handle)
         self.setObjectName('PostprocessMessage')
+
+        self._pictureList = pictureList
+        self._uploads3 = uploads3
+
         self.initFrame(items, postprocess_handle, idle_handle, worker)
 
     def initFrame(self, items, postprocess_handle, idle_handle, worker):
@@ -701,13 +714,12 @@ class PostprocessMessage(Widgets.TransparentOverlay):
             self._label.update()
             worker.put(lambda: postprocess_handle(action))
             worker.put(idle_handle)
-            # worker.put(self.close)
 
         def createButton(item):
             button = QtWidgets.QPushButton(item.label)
             button.clicked.connect(lambda: disableAndCall(button, item.action))
             return button
-
+        
         self._buttons = [createButton(item) for item in items]
         self._buttons.append(QtWidgets.QPushButton(_('Next photo')))
         self._buttons[-1].clicked.connect(idle_handle)
@@ -717,13 +729,20 @@ class PostprocessMessage(Widgets.TransparentOverlay):
             pos = divmod(i, 2)
             button_lay.addWidget(button, *pos)
 
+        tabs = QtWidgets.QTabWidget()
+        tabs.addTab(QtWidgets.QLabel(""), _('Picture'))
+        if self._uploads3["enable"]:
+            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureList.getLast()))), _('QR'))
+
         layout = QtWidgets.QVBoxLayout()
         self._label = QtWidgets.QLabel(_('Happy with your picture?'))
         layout.addWidget(self._label, stretch=0)
-        layout.addStretch(1)
+        if self._uploads3["enable"]:
+            layout.addWidget(tabs)
+        else:
+            layout.addStretch(1)
         layout.addLayout(button_lay)
         self.setLayout(layout)
-
 
 class SetDateTime(QtWidgets.QFrame):
 
@@ -810,6 +829,8 @@ class Settings(QtWidgets.QFrame):
 
         super().__init__()
 
+        self.setObjectName('Settings')
+
         self._cfg = config
         self._reloadAction = reload_action
         self._cancelAction = cancel_action
@@ -854,7 +875,8 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createPrinterSettings(), _('Printer'))
         tabs.addTab(self.createWebSettings(), _('Web'))
         tabs.addTab(self.createMailerSettings(), _('Mailer'))
-        tabs.addTab(self.createUploadSettings(), _('Upload'))
+        tabs.addTab(self.createUploadS3Settings(), _('UploadS3'))
+        tabs.addTab(self.createUploadWebdavSettings(), _('UploadWebdav'))
         return tabs
 
     def createButtons(self):
@@ -1401,7 +1423,43 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
-    def createUploadSettings(self):
+    def createUploadS3Settings(self):
+
+        self.init('UploadS3')
+
+        enable = QtWidgets.QCheckBox()
+        enable.setChecked(self._cfg.getBool('UploadS3', 'enable'))
+        self.add('UploadS3', 'enable', enable)
+
+        region = QtWidgets.QLineEdit(self._cfg.get('UploadS3', 'region'))
+        self.add('UploadS3', 'region', region)
+
+        basepath = QtWidgets.QLineEdit(self._cfg.get('UploadS3', 'basepath'))
+        self.add('UploadS3', 'basepath', basepath)
+
+        bucket = QtWidgets.QLineEdit(self._cfg.get('UploadS3', 'bucket'))
+        self.add('UploadS3', 'bucket', bucket)
+
+        client_id = QtWidgets.QLineEdit(self._cfg.get('UploadS3', 'client_id'))
+        self.add('UploadS3', 'client_id', client_id)
+
+        client_secret = QtWidgets.QLineEdit(self._cfg.get('UploadS3', 'client_secret'))
+        self.add('UploadS3', 'client_secret', client_secret)
+
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Enable WebDAV upload:'), enable)
+        layout.addRow(_('Region (ex. eu-central-1):'), region)
+        layout.addRow(_('Basepath (ex. /download/):'), basepath)
+        layout.addRow(_('Bucket (ex. my-bucket, requires PutObject & PutObjectACL permissions):'), bucket)
+        layout.addRow(_('Client id:'), client_id)
+        layout.addRow(_('Client secret:'), client_secret)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
+    def createUploadWebdavSettings(self):
 
         self.init('UploadWebdav')
 

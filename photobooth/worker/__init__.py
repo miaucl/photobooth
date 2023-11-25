@@ -28,6 +28,7 @@ from .AdList import AdList
 from .PictureList import PictureList
 from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
+from .PictureUploadS3 import PictureUploadS3
 from .PictureUploadWebdav import PictureUploadWebdav
 from .Counter import Counter
 from .PostprocessorPrinter import PostprocessorPrinter
@@ -81,6 +82,10 @@ class Worker:
         if config.getBool('Mailer', 'enable'):
             self._reviewPictureTasks.append(PictureMailer(config))
 
+        # PictureUploadS3 to upload pictures to a s3 storage for direct download
+        if config.getBool('UploadS3', 'enable'):
+            self._reviewPictureTasks.append(PictureUploadS3(config))
+
         # PictureUploadWebdav to upload pictures to a webdav storage
         if config.getBool('UploadWebdav', 'enable'):
             self._reviewPictureTasks.append(PictureUploadWebdav(config))
@@ -111,7 +116,7 @@ class Worker:
                 # Counter for printed pictures
                 self._postProcessAutomTasks.append(self._printCounter)
                 # Event log for printed pictures
-                self._postprocessPrintTasks.append(self._eventLogPrint)
+                self._postProcessAutomTasks.append(self._eventLogPrint)
 
     def initShotTasks(self, config):
 
@@ -144,6 +149,8 @@ class Worker:
                 self.doPostprocessAutomTasks(state.pictureId)
             elif state.action == 'print':
                 self.doPostprocessPrintTasks(state.pictureId)
+            elif state.action == 'uploads3':
+                pass
         elif isinstance(state, StateMachine.CameraEvent):
             if state.name == 'capture':
                 picturename = self._pictureList.getNextPicShot()

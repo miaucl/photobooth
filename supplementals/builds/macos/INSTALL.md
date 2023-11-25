@@ -69,7 +69,7 @@ source .venv/bin/activate
 Run the following command to download and install all dependencies and the photobooth:
 
 ```bash
-pip install numpy opencv-python Pillow requests PyQt6 Flask
+pip install numpy opencv-python Pillow requests PyQt6 Flask boto3 qrcode
 ```
 
 ## Run Photobooth from Terminal
