@@ -19,6 +19,7 @@
 
 import logging
 import os
+import signal
 
 from photobooth.worker import AdList
 
@@ -107,6 +108,9 @@ class PyQtGui(GuiSkeleton):
         self._app = QtWidgets.QApplication(argv)
         self._app.setStyleSheet(stylesheet)
         self._gui = PyQtMainWindow(self._cfg, self._handleKeypressEvent)
+
+        # Listen to signals to correctly abort on ctrl+c
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
 
         # Load additional fonts
         fonts = [os.path.join(os.path.dirname(__file__), 'fonts/AmaticSC-Regular.ttf'),
