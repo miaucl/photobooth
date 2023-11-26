@@ -19,6 +19,8 @@
 
 import logging
 
+from photobooth.worker.PictureList import Picture, PictureRef
+
 
 class Context:
 
@@ -167,16 +169,16 @@ class TeardownEvent(Event):
 
 class GuiEvent(Event):
 
-    def __init__(self, name, pictureId=None, postprocessAction=None):
+    def __init__(self, name, pictureRef=None, postprocessAction=None):
 
         super().__init__(name)
-        self._pictureId = pictureId
+        self._pictureRef = pictureRef
         self._postprocessAction = postprocessAction
 
     @property
-    def pictureId(self):
+    def pictureRef(self):
 
-        return self._pictureId
+        return self._pictureRef
 
     @property
     def postprocessAction(self):
@@ -194,33 +196,27 @@ class WebEvent(Event):
 
 class CameraEvent(Event):
 
-    def __init__(self, name, picture=None, thumbnail=None, watermarked=None, num_pictures=None):
+    def __init__(self, name, picture: Picture=None, shot=None, num_shots=None):
 
         super().__init__(name)
         self._picture = picture
-        self._thumbnail = thumbnail
-        self._watermarked = watermarked
-        self._num_pictures = num_pictures
+        self._shot = shot
+        self._num_shots = num_shots
 
     @property
-    def picture(self):
+    def picture(self) -> Picture:
 
         return self._picture
 
     @property
-    def thumbnail(self):
+    def shot(self):
 
-        return self._thumbnail
-
-    @property
-    def watermarked(self):
-
-        return self._watermarked
+        return self._shot
 
     @property
-    def num_pictures(self):
+    def num_shots(self):
 
-        return self._num_pictures
+        return self._num_shots
 
 class WorkerEvent(Event):
 
@@ -372,7 +368,7 @@ class StartupState(State):
     def handleEvent(self, event, context):
 
         if isinstance(event, CameraEvent) and event.name == 'ready':
-            context.num_pictures = event.num_pictures
+            context.num_shots = event.num_shots
             context.is_running = True
             context.state = IdleState()
         else:
@@ -389,7 +385,7 @@ class IdleState(State):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'trigger'):
-            context.state = GreeterState(num_pictures=context.num_pictures)
+            context.state = GreeterState(num_shots=context.num_shots)
         elif isinstance(event, GuiEvent) and event.name == 'slideshow':
             context.state = SlideshowState()
         elif isinstance(event, GuiEvent) and event.name == 'gallery':
@@ -429,22 +425,22 @@ class GalleryState(State):
         elif isinstance(event, GuiEvent) and event.name == 'slideshow':
             context.state = SlideshowState()
         elif (isinstance(event, GuiEvent) and event.name == 'galleryselect'):
-            context.state = GallerySelectState(event.pictureId)
+            context.state = GallerySelectState(event.pictureRef)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 class GallerySelectState(State):
 
-    def __init__(self, pictureId=None, action=None):
+    def __init__(self, pictureRef: PictureRef=None, action=None):
 
         super().__init__()
-        self._pictureId = pictureId
+        self._pictureRef = pictureRef
         self._action = action
 
     @property
-    def pictureId(self):
+    def pictureRef(self) -> PictureRef:
 
-        return self._pictureId
+        return self._pictureRef
 
     @property
     def action(self):
@@ -461,7 +457,7 @@ class GallerySelectState(State):
             context.state = SlideshowState()
         elif (isinstance(event, GuiEvent) and
            event.name == 'postprocess'):
-            context.state = GallerySelectState(event.pictureId, event.postprocessAction)
+            context.state = GallerySelectState(event.pictureRef, event.postprocessAction)
         elif (isinstance(event, GuiEvent) and event.name == 'galleryselect'):
             pass # Might be a double tap behind the popup
         else:
@@ -469,32 +465,32 @@ class GallerySelectState(State):
 
 class GreeterState(State):
 
-    def __init__(self, num_pictures=None):
+    def __init__(self, num_shots=None):
 
         super().__init__()
-        self._num_pictures = num_pictures
+        self._num_shots = num_shots
 
     def handleEvent(self, event, context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'countdown'):
-            context.state = CountdownState(1, num_pictures=context.num_pictures)
+            context.state = CountdownState(1, num_shots=context.num_shots)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
     @property
-    def num_pictures(self):
+    def num_shots(self):
 
-        return self._num_pictures
+        return self._num_shots
 
 class CountdownState(State):
 
-    def __init__(self, num_picture, num_pictures=0):
+    def __init__(self, num_picture, num_shots=0):
 
         super().__init__()
 
         self._num_picture = num_picture
-        self._num_pictures = num_pictures
+        self._num_shots = num_shots
 
     @property
     def num_picture(self):
@@ -502,28 +498,28 @@ class CountdownState(State):
         return self._num_picture
 
     @property
-    def num_pictures(self):
+    def num_shots(self):
 
-        return self._num_pictures
+        return self._num_shots
 
     def handleEvent(self, event, context):
 
         if isinstance(event, GuiEvent) and event.name == 'countdown':
             pass
         elif isinstance(event, GuiEvent) and event.name == 'capture':
-            context.state = CaptureState(self.num_picture, self.num_pictures)
+            context.state = CaptureState(self.num_picture, self.num_shots)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 
 class CaptureState(State):
 
-    def __init__(self, num_picture, num_pictures):
+    def __init__(self, num_picture, num_shots):
 
         super().__init__()
 
         self._num_picture = num_picture
-        self._num_pictures = num_pictures
+        self._num_shots = num_shots
 
     @property
     def num_picture(self):
@@ -531,14 +527,14 @@ class CaptureState(State):
         return self._num_picture
 
     @property
-    def num_pictures(self):
+    def num_shots(self):
 
-        return self._num_pictures
+        return self._num_shots
 
     def handleEvent(self, event, context):
 
         if isinstance(event, CameraEvent) and event.name == 'countdown':
-            context.state = CountdownState(self.num_picture + 1, self._num_pictures)
+            context.state = CountdownState(self.num_picture + 1, self._num_shots)
         elif isinstance(event, CameraEvent) and event.name == 'assemble':
             context.state = AssembleState()
         else:
@@ -554,34 +550,22 @@ class AssembleState(State):
     def handleEvent(self, event, context):
 
         if isinstance(event, CameraEvent) and event.name == 'review':
-            context.state = ReviewState(event.picture, event.thumbnail, event.watermarked)
+            context.state = ReviewState(event.picture)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
 
 class ReviewState(State):
 
-    def __init__(self, picture, thumbnail, watermarked):
+    def __init__(self, picture: Picture):
 
         super().__init__()
         self._picture = picture
-        self._thumbnail = thumbnail
-        self._watermarked = watermarked
 
     @property
-    def picture(self):
+    def picture(self) -> Picture:
 
         return self._picture
-
-    @property
-    def thumbnail(self):
-
-        return self._thumbnail
-
-    @property
-    def watermarked(self):
-
-        return self._watermarked
 
     def handleEvent(self, event, context):
 
@@ -593,16 +577,16 @@ class ReviewState(State):
 
 class PostprocessState(State):
 
-    def __init__(self, pictureId=None, action=None):
+    def __init__(self, pictureRef: PictureRef=None, action=None):
 
         super().__init__()
-        self._pictureId = pictureId
+        self._pictureRef = pictureRef
         self._action = action
 
     @property
-    def pictureId(self):
+    def pictureRef(self) -> PictureRef:
 
-        return self._pictureId
+        return self._pictureRef
 
     @property
     def action(self):
@@ -617,6 +601,6 @@ class PostprocessState(State):
             context.state = IdleState()
         elif (isinstance(event, GuiEvent) and
            event.name == 'postprocess'):
-            context.state = PostprocessState(event.pictureId, event.postprocessAction)
+            context.state = PostprocessState(event.pictureRef, event.postprocessAction)
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))

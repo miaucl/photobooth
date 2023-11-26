@@ -41,7 +41,7 @@ from PIL import Image, ImageQt
 
 from time import localtime, strftime
 
-from ...StateMachine import GuiEvent, TeardownEvent
+from ...StateMachine import CameraEvent, GallerySelectState, GuiEvent, ReviewState, TeardownEvent
 from ...Threading import Workers
 from ...worker.PictureList import PictureList
 from ...worker.Count import Count
@@ -67,8 +67,8 @@ class PyQtGui(GuiSkeleton):
         self._initReceiver()
         self._initWorker()
 
-        self._pictureId = None
-        self._picture = None
+        # self._pictureRef = None
+        # self._picture = None
         self._postprocess = GuiPostprocessor(self._cfg)
 
 
@@ -165,29 +165,29 @@ class PyQtGui(GuiSkeleton):
          QtCore.QObject.killTimer(self, self._timerStartSlideshow)
          QtCore.QObject.killTimer(self, self._timerViewSlides)
 
-    def _newslideshowPicture(self):
+    def _newslideshowMedia(self):
         
         if (self._pictureList.counter == 0 and self._ad_every_nth_slide == 0):
-            picture = Image.new('RGBA',self._default_size,(128,128,128,0))
+            show_media = Image.new('RGBA',self._default_size,(128,128,128,0))
             text = _('No slideshow yet...')
         else:
             if (self._ad_every_nth_slide == 0 or self._slides_since_last_ad < self._ad_every_nth_slide and self._pictureList.counter > 0):
                 self._slides_since_last_ad += 1
-                picturename, _x = self._pictureList.getRandomPic()
-                while (not os.path.isfile(picturename)):
-                    picturename, _x = self._pictureList.getRandomPic()
-                logging.debug('Picture name for slideshow {}'.format(picturename))
-                picture = Image.open(picturename)
+                pictureRef, _x = self._pictureList.getRandomPicture()
+                while (not os.path.isfile(pictureRef.original)):
+                    pictureRef, _x = self._pictureList.getRandomPicture()
+                logging.debug('Picture name for slideshow {}'.format(pictureRef.original))
+                show_media = Image.open(pictureRef.original)
             else:
                 self._slides_since_last_ad = 0
                 adname, _x = self._adList.getRandomAd()
                 while (not os.path.isfile(adname)):
                     adname, _x = self._adList.getRandomAd()
                 logging.debug('Add name for slideshow {}'.format(adname))
-                picture = Image.open(adname)
+                show_media = Image.open(adname)
             text = ('')
             
-        return(picture, text)
+        return(show_media, text)
         
     def close(self):
 
@@ -278,20 +278,18 @@ class PyQtGui(GuiSkeleton):
 
         self._timerViewSlides.setSingleShot(False)
         self._timerViewSlides.start(view_time)
-        picture, text = self._newslideshowPicture()
+        media, text = self._newslideshowMedia()
                 
-        self._setWidget(Frames.SlideshowMessage(picture,text, self._cfg.getBool('Slideshow', 'fade'),
+        self._setWidget(Frames.SlideshowMessage(media, text, self._cfg.getBool('Slideshow', 'fade'),
                                                 lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger'))))
         
     def updateSlideshow(self, event):
                 
-        picture, text = self._newslideshowPicture()            
+        picture, _ = self._newslideshowMedia()            
         self._gui.centralWidget().alpha = 0.0
         self._gui.centralWidget().slide = picture
         self._gui.centralWidget().update()
-        
-        # self._lastslide = picture
-        
+                
     def showGallery(self, state):
 
         logging.info('Start Gallery')
@@ -307,12 +305,12 @@ class PyQtGui(GuiSkeleton):
         if not isinstance(self._gui.centralWidget(), Frames.GalleryMessage):
             self._setWidget(Frames.GalleryMessage(self._pictureList, self._cfg.getInt("Gallery", "columns"),
                                                     lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger')),
-                                                    lambda x: self._comm.send(Workers.MASTER, GuiEvent('galleryselect', pictureId=x))))
+                                                    lambda x: self._comm.send(Workers.MASTER, GuiEvent('galleryselect', pictureRef=x))))
         else:
             logging.info('Skip Reinitializing Gallery')
 
 
-    def showGallerySelect(self, state):
+    def showGallerySelect(self, state: GallerySelectState):
 
         slideshow_time = self._cfg.getInt('Slideshow', 'start_slideshow_time') * 1000
         uploads3 = {
@@ -327,8 +325,8 @@ class PyQtGui(GuiSkeleton):
             items = self._postprocess.getAllItems()
 
             Frames.GallerySelectMessage(
-                self._gui.centralWidget(), self._pictureList, items, self._worker, state.pictureId, uploads3,
-                lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=state.pictureId, postprocessAction=x)),
+                self._gui.centralWidget(), self._pictureList, items, self._worker, state.pictureRef, uploads3,
+                lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureRef=state.pictureRef, postprocessAction=x)),
                 lambda: self._comm.send(Workers.MASTER, GuiEvent('close')),
                 lambda x: self._timerStartSlideshow.start(slideshow_time))
         else:
@@ -341,7 +339,7 @@ class PyQtGui(GuiSkeleton):
         self._enableEscape()
         self._disableTrigger()
         greeter_time = self._cfg.getInt('Photobooth', 'greeter_time') * 1000
-        num_pics = state.num_pictures
+        num_pics = state.num_shots
         # Only show something for greeter time > 0
         if greeter_time > 0: 
             self._setWidget(Frames.GreeterMessage(
@@ -358,22 +356,22 @@ class PyQtGui(GuiSkeleton):
             countdown_time,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('capture'))))
 
-    def updatePreview(self, event):
-        picture = Image.open(event.picture)
-        self._gui.centralWidget().picture = ImageQt.ImageQt(picture)
+    def updatePreview(self, event: CameraEvent):
+        shot = Image.open(event.shot)
+        self._gui.centralWidget().picture = ImageQt.ImageQt(shot)
         self._gui.centralWidget().update()
 
-    def showCapture(self, state):
+    def showCapture(self, state: CameraEvent):
 
-        self._setWidget(Frames.CaptureMessage(state.num_picture, state.num_pictures))
+        self._setWidget(Frames.CaptureMessage(state.num_picture, state.num_shots))
 
-    def showAssemble(self, state):
+    def showAssemble(self, state: CameraEvent):
 
         self._setWidget(Frames.WaitMessage(_('Processing picture...')))
 
-    def showReview(self, state):
+    def showReview(self, state: ReviewState):
 
-        picture = Image.open(state.picture)
+        picture = Image.open(state.picture.original)
         self._picture = ImageQt.ImageQt(picture)
         self._pictureList.findExistingFiles()
         review_time = self._cfg.getInt('Photobooth', 'display_time') * 1000
@@ -396,7 +394,7 @@ class PyQtGui(GuiSkeleton):
 
         Frames.PostprocessMessage(
             self._gui.centralWidget(), self._pictureList, items, self._worker, uploads3,
-            lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureId=self._pictureList.getLast(), postprocessAction=x)),
+            lambda x: self._comm.send(Workers.MASTER, GuiEvent('postprocess', pictureRef=self._pictureList.getLast(), postprocessAction=x)),
             lambda: self._comm.send(Workers.MASTER, GuiEvent('idle')),
             postproc_t * 1000)
 

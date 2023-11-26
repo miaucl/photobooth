@@ -109,24 +109,21 @@ def slideshow():
 
 @app.route('/thumbnail/<int:index>')
 def thumbnail(index):
-    filepath = picture_list.getThumbnail(index)
-    logging.info(f'GET picture thumbnail { index }: { filepath }')
+    pictureRef = picture_list.getPicture(index)
+    logging.info(f'GET picture thumbnail { index }: { pictureRef.thumbnail }')
     # For local paths, we need to go back to the cwd it has been based on, otherwise, just use the global path
-    return send_file(filepath if filepath.startswith('/') else f'../../{ filepath }')
+    return send_file(pictureRef.thumbnail if pictureRef.thumbnail.startswith('/') else f'../../{ pictureRef.thumbnail }')
 
 @app.route('/r')
 def rpicture():
-    _, r = picture_list.getRandomPic()
-    filepath = picture_list.getWatermarked(r)
-    _, filename = os.path.split(filepath)
-    logging.info(f'GET random picture: { filepath }')
+    pictureRef, _ = picture_list.getRandomPicture()
+    logging.info(f'GET random picture: { pictureRef.watermarked }')
     # For local paths, we need to go back to the cwd it has been based on, otherwise, just use the global path
-    return send_file(filepath if filepath.startswith('/') else f'../../{ filepath }')
+    return send_file(pictureRef.watermarked if pictureRef.watermarked.startswith('/') else f'../../{ pictureRef.watermarked }')
 
 @app.route('/<int:index>')
 def picture(index):
-    filepath = picture_list.getWatermarked(index)
-    _, filename = os.path.split(filepath)
-    logging.info(f'GET picture { index }: { filepath }')
+    pictureRef = picture_list.getPicture(index)
+    logging.info(f'GET picture { index }: { pictureRef.watermarked }')
     # For local paths, we need to go back to the cwd it has been based on, otherwise, just use the global path
-    return send_file(filepath if filepath.startswith('/') else f'../../{ filepath }')
+    return send_file(pictureRef.watermarked if pictureRef.watermarked.startswith('/') else f'../../{ pictureRef.watermarked }')

@@ -22,6 +22,8 @@ import requests
 
 from pathlib import Path
 
+from photobooth.worker.PictureList import Picture, PictureRef
+
 from .PictureWorkerTask import PictureWorkerTask
 
 
@@ -38,12 +40,12 @@ class PictureUploadWebdav(PictureWorkerTask):
         else:
             self._auth = None
 
-    def do(self, picture, filename):
+    def do(self, picture: Picture, pictureRef: PictureRef):
 
-        url = self._baseurl + '/' + Path(filename).name
+        url = self._baseurl + '/' + Path(pictureRef.original).name
         logging.info('Uploading picture as %s', url)
 
-        r = requests.put(url, data=picture.getbuffer(), auth=self._auth)
+        r = requests.put(url, data=picture.original.getbuffer(), auth=self._auth)
         if r.status_code in range(200, 300):
             logging.warn(('PictureUploadWebdav: Upload failed with '
                           'status code {}').format(r.status_code))

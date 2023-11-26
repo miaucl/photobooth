@@ -18,8 +18,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from colorsys import hsv_to_rgb
-from time import sleep
 
 from .. import StateMachine
 from ..Threading import Workers

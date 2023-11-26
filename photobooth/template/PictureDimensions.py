@@ -24,7 +24,7 @@ class PictureDimensions:
 
     def __init__(self, config):
 
-        self._num_pictures = (config.getInt('Picture', 'num_x'),
+        self._num_shots = (config.getInt('Picture', 'num_x'),
                               config.getInt('Picture', 'num_y'))
 
         self._capture_size = 0
@@ -39,7 +39,7 @@ class PictureDimensions:
 
         self._skip = [i for i in config.getIntList('Picture', 'skip')
                       if 1 <= i and
-                      i <= self._num_pictures[0] * self._num_pictures[1]]
+                      i <= self._num_shots[0] * self._num_shots[1]]
 
 
 
@@ -97,12 +97,12 @@ class PictureDimensions:
     @property
     def numPictures(self):
 
-        return self._num_pictures
+        return self._num_shots
 
     @property
     def totalNumPictures(self):
 
-        return max(self._num_pictures[0] * self._num_pictures[1] -
+        return max(self._num_shots[0] * self._num_shots[1] -
                    len(self._skip), 1)
 
     @property

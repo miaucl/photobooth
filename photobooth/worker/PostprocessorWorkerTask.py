@@ -25,6 +25,6 @@ class PostprocessorWorkerTask(WorkerTask):
 
         assert not kwargs
 
-    def do(self, pictureOrPictureId):
+    def do(self, pictureOrPictureRef):
 
         raise NotImplementedError()

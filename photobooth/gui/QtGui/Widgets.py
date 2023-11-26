@@ -22,6 +22,8 @@ import os
 import logging
 import qrcode
 
+from photobooth.worker import PictureList
+
 try:
     from PyQt6 import QtCore
     from PyQt6 import QtGui
@@ -283,15 +285,15 @@ class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
 
     def editorEvent(self, event, model, option, index):
         if event.type() == QtCore.QEvent.Type.MouseButtonPress and self._gallery_select_action:
-            pictureId = index.model().data(index, SelectRole)
-            self._gallery_select_action(pictureId)
+            pictureRef = index.model().data(index, SelectRole)
+            self._gallery_select_action(pictureRef)
             return True
         else:
             return False
 
 
 class GalleryThumbnailModel(QtCore.QAbstractTableModel):
-    def __init__(self, pictureList=None, columns=1):
+    def __init__(self, pictureList: PictureList=None, columns=1):
         super().__init__()
         self._pictureList = pictureList
         self._columns = columns
@@ -302,31 +304,29 @@ class GalleryThumbnailModel(QtCore.QAbstractTableModel):
 
         id = self.indexToID(index)
         if role == QtCore.Qt.ItemDataRole.DisplayRole:
-            f = self._pictureList.getThumbnail(id)
-            if (not os.path.isfile(f)):
+            pictureRef = self._pictureList.getPicture(id)
+            if (not os.path.isfile(pictureRef.thumbnail)):
                 return None
-
             try:
-                image = Image.open(f)
+                image = Image.open(pictureRef.thumbnail)
             except:
                 return None
-            return thumbnailData(id, f, image)
+            return thumbnailData(id, pictureRef.thumbnail, image)
         elif role == PrintRole:
-            f = self._pictureList.getFilename(id)
-            if (not os.path.isfile(f)):
+            pictureRef = self._pictureList.getPicture(id)
+            if (not os.path.isfile(pictureRef.original)):
                 return None
-
             try:
-                image = Image.open(f)
+                image = Image.open(pictureRef.original)
             except:
                 return None
-            return thumbnailData(id, f, image)
+            return thumbnailData(id, pictureRef.original, image)
         elif role == SelectRole:
-            f = self._pictureList.getFilename(id)
-            return f
+            pictureRef = self._pictureList.getPicture(id)
+            return pictureRef
         elif role == QtCore.Qt.ItemDataRole.ToolTipRole:
-            f = self._pictureList.getThumbnail(id)
-            return f
+            pictureRef = self._pictureList.getPicture(id)
+            return pictureRef.thumbnail
         else: 
             return None
 

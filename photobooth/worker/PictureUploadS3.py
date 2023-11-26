@@ -21,6 +21,8 @@ import os
 import logging
 import boto3
 
+from photobooth.worker.PictureList import Picture, PictureRef
+
 
 from .PictureWorkerTask import PictureWorkerTask
 
@@ -46,13 +48,13 @@ class PictureUploadS3(PictureWorkerTask):
 
         
 
-    def do(self, picture, filename):
+    def do(self, picture: Picture, pictureRef: PictureRef):
 
-        p = os.path.join(self._basepath, os.path.basename(filename))
+        p = os.path.join(self._basepath, os.path.basename(pictureRef.original))
         logging.info('Uploading picture as %s', p)
 
         try:
-            self._client.upload_file(filename, self._bucket, p, ExtraArgs={'ACL': 'public-read'})
+            self._client.upload_file(pictureRef.watermarked, self._bucket, p, ExtraArgs={'ACL': 'public-read'})
         except Exception as e:
             logging.warn('PictureUploadS3: Upload failed')
             logging.error(e)

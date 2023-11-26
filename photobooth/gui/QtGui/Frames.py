@@ -22,6 +22,8 @@ import os
 import subprocess
 import sys
 
+from photobooth.worker.PictureList import PictureList, PictureRef
+
 try:
     from PyQt6 import QtCore
     from PyQt6 import QtGui
@@ -154,17 +156,17 @@ class IdleMessage(QtWidgets.QFrame):
         self._message_button = _('Photo!')
         self._print_label = _('Pictures printed: {}').format(printCount) if printCount else None
         
-        self._picture = None
+        self._picture: ImageQt.ImageQt = None
 
         self.initFrame(trigger_action, gallery_action)
     
     @property
-    def picture(self):
+    def picture(self) -> ImageQt.ImageQt:
 
         return self._picture
 
     @picture.setter
-    def picture(self, picture):
+    def picture(self, picture: ImageQt.ImageQt):
 
         if not isinstance(picture, ImageQt.ImageQt):
             self._picture = None
@@ -226,7 +228,7 @@ class IdleMessage(QtWidgets.QFrame):
 
 class GreeterMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_pictures, countdown_action):
+    def __init__(self, num_shots, countdown_action):
 
         super().__init__()
         self.setObjectName('GreeterMessage')
@@ -234,22 +236,22 @@ class GreeterMessage(QtWidgets.QFrame):
         self._text_label1 = _('Get ready')
         self._text_button = _('Go!')
 
-        self._picture = None
+        self._picture: ImageQt.ImageQt = None
 
-        if num_pictures > 1:
-            self._text_label2 = _('for {} photos...').format(num_pictures)
+        if num_shots > 1:
+            self._text_label2 = _('for {} photos...').format(num_shots)
         else:
             self._text_label2 = _('for the photo')
 
         self.initFrame(countdown_action)
 
     @property
-    def picture(self):
+    def picture(self) -> ImageQt.ImageQt:
 
         return self._picture
 
     @picture.setter
-    def picture(self, picture):
+    def picture(self, picture: ImageQt.ImageQt):
 
         if not isinstance(picture, ImageQt.ImageQt):
             self._picture = None
@@ -300,14 +302,14 @@ class GreeterMessage(QtWidgets.QFrame):
 
 class CaptureMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_picture, num_pictures):
+    def __init__(self, num_picture, num_shots):
 
         super().__init__()
         self.setObjectName('PoseMessage')
 
-        if num_pictures > 1:
+        if num_shots > 1:
             self._text = _('Photo {} of {}...').format(num_picture,
-                                                         num_pictures)
+                                                         num_shots)
         else:
             self._text = _('Taking a photo...')
 
@@ -323,12 +325,12 @@ class CaptureMessage(QtWidgets.QFrame):
 
 class PictureMessage(QtWidgets.QFrame):
 
-    def __init__(self, picture):
+    def __init__(self, picture: ImageQt.ImageQt):
 
         super().__init__()
         self.setObjectName('PictureMessage')
 
-        self._picture = picture
+        self._picture: ImageQt.ImageQt = picture
 
     def _paintPicture(self, painter):
 
@@ -352,16 +354,16 @@ class PictureMessage(QtWidgets.QFrame):
 
 class SlideshowMessage(QtWidgets.QFrame):
 
-    def __init__(self, slide, text, fade, trigger_action):
+    def __init__(self, slide: Image.Image, text, fade, trigger_action):
 
         super().__init__()
         self.setObjectName('SlideshowMessage')
 
         self._start_label = _('Touch to exit slideshow')
 
-        self._slide = slide
-        self._newslide = slide
-        self._lastslide = slide
+        self._slide: Image.Image = slide
+        self._newslide: Image.Image = slide
+        self._lastslide: Image.Image = slide
         self._text = text
         self._fade = fade
         self._alpha = 0.0
@@ -382,12 +384,12 @@ class SlideshowMessage(QtWidgets.QFrame):
         self._trigger_action()
             
     @property
-    def slide(self):
+    def slide(self) -> Image.Image:
 
         return self._slide
 
     @slide.setter
-    def slide(self, slide):
+    def slide(self, slide: Image.Image):
 
         if not isinstance(slide, Image.Image):
             self._slide = None
@@ -440,12 +442,12 @@ class SlideshowMessage(QtWidgets.QFrame):
 
 class GalleryMessage(QtWidgets.QFrame):
 
-    def __init__(self, pictureList, columns, trigger_action, gallery_select_action):
+    def __init__(self, pictureList: PictureList, columns, trigger_action, gallery_select_action):
 
         super().__init__()
         self.setObjectName('GalleryMessage')
 
-        self._pictureList = pictureList
+        self._pictureList: PictureList = pictureList
         self._columns = columns
         self._gallery_label = _('Gallery')
         self._gallery_back_button = _('← Back')
@@ -496,17 +498,17 @@ class GalleryMessage(QtWidgets.QFrame):
 
 class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
-    def __init__(self,  parent, pictureList, items, worker, pictureId, uploads3, postprocess_handle, close_handle, show_picture_handle):
+    def __init__(self,  parent, pictureList: PictureList, items, worker, pictureRef: PictureRef, uploads3, postprocess_handle, close_handle, show_picture_handle):
 
 
         super().__init__(parent)
         self.setObjectName('GallerySelectMessage')
 
-        self._pictureList = pictureList
-        self._pictureId = pictureId
+        self._pictureList: PictureList = pictureList
+        self._pictureRef: PictureRef = pictureRef
         self._uploads3 = uploads3
-        self._previousPictureId = None
-        self._nextPictureId = None
+        self._previousPictureRef = None
+        self._nextPictureRef = None
         self._info = ""
 
         self.initFrame(items, postprocess_handle, close_handle, show_picture_handle, worker)
@@ -542,19 +544,19 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         previousBtn = QtWidgets.QPushButton('→')
         self._label = QtWidgets.QLabel(self._info)
 
-        def updatePicture(newPictureId):
-            if newPictureId:
-                self._pictureId = newPictureId
-                self._previousPictureId = self._pictureList.getPreviousFilename(newPictureId)
-                self._nextPictureId = self._pictureList.getNextFilename(newPictureId)
-                nextBtn.setEnabled(self._nextPictureId != None)
-                previousBtn.setEnabled(self._previousPictureId != None)
+        def updatePicture(newPictureRef: PictureRef):
+            if newPictureRef:
+                self._pictureRef = newPictureRef
+                self._previousPictureRef = self._pictureList.getPreviousPicture(newPictureRef)
+                self._nextPictureRef = self._pictureList.getNextPicture(newPictureRef)
+                nextBtn.setEnabled(self._nextPictureRef != None)
+                previousBtn.setEnabled(self._previousPictureRef != None)
                 self.update()
-                show_picture_handle(newPictureId)
-        updatePicture(self._pictureId)
+                show_picture_handle(newPictureRef)
+        updatePicture(self._pictureRef)
 
-        nextBtn.clicked.connect(lambda: updatePicture(self._nextPictureId))            
-        previousBtn.clicked.connect(lambda: updatePicture(self._previousPictureId))
+        nextBtn.clicked.connect(lambda: updatePicture(self._nextPictureRef))            
+        previousBtn.clicked.connect(lambda: updatePicture(self._previousPictureRef))
 
         headerLayout = QtWidgets.QHBoxLayout()
         headerLayout.addWidget(nextBtn)
@@ -564,7 +566,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         tabs = QtWidgets.QTabWidget()
         tabs.addTab(QtWidgets.QLabel(""), _('Picture'))
         if self._uploads3["link"]:
-            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureId))), _('QR'))
+            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureRef.original))), _('QR'))
 
         layout = QtWidgets.QVBoxLayout()
         layout.addLayout(headerLayout, stretch=0)
@@ -581,7 +583,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         painter = QtGui.QPainter(self)
 
         try:
-            image = ImageQt.ImageQt(Image.open(self._pictureId))
+            image = ImageQt.ImageQt(Image.open(self._pictureRef.original))
             image = image.scaled(self.contentsRect().size(),
                              QtCore.Qt.AspectRatioMode.KeepAspectRatio,
                              QtCore.Qt.TransformationMode.FastTransformation)
@@ -606,7 +608,7 @@ class CountdownMessage(QtWidgets.QFrame):
         self._step_size = 50
         self._value = time * (1000 // self._step_size)
         self._action = action
-        self._picture = None
+        self._picture: ImageQt.ImageQt = None
 
         self._initProgressBar(time)
 
@@ -621,12 +623,12 @@ class CountdownMessage(QtWidgets.QFrame):
         self._value = value
 
     @property
-    def picture(self):
+    def picture(self) -> ImageQt.ImageQt:
 
         return self._picture
 
     @picture.setter
-    def picture(self, picture):
+    def picture(self, picture: ImageQt.ImageQt):
 
         if not isinstance(picture, ImageQt.ImageQt):
             self._picture = None
@@ -689,7 +691,7 @@ class CountdownMessage(QtWidgets.QFrame):
 
 class PostprocessMessage(Widgets.TransparentOverlay):
 
-    def __init__(self, parent, pictureList, items, worker, uploads3, postprocess_handle, idle_handle,
+    def __init__(self, parent, pictureList: PictureList, items, worker, uploads3, postprocess_handle, idle_handle,
                  timeout=None, timeout_handle=None):
         
         if timeout_handle is None:
@@ -732,7 +734,7 @@ class PostprocessMessage(Widgets.TransparentOverlay):
         tabs = QtWidgets.QTabWidget()
         tabs.addTab(QtWidgets.QLabel(""), _('Picture'))
         if self._uploads3["enable"]:
-            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureList.getLast()))), _('QR'))
+            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureList.getLast().original))), _('QR'))
 
         layout = QtWidgets.QVBoxLayout()
         self._label = QtWidgets.QLabel(_('Happy with your picture?'))

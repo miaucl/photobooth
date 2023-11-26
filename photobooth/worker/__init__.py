@@ -28,6 +28,7 @@ from .AdList import AdList
 from .PictureList import PictureList
 from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
+from .ShotSaver import ShotSaver
 from .PictureUploadS3 import PictureUploadS3
 from .PictureUploadWebdav import PictureUploadWebdav
 from .Counter import Counter
@@ -64,8 +65,6 @@ class Worker:
     def initReviewTasks(self, config):
 
         self._reviewPictureTasks = []
-        self._reviewThumbnailTasks = []
-        self._reviewWatermarkedTasks = []
 
         # Counter for assembled pictures
         self._reviewPictureTasks.append(self._pictureCounter)
@@ -75,8 +74,6 @@ class Worker:
 
         # PictureSaver for assembled pictures
         self._reviewPictureTasks.append(PictureSaver())
-        self._reviewThumbnailTasks.append(PictureSaver())
-        self._reviewWatermarkedTasks.append(PictureSaver())
 
         # PictureMailer for assembled pictures
         if config.getBool('Mailer', 'enable'):
@@ -123,7 +120,7 @@ class Worker:
         self._shotTasks = []
 
         # PictureSaver for single shots
-        self._shotTasks.append(PictureSaver())
+        self._shotTasks.append(ShotSaver())
 
         # Event log for shots
         self._shotTasks.append(self._eventLogShot)
@@ -140,21 +137,17 @@ class Worker:
         if isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
         elif isinstance(state, StateMachine.ReviewState):
-            picturename, thumbnailname, watermarkedname = self._pictureList.getNextPic()
-            self.doReviewPictureTasks(state.picture, picturename)
-            self.doReviewThumbnailTasks(state.thumbnail, thumbnailname)
-            self.doReviewWatermarkedTasks(state.watermarked, watermarkedname)
+            pictureRef = self._pictureList.getNewPicture()
+            self.doReviewPictureTasks(state.picture, pictureRef)
         elif isinstance(state, StateMachine.PostprocessState) or isinstance(state, StateMachine.GallerySelectState):
             if not state.action:
-                self.doPostprocessAutomTasks(state.pictureId)
+                self.doPostprocessAutomTasks(state.pictureRef)
             elif state.action == 'print':
-                self.doPostprocessPrintTasks(state.pictureId)
-            elif state.action == 'uploads3':
-                pass
+                self.doPostprocessPrintTasks(state.pictureRef)
         elif isinstance(state, StateMachine.CameraEvent):
             if state.name == 'capture':
-                picturename = self._pictureList.getNextPicShot()
-                self.doShotTasks(state.picture, picturename)
+                shotRef = self._pictureList.getNextPictureShot()
+                self.doShotTasks(state.shot, shotRef)
             else:
                 raise ValueError('Unknown CameraEvent "{}"'.format(state))
 
@@ -162,32 +155,22 @@ class Worker:
 
         pass
 
-    def doReviewPictureTasks(self, picture, picturename):
+    def doReviewPictureTasks(self, picture, pictureRef):
 
         for task in self._reviewPictureTasks:
-            task.do(picture=picture, filename=picturename)
+            task.do(picture=picture, pictureRef=pictureRef)
 
-    def doReviewThumbnailTasks(self, picture, picturename):
-
-        for task in self._reviewThumbnailTasks:
-            task.do(picture=picture, filename=picturename)
-
-    def doReviewWatermarkedTasks(self, picture, picturename):
-
-        for task in self._reviewWatermarkedTasks:
-            task.do(picture=picture, filename=picturename)
-
-    def doPostprocessPrintTasks(self, pictureId):
+    def doPostprocessPrintTasks(self, pictureRef):
 
         for task in self._postprocessPrintTasks:
-            task.do(pictureId=pictureId)
+            task.do(pictureRef=pictureRef)
 
-    def doPostprocessAutomTasks(self, pictureId):
+    def doPostprocessAutomTasks(self, pictureRef):
 
         for task in self._postProcessAutomTasks:
-            task.do(pictureId=pictureId)
+            task.do(pictureRef=pictureRef)
 
-    def doShotTasks(self, picture, picturename):
+    def doShotTasks(self, shot, shotRef):
 
         for task in self._shotTasks:
-            task.do(picture=picture, filename=picturename)
+            task.do(shot=shot, shotRef=shotRef)

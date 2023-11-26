@@ -2,9 +2,9 @@
 
 List of things left to do.
 
-## Unify
+## Type
 
-Instead of "picture", "thumbnail" and "watermarked" vars, combine them to a union and always have all together
+Add type hinting
 
 ## Quick setting for single picture in standard template
 

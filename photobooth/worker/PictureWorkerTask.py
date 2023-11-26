@@ -18,6 +18,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
+from photobooth.worker.PictureList import Picture, PictureRef
 from .WorkerTask import WorkerTask
 
 
@@ -27,6 +28,6 @@ class PictureWorkerTask(WorkerTask):
 
         assert not kwargs
 
-    def do(self, picture, picturename):
+    def do(self, picture: Picture, pictureRef: PictureRef):
 
         raise NotImplementedError()

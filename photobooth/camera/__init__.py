@@ -22,6 +22,8 @@ import logging
 from PIL import Image, ImageOps
 from io import BytesIO
 
+from photobooth.worker.PictureList import Picture
+
 from .. import StateMachine
 from ..Threading import Workers
 
@@ -89,7 +91,7 @@ class Camera:
         self._template.startup(self._pictureCaptureSize)
 
         # starting up and passing total number of pictures to make it available in overall context for later states
-        self._comm.send(Workers.MASTER, StateMachine.CameraEvent('ready', num_pictures=self._template.totalNumPics))
+        self._comm.send(Workers.MASTER, StateMachine.CameraEvent('ready', num_shots=self._template.totalNumPics))
 
     def teardown(self, state):
 
@@ -163,7 +165,7 @@ class Camera:
                 byte_data = BytesIO()
                 picture.save(byte_data, format='jpeg')
                 self._comm.send(Workers.GUI,
-                                StateMachine.CameraEvent('preview', byte_data))
+                                StateMachine.CameraEvent('preview', shot=byte_data))
 
     def capturePicture(self, state):
 
@@ -178,7 +180,7 @@ class Camera:
 
         if self._is_keep_pictures:
             self._comm.send(Workers.WORKER,
-                            StateMachine.CameraEvent('capture', byte_data))
+                            StateMachine.CameraEvent('capture', shot=byte_data))
 
         if state.num_picture < self._template.totalNumPics:
             self._comm.send(Workers.MASTER,
@@ -195,5 +197,5 @@ class Camera:
         byte_data, thumbnail_byte_data, watermarked_byte_data = self._template.assemblePicture(self._pictures)
 
         self._comm.send(Workers.MASTER,
-                        StateMachine.CameraEvent('review', byte_data, thumbnail_byte_data, watermarked_byte_data))
+                        StateMachine.CameraEvent('review', Picture(byte_data, watermarked_byte_data, thumbnail_byte_data)))
         self._pictures = []

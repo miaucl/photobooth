@@ -17,21 +17,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from photobooth.worker.PictureList import PictureRef
-from .. import printer
-from ..util import lookup_and_import
-from PIL import Image, ImageQt
-from .PostprocessorWorkerTask import PostprocessorWorkerTask
+import logging
+
+from .PictureWorkerTask import PictureWorkerTask
 
 
-class PostprocessorPrinter(PostprocessorWorkerTask):
+class ShotSaver(PictureWorkerTask):
 
-    def __init__(self, printer_module, paper_size, storage_dir, **kwargs):
+    def __init__(self):
 
-        super().__init__(**kwargs)
+        super().__init__()
 
-        Printer = lookup_and_import(printer.modules, printer_module, 'printer')
-        self._printer = Printer(paper_size, storage_dir)
 
-    def do(self, pictureRef: PictureRef):
-        self._printer.print(ImageQt.ImageQt(Image.open(pictureRef.original)))
+    def do(self, shot, shotRef):
+
+        logging.info('Saving shot as %s', shotRef)
+        with open(shotRef, 'wb') as f:
+            f.write(shot.getbuffer())

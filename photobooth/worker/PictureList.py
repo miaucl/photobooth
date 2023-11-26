@@ -17,13 +17,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from io import BytesIO
 import logging
 
 import os.path
 from glob import glob
 from time import localtime, strftime
+from collections import namedtuple
 
 import random
+
+Picture = namedtuple("Picture", "original watermarked thumbnail")
+Picture.__annotations__ = { "original": BytesIO, "watermarked": BytesIO, "thumbnail": BytesIO }
+PictureRef = namedtuple("PictureRef", "original watermarked thumbnail")
+PictureRef.__annotations__ = { "original": str, "watermarked": str, "thumbnail": str }
 
 class PictureList:
     """A simple helper class.
@@ -74,14 +81,14 @@ class PictureList:
         """
         # Find existing files
         count_pattern = '[0-9]' * self.count_width
-        pictures = glob(self.basename + count_pattern + self.suffix)
+        found_pictures = glob(self.basename + count_pattern + self.suffix)
     
         # Get number of latest file
-        if len(pictures) == 0:
+        if len(found_pictures) == 0:
             self.counter = 0
         else:
-            pictures.sort()
-            last_picture = pictures[-1]
+            found_pictures.sort()
+            last_picture = found_pictures[-1]
             self.counter = int(last_picture[
                 -(self.count_width + len(self.suffix)):-len(self.suffix)])
 
@@ -98,7 +105,6 @@ class PictureList:
     def count(self):
         """Return the count"""
         return self.counter
-
 
     def getFilename(self, count):
         """Return the file name for a given file number"""
@@ -117,43 +123,47 @@ class PictureList:
         return self.getFilename(count+1)[:-len(self.suffix)] + \
             '_shot' + str(shotCount).zfill(3) + self.suffix
 
-    def getLast(self):
-        """Return the current filename"""
-        return self.getFilename(self.counter)
-
-    def getNextPic(self):
-        """Update counter and return the next filename and thumbnail"""
+    def getNewPicture(self):
+        """Update counter and return the next new filename and thumbnail"""
         self.counter += 1
         self.shot_counter = 0
-        return self.getFilename(self.counter), self.getThumbnail(self.counter), self.getWatermarked(self.counter)
+        return self.getPicture(self.counter)
 
-    def getNextPicShot(self):
+    def getNextPictureShot(self):
         """Update counter and return the next filename"""
         self.shot_counter += 1
         return self.getFilenameShot(self.counter, self.shot_counter)
 
-    def getRandomPic(self):
-        """Return a random filename"""
+    def getRandomPicture(self):
+        """Return a random picture"""
         
         self.findExistingFiles()
         if self.counter == 0:
             return self.getFilename(0)
         else:
             r = random.randrange(self.counter)+1
-            return self.getFilename(random.randrange(self.counter)+1), r
+            return self.getPicture(random.randrange(self.counter)+1), r
 
-    def getNextFilename(self, filename):
+    def getPicture(self, count) -> PictureRef:
+        """Return the picture for a given file number"""
+        return PictureRef(self.getFilename(count), self.getWatermarked(count), self.getThumbnail(count))
+
+    def getNextPicture(self, picture: PictureRef) -> PictureRef or None:
         """Return the next filename or None if not available"""
-        index = int(filename[len(self.basename):-4])
+        index = int(picture.original[len(self.basename):-4])
         if index < self.counter:
-            return self.getFilename(index+1)
+            return self.getPicture(index+1)
         else:
             None
 
-    def getPreviousFilename(self, filename):
+    def getPreviousPicture(self, picture: PictureRef) -> PictureRef or None:
         """Return the previous filename or None if not available"""
-        index = int(filename[len(self.basename):-4])
+        index = int(picture.original[len(self.basename):-4])
         if index > 0:
-            return self.getFilename(index-1)
+            return self.getPicture(index-1)
         else:
             None
+
+    def getLast(self) -> PictureRef or None:
+        """Return the current filename"""
+        return self.getPicture(self.counter)

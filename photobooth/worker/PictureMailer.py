@@ -28,6 +28,8 @@ from email import encoders
 
 from pathlib import Path
 
+from photobooth.worker.PictureList import Picture, PictureRef
+
 from .PictureWorkerTask import PictureWorkerTask
 
 
@@ -93,9 +95,9 @@ class PictureMailer(PictureWorkerTask):
         self._password = config.get('Mailer', 'password')
         self._is_tls = config.getBool('Mailer', 'use_tls')
 
-    def do(self, picture, picturename):
+    def do(self, picture: Picture, pictureRef: PictureRef):
 
         logging.info('Sending picture to %s', self._recipient)
         send_mail(self._sender, self._recipient, self._subject, self._message,
-                  picture, picturename, self._server, self._port, self._is_auth, self._user,
+                  picture.original, pictureRef.original, self._server, self._port, self._is_auth, self._user,
                   self._password, self._is_tls)

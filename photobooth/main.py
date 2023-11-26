@@ -205,7 +205,7 @@ def run(argv, is_run):
     comm = Communicator()
     context = Context(comm, is_run)
 
-    # Initialize processes: We use five processes here:
+    # Initialize processes: We use 6 processes here:
     # 1. Master that collects events and distributes state changes
     # 2. Camera handling
     # 3. GUI

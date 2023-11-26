@@ -18,7 +18,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import os
+
+from photobooth.worker.PictureList import Picture, PictureRef
 
 from .PictureWorkerTask import PictureWorkerTask
 
@@ -30,8 +31,16 @@ class PictureSaver(PictureWorkerTask):
         super().__init__()
 
 
-    def do(self, picture, filename):
+    def do(self, picture: Picture, pictureRef: PictureRef):
 
-        logging.info('Saving picture as %s', filename)
-        with open(filename, 'wb') as f:
-            f.write(picture.getbuffer())
+        logging.info('Saving original picture as %s', pictureRef.original)
+        with open(pictureRef.original, 'wb') as f:
+            f.write(picture.original.getbuffer())
+
+        logging.info('Saving watermarked picture as %s', pictureRef.watermarked)
+        with open(pictureRef.watermarked, 'wb') as f:
+            f.write(picture.watermarked.getbuffer())
+
+        logging.info('Saving picture thumbnail as %s', pictureRef.thumbnail)
+        with open(pictureRef.thumbnail, 'wb') as f:
+            f.write(picture.thumbnail.getbuffer())
