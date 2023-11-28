@@ -21,6 +21,11 @@ import logging
 import os
 import subprocess
 import sys
+from typing import Callable
+from photobooth.Config import Config
+from photobooth.StateMachine import Event
+from photobooth.gui.GuiPostprocessor import PostprocessItem
+from photobooth.worker import Worker
 
 from photobooth.worker.PictureList import PictureList, PictureRef
 
@@ -52,8 +57,7 @@ from . import styles
 
 class Welcome(QtWidgets.QFrame):
 
-    def __init__(self, version, build, event, start_action, set_date_action, settings_action,
-                 exit_action):
+    def __init__(self, version: str, build: str, event: Event, start_action: Callable[[None], None], set_date_action: Callable[[None], None], settings_action: Callable[[None], None], exit_action: Callable[[None], None]):
 
         super().__init__()
         self.setObjectName('WelcomeMessage')
@@ -64,8 +68,7 @@ class Welcome(QtWidgets.QFrame):
         self.initFrame(start_action, set_date_action, settings_action,
                        exit_action)
 
-    def initFrame(self, start_action, set_date_action, settings_action,
-                  exit_action):
+    def initFrame(self, start_action: Callable[[None], None], set_date_action: Callable[[None], None], settings_action: Callable[[None], None], exit_action: Callable[[None], None]):
 
         btnStart = QtWidgets.QPushButton(_('Start photobooth'))
         btnStart.clicked.connect(start_action)
@@ -106,7 +109,7 @@ class Welcome(QtWidgets.QFrame):
 
 class WaitMessage(QtWidgets.QFrame):
 
-    def __init__(self, message):
+    def __init__(self, message: str):
 
         super().__init__()
         self.setObjectName('WaitMessage')
@@ -145,7 +148,7 @@ class WaitMessage(QtWidgets.QFrame):
 
 class IdleMessage(QtWidgets.QFrame):
 
-    def __init__(self, event, pictureCount, printCount, trigger_action, gallery_action):
+    def __init__(self, event: Event, pictureCount: int, printCount: int, trigger_action: Callable[[None], None], gallery_action: Callable[[None], None]):
 
         super().__init__()
         self.setObjectName('IdleMessage')
@@ -161,7 +164,7 @@ class IdleMessage(QtWidgets.QFrame):
         self.initFrame(trigger_action, gallery_action)
     
     @property
-    def picture(self) -> ImageQt.ImageQt:
+    def picture(self):
 
         return self._picture
 
@@ -174,7 +177,7 @@ class IdleMessage(QtWidgets.QFrame):
         else:
             self._picture = picture
 
-    def initFrame(self, trigger_action, gallery_action):
+    def initFrame(self, trigger_action: Callable[[None], None], gallery_action: Callable[[None], None]):
 
         eventLbl = QtWidgets.QLabel(self._event_label)
         eventLbl.setObjectName('EventLabel')
@@ -228,7 +231,7 @@ class IdleMessage(QtWidgets.QFrame):
 
 class GreeterMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_shots, countdown_action):
+    def __init__(self, num_shots: int, countdown_action: Callable[[None], None]):
 
         super().__init__()
         self.setObjectName('GreeterMessage')
@@ -246,7 +249,7 @@ class GreeterMessage(QtWidgets.QFrame):
         self.initFrame(countdown_action)
 
     @property
-    def picture(self) -> ImageQt.ImageQt:
+    def picture(self):
 
         return self._picture
 
@@ -259,7 +262,7 @@ class GreeterMessage(QtWidgets.QFrame):
         else:
             self._picture = picture
 
-    def initFrame(self, countdown_action):
+    def initFrame(self, countdown_action: Callable[[None], None]):
 
         lbl = QtWidgets.QLabel('{} {}'.format(self._text_label1, self._text_label2))
         lbl.setObjectName('Message')
@@ -302,7 +305,7 @@ class GreeterMessage(QtWidgets.QFrame):
 
 class CaptureMessage(QtWidgets.QFrame):
 
-    def __init__(self, num_picture, num_shots):
+    def __init__(self, num_picture: int, num_shots: int):
 
         super().__init__()
         self.setObjectName('PoseMessage')
@@ -354,7 +357,7 @@ class PictureMessage(QtWidgets.QFrame):
 
 class SlideshowMessage(QtWidgets.QFrame):
 
-    def __init__(self, slide: Image.Image, text, fade, trigger_action):
+    def __init__(self, slide: Image.Image, text: str, fade: bool, trigger_action: Callable[[None], None]):
 
         super().__init__()
         self.setObjectName('SlideshowMessage')
@@ -384,7 +387,7 @@ class SlideshowMessage(QtWidgets.QFrame):
         self._trigger_action()
             
     @property
-    def slide(self) -> Image.Image:
+    def slide(self):
 
         return self._slide
 
@@ -442,7 +445,7 @@ class SlideshowMessage(QtWidgets.QFrame):
 
 class GalleryMessage(QtWidgets.QFrame):
 
-    def __init__(self, pictureList: PictureList, columns, trigger_action, gallery_select_action):
+    def __init__(self, pictureList: PictureList, columns: int, trigger_action: Callable[[None], None], gallery_select_action: Callable[[PictureRef], None]):
 
         super().__init__()
         self.setObjectName('GalleryMessage')
@@ -457,7 +460,7 @@ class GalleryMessage(QtWidgets.QFrame):
 
         self.initFrame(trigger_action, gallery_select_action)
         
-    def initFrame(self, trigger_action, gallery_select_action):
+    def initFrame(self, trigger_action: Callable[[None], None], gallery_select_action: Callable[[PictureRef], None]):
 
         tbl = QtWidgets.QTableView()
         tbl.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
@@ -498,7 +501,7 @@ class GalleryMessage(QtWidgets.QFrame):
 
 class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
-    def __init__(self,  parent, pictureList: PictureList, items, worker, pictureRef: PictureRef, uploads3, postprocess_handle, close_handle, show_picture_handle):
+    def __init__(self,  parent, pictureList: PictureList, items: list[PostprocessItem], worker: Worker, pictureRef: PictureRef, uploads3: dict, postprocess_handle: Callable[[str], None], close_handle: Callable[[None], None], show_picture_handle: Callable[[PictureRef], None]):
 
 
         super().__init__(parent)
@@ -513,9 +516,9 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
         self.initFrame(items, postprocess_handle, close_handle, show_picture_handle, worker)
 
-    def initFrame(self, items, postprocess_handle, close_handle, show_picture_handle, worker):
+    def initFrame(self, items: list[PostprocessItem], postprocess_handle: Callable[[str], None], close_handle: Callable[[None], None], show_picture_handle: Callable[[PictureRef], None], worker: Worker):
 
-        def disableAndCall(button, action):
+        def disableAndCall(button: QtWidgets.QPushButton, action: str):
             for i, b in enumerate(self._buttons[:-1]):
                 logging.info('Disable button {}'.format(b.text()))
                 b.setEnabled(False)
@@ -524,7 +527,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
             self._label.update()
             worker.put(lambda: postprocess_handle(action))
 
-        def createButton(item):
+        def createButton(item: PostprocessItem):
             button = QtWidgets.QPushButton(item.label)
             button.clicked.connect(lambda: disableAndCall(button, item.action))
             return button
@@ -600,7 +603,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
 class CountdownMessage(QtWidgets.QFrame):
 
-    def __init__(self, time, action):
+    def __init__(self, time: int, action: str):
 
         super().__init__()
         self.setObjectName('CountdownMessage')
@@ -618,12 +621,12 @@ class CountdownMessage(QtWidgets.QFrame):
         return self._value
 
     @value.setter
-    def value(self, value):
+    def value(self, value: int):
 
         self._value = value
 
     @property
-    def picture(self) -> ImageQt.ImageQt:
+    def picture(self):
 
         return self._picture
 
@@ -636,7 +639,7 @@ class CountdownMessage(QtWidgets.QFrame):
         else:
             self._picture = picture
 
-    def _initProgressBar(self, time):
+    def _initProgressBar(self, time: int):
 
         self._bar = Widgets.RoundProgressBar(0, time, time)
         self._bar.setFixedSize(160, 160)
@@ -691,8 +694,8 @@ class CountdownMessage(QtWidgets.QFrame):
 
 class PostprocessMessage(Widgets.TransparentOverlay):
 
-    def __init__(self, parent, pictureList: PictureList, items, worker, uploads3, postprocess_handle, idle_handle,
-                 timeout=None, timeout_handle=None):
+    def __init__(self, parent, pictureList: PictureList, items: list[PostprocessItem], worker: Worker, uploads3: dict, postprocess_handle: Callable[[str], None], idle_handle: Callable[[None], None],
+                 timeout: int=None, timeout_handle: Callable[[None], None]=None):
         
         if timeout_handle is None:
             timeout_handle = idle_handle
@@ -705,9 +708,9 @@ class PostprocessMessage(Widgets.TransparentOverlay):
 
         self.initFrame(items, postprocess_handle, idle_handle, worker)
 
-    def initFrame(self, items, postprocess_handle, idle_handle, worker):
+    def initFrame(self, items: list[PostprocessItem], postprocess_handle: Callable[[str], None], idle_handle: Callable[[None], None], worker: Worker):
 
-        def disableAndCall(button, action):
+        def disableAndCall(button: QtWidgets.QPushButton, action: str):
             for i, b in enumerate(self._buttons):
                 logging.info('Disable button {}'.format(b.text()))
                 b.setEnabled(False)
@@ -717,7 +720,7 @@ class PostprocessMessage(Widgets.TransparentOverlay):
             worker.put(lambda: postprocess_handle(action))
             worker.put(idle_handle)
 
-        def createButton(item):
+        def createButton(item: PostprocessItem):
             button = QtWidgets.QPushButton(item.label)
             button.clicked.connect(lambda: disableAndCall(button, item.action))
             return button
@@ -748,7 +751,7 @@ class PostprocessMessage(Widgets.TransparentOverlay):
 
 class SetDateTime(QtWidgets.QFrame):
 
-    def __init__(self, cancel_action, restart_action):
+    def __init__(self, cancel_action: Callable[[None], None], restart_action: Callable[[None], None]):
 
         super().__init__()
 
@@ -827,7 +830,7 @@ class SetDateTime(QtWidgets.QFrame):
 
 class Settings(QtWidgets.QFrame):
 
-    def __init__(self, config, reload_action, cancel_action, restart_action):
+    def __init__(self, config: Config, reload_action: Callable[[None], None], cancel_action: Callable[[None], None], restart_action: Callable[[None], None]):
 
         super().__init__()
 
@@ -840,15 +843,15 @@ class Settings(QtWidgets.QFrame):
 
         self.initFrame()
 
-    def init(self, category):
+    def init(self, category: str):
 
         self._widgets[category] = {}
 
-    def add(self, category, key, value):
+    def add(self, category: str, key: str, value: str | int | bool | list[int]):
 
         self._widgets[category][key] = value
 
-    def get(self, category, key):
+    def get(self, category: str, key: str) -> str | int | bool | list[int]:
 
         return self._widgets[category][key]
 

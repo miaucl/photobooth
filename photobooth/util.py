@@ -19,10 +19,7 @@
 
 import importlib
 
-from PIL import Image
-
-
-def lookup_and_import(module_list, name, package=None):
+def lookup_and_import(module_list: any, name: str, package: str=None):
 
     result = next(((mod_name, class_name)
                    for config_name, mod_name, class_name in module_list
@@ -38,21 +35,3 @@ def lookup_and_import(module_list, name, package=None):
         return import_module
     else:
         return getattr(import_module, result[1])
-
-
-def pickle_image(image):
-
-    if image is None:
-        return None
-    else:
-        image_data = (image.mode, image.size, image.tobytes())
-        return image_data
-
-
-def unpickle_image(image_data):
-
-    if image_data is None:
-        return None
-    else:
-        image = Image.frombytes(*image_data)
-        return image

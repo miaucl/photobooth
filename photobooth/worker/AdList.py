@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from io import BytesIO
 import logging
 
 import os.path
@@ -24,13 +25,16 @@ from glob import glob
 
 import random
 
+Ad = type(BytesIO)
+AdRef = str
+
 class AdList:
     """A simple helper class.
 
     It provides the filenames for the ads
     """
 
-    def __init__(self, ad_prefix, basedir):
+    def __init__(self, ad_prefix: str, basedir: str):
         """Initialize filenames to the given ad prefix and search for
         existing files.
         """
@@ -38,7 +42,7 @@ class AdList:
         # Set basedir and ad prefix
         self._basedir = basedir
         self._ad_prefix = ad_prefix
-        self._ads = []
+        self._ads: list[AdRef] = []
         self._ads_count = 0
 
         # Ensure directory exists 
@@ -70,7 +74,7 @@ class AdList:
         return self._ad_prefix
 
     @ad_prefix.setter
-    def ad_prefix(self, ad_prefix):
+    def ad_prefix(self, ad_prefix: str):
         logging.info('New ad_prefix is {}'.format(ad_prefix))
         self._ad_prefix = ad_prefix
 

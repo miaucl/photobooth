@@ -41,7 +41,7 @@ gettext.install('photobooth', 'photobooth/locale')
 
 class CameraProcess(mp.Process):
 
-    def __init__(self, argv, config, comm):
+    def __init__(self, argv, config: Config, comm: Communicator):
 
         super().__init__()
         self.daemon = True
@@ -73,7 +73,7 @@ class CameraProcess(mp.Process):
 
 class GuiProcess(mp.Process):
 
-    def __init__(self, argv, config, comm):
+    def __init__(self, argv, config: Config, comm: Communicator):
 
         super().__init__()
 
@@ -94,7 +94,7 @@ class GuiProcess(mp.Process):
 
 class WorkerProcess(mp.Process):
 
-    def __init__(self, argv, config, comm):
+    def __init__(self, argv, config: Config, comm: Communicator):
 
         super().__init__()
         self.daemon = True
@@ -120,7 +120,7 @@ class WorkerProcess(mp.Process):
 
 class GpioProcess(mp.Process):
 
-    def __init__(self, argv, config, comm):
+    def __init__(self, argv, config: Config, comm: Communicator):
 
         super().__init__()
         self.daemon = True
@@ -146,7 +146,7 @@ class GpioProcess(mp.Process):
 
 class WebProcess(mp.Process):
 
-    def __init__(self, argv, config, comm):
+    def __init__(self, argv, config: Config, comm: Communicator):
 
         super().__init__()
         self.daemon = True
@@ -181,7 +181,7 @@ def parseArgs(argv):
     return parser.parse_known_args()
 
 
-def mainloop(comm, context):
+def mainloop(comm: Communicator, context: Context):
 
     while True:
         try:

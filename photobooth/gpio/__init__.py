@@ -19,13 +19,15 @@
 
 import logging
 
+from photobooth.Config import Config
+
 from .. import StateMachine
-from ..Threading import Workers
+from ..Threading import Communicator, Workers
 
 
 class Gpio:
 
-    def __init__(self, config, comm):
+    def __init__(self, config: Config, comm: Communicator):
 
         super().__init__()
 
@@ -38,7 +40,7 @@ class Gpio:
 
         self.initGpio(config)
 
-    def initGpio(self, config):
+    def initGpio(self, config: Config):
 
         if self._is_enabled_button or self._is_enabled_light:
             self._gpio = Entities()
@@ -74,7 +76,7 @@ class Gpio:
 
         return True
 
-    def handleState(self, state):
+    def handleState(self, state: StateMachine.State):
 
         if isinstance(state, StateMachine.IdleState):
             self.showIdle()
@@ -99,7 +101,7 @@ class Gpio:
         elif isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
 
-    def teardown(self, state):
+    def teardown(self, state: StateMachine.State):
 
         if self._is_enabled_light:
             self._gpio.teardown()
@@ -207,7 +209,7 @@ class Entities:
         for l in self._lamps:
             l.off()
 
-    def setTriggerButton(self, bcm_pin, trigger_handler):
+    def setTriggerButton(self, bcm_pin: int, trigger_handler: any):
 
         try:
             self._buttons.append(self.Button(bcm_pin))
@@ -215,7 +217,7 @@ class Entities:
         except self.GPIOPinInUse:
             logging.error('Pin {} already in use!'.format(bcm_pin))
 
-    def setExitButton(self, bcm_pin, trigger_handler, exit_handler):
+    def setExitButton(self, bcm_pin, trigger_handler: any, exit_handler: any):
 
         try:
             self._buttons.append(self.Button(pin=bcm_pin, hold_time = 5))
@@ -224,7 +226,7 @@ class Entities:
         except self.GPIOPinInUse:
             logging.error('Pin {} already in use!'.format(bcm_pin))
 
-    def setLamp(self, bcm_pin):
+    def setLamp(self, bcm_pin: int):
 
         try:
             self._lamps.append(self.LED(bcm_pin))
@@ -233,12 +235,12 @@ class Entities:
             logging.error('Pin {} already in use!'.format(bcm_pin))
             return None
 
-    def lampOn(self, index):
+    def lampOn(self, index: int):
 
         if index is not None:
             self._lamps[index].on()
 
-    def lampOff(self, index):
+    def lampOff(self, index: int):
 
         if index is not None:
             self._lamps[index].off()

@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from photobooth.worker.PictureList import Picture, PictureRef
 from .WorkerTask import WorkerTask
 
 class PostprocessorWorkerTask(WorkerTask):
@@ -25,6 +26,6 @@ class PostprocessorWorkerTask(WorkerTask):
 
         assert not kwargs
 
-    def do(self, pictureOrPictureRef):
+    def do(self, picture: Picture, pictureRef: PictureRef):
 
         raise NotImplementedError()

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import logging
+from photobooth.Config import Config
+from photobooth.worker.PictureList import Picture, ShotRef
 
 # Available template modules as tuples of (config name, module name, class name)
 modules = (
@@ -11,7 +12,7 @@ modules = (
 
 class Template:
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
 
         self._cfg = config
         self._totalNumPics = 0
@@ -19,7 +20,7 @@ class Template:
     def startup(self):
         raise NotImplementedError('template function not implemented!')
 
-    def assemblePicture(self, pictures):
+    def assemblePicture(self, pictures: list[ShotRef]) -> Picture:
         raise NotImplementedError('template function not implemented!')
 
     @property

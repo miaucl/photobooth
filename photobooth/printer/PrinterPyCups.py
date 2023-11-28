@@ -23,6 +23,7 @@
 
 import logging
 import os
+from PIL import ImageQt
 
 try:
     import cups
@@ -37,7 +38,7 @@ from . import Printer
 
 class PrinterPyCups(Printer):
 
-    def __init__(self, page_size, storage_dir):
+    def __init__(self, page_size: tuple[int, int] | list[int], storage_dir: str):
 
         super().__init__(page_size, storage_dir)
 
@@ -53,7 +54,7 @@ class PrinterPyCups(Printer):
             self._printer = self._conn.getDefault()
             logging.info('Using printer "%s"', self._printer)
 
-    def print(self, picture):
+    def print(self, picture: ImageQt.ImageQt):
 
         if self._conn is not None:
             if isinstance(picture, ImageQt.ImageQt):

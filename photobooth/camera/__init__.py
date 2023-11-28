@@ -18,14 +18,18 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+from typing import Tuple
 
 from PIL import Image, ImageOps
 from io import BytesIO
+from photobooth.Config import Config
+from photobooth.camera.CameraInterface import CameraInterface
+from photobooth.template import Template
 
 from photobooth.worker.PictureList import Picture
 
 from .. import StateMachine
-from ..Threading import Workers
+from ..Threading import Communicator, Workers
 
 # Available camera modules as tuples of (config name, module name, class name)
 modules = (
@@ -43,7 +47,7 @@ modules = (
 
 class Camera:
 
-    def __init__(self, config, comm, CameraModule, TemplateModule):
+    def __init__(self, config: Config, comm: Communicator, CameraModule: CameraInterface, TemplateModule: Template):
 
         super().__init__()
 
@@ -93,7 +97,7 @@ class Camera:
         # starting up and passing total number of pictures to make it available in overall context for later states
         self._comm.send(Workers.MASTER, StateMachine.CameraEvent('ready', num_shots=self._template.totalNumPics))
 
-    def teardown(self, state):
+    def teardown(self, state: StateMachine.State):
 
         if self._cap is not None:
             self._cap.cleanup()
@@ -105,7 +109,7 @@ class Camera:
 
         return True
 
-    def handleState(self, state):
+    def handleState(self, state: StateMachine.State):
 
         if isinstance(state, StateMachine.StartupState):
             self.startup()
@@ -138,7 +142,7 @@ class Camera:
         self.setActive()
         self._pictures = []
 
-    def _computePreviewDimensions(self, size):
+    def _computePreviewDimensions(self, size: tuple[int, int]):
 
         gui_size = (self._cfg.getInt('Gui', 'width'),
                     self._cfg.getInt('Gui', 'height'))
@@ -167,7 +171,7 @@ class Camera:
                 self._comm.send(Workers.GUI,
                                 StateMachine.CameraEvent('preview', shot=byte_data))
 
-    def capturePicture(self, state):
+    def capturePicture(self, state: StateMachine.State):
 
         self.setIdle()
         picture = self._cap.getPicture()
@@ -194,8 +198,8 @@ class Camera:
         self.setIdle()
 
         # assemble pictures based on template
-        byte_data, thumbnail_byte_data, watermarked_byte_data = self._template.assemblePicture(self._pictures)
+        picture = self._template.assemblePicture(self._pictures)
 
         self._comm.send(Workers.MASTER,
-                        StateMachine.CameraEvent('review', Picture(byte_data, watermarked_byte_data, thumbnail_byte_data)))
+                        StateMachine.CameraEvent('review', picture))
         self._pictures = []

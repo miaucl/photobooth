@@ -19,6 +19,7 @@
 
 import os
 import logging
+from PIL import ImageQt
 
 try:
     from PyQt6.QtPrintSupport import QPrinter
@@ -36,7 +37,7 @@ from .PrinterPyQt import PrinterPyQt
 
 class PrinterPyQt_PDF(PrinterPyQt):
 
-    def __init__(self, page_size, storage_dir):
+    def __init__(self, page_size: tuple[int, int] | list[int], storage_dir: str):
 
         super().__init__(page_size, storage_dir)
 
@@ -45,7 +46,7 @@ class PrinterPyQt_PDF(PrinterPyQt):
         self._counter = 0
         self._printer.setOutputFormat(QPrinter.OutputFormat.PdfFormat)
 
-    def print(self, picture):
+    def print(self, picture: ImageQt.ImageQt):
 
         outputFileName = os.path.join(self.storageDir, 'print_{}.pdf'.format(self._counter))
         self._printer.setOutputFileName(outputFileName)

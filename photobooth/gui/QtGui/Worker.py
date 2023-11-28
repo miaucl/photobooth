@@ -20,6 +20,8 @@
 import queue
 import logging
 
+from photobooth.Threading import Communicator
+
 try:
     from PyQt6 import QtCore
 except ImportError:
@@ -33,7 +35,7 @@ except ImportError:
 
 class Worker(QtCore.QThread):
 
-    def __init__(self, comm):
+    def __init__(self, comm: Communicator):
 
         super().__init__()
         self._comm = comm

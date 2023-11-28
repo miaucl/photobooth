@@ -21,12 +21,14 @@ import logging
 import os
 from time import localtime, strftime
 
+from photobooth.Config import Config
+
 from .WorkerTask import WorkerTask
 
 
 class Counter(WorkerTask):
 
-    def __init__(self, config, subject):
+    def __init__(self, config: Config, subject: str):
 
         super().__init__()
 

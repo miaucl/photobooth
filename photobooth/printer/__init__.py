@@ -24,10 +24,11 @@ modules = (
     ('PyCUPS', 'PrinterPyCups', 'PrinterPyCups'))
 
 import os
+from PIL import ImageQt
 
 class Printer:
 
-    def __init__(self, page_size, storage_dir):
+    def __init__(self, page_size: tuple[int, int] | list[int], storage_dir: str):
 
         self.pageSize = page_size
         self.storageDir = storage_dir
@@ -38,7 +39,7 @@ class Printer:
         return self._page_size
 
     @pageSize.setter
-    def pageSize(self, page_size):
+    def pageSize(self, page_size: tuple[int, int] | list[int]):
 
         if not isinstance(page_size, (list, tuple)) or len(page_size) != 2:
             raise ValueError('page_size must be a list/tuple of length 2')
@@ -51,13 +52,13 @@ class Printer:
         return self._storage_dir
 
     @storageDir.setter
-    def storageDir(self, storage_dir):
+    def storageDir(self, storage_dir: str):
 
         if not os.path.isdir(storage_dir):
             raise ValueError("'storage_dir' must exist")
 
         self._storage_dir = storage_dir
 
-    def print(self, picture):
+    def print(self, picture: ImageQt.ImageQt):
 
         raise NotImplementedError('print function not implemented!')

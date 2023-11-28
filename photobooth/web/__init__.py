@@ -22,9 +22,11 @@ from flask import Flask, request, render_template, send_file
 import os.path
 from time import localtime, strftime, time
 
+from photobooth.Config import Config
+
 from ..worker.PictureList import PictureList
 from .. import StateMachine
-from ..Threading import Workers
+from ..Threading import Communicator, Workers
 from threading import Thread
 
 app = Flask(__name__)
@@ -34,7 +36,7 @@ index_data = None
 picture_list = None
 
 class Web:    
-    def __init__(self, config, comm):
+    def __init__(self, config: Config, comm: Communicator):
 
         super().__init__()
 
@@ -52,7 +54,7 @@ class Web:
 
         self.initWeb(config)
 
-    def initWeb(self, config):
+    def initWeb(self, config: Config):
         global index_data, picture_list
 
         if self._is_enabled_server:
@@ -81,12 +83,12 @@ class Web:
 
         return True
 
-    def handleState(self, state):
+    def handleState(self, state: StateMachine.State):
 
         if isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
 
-    def teardown(self, state):
+    def teardown(self, state: StateMachine.State):
 
         func = request.environ.get('werkzeug.server.shutdown')
         if func is None:

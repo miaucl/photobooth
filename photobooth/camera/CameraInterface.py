@@ -48,7 +48,7 @@ class CameraInterface:
         return self._has_preview
 
     @hasPreview.setter
-    def hasPreview(self, value):
+    def hasPreview(self, value: bool):
 
         if not isinstance(value, bool):
             raise ValueError('Expected bool')
@@ -61,7 +61,7 @@ class CameraInterface:
         return self._has_idle
 
     @hasIdle.setter
-    def hasIdle(self, value):
+    def hasIdle(self, value: bool):
 
         if not isinstance(value, bool):
             raise ValueError('Expected bool')
@@ -104,7 +104,7 @@ class CameraInterface:
                                 'defaults.cfg')
         self._cfg.read(filename)
 
-    def loadConfig(self, model):
+    def loadConfig(self, model: str):
 
         name = ''.join(c for c in model.lower() if c.isalnum()) + '.cfg'
         filename = os.path.join(os.path.dirname(__file__), 'models', name)

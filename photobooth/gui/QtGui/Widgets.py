@@ -20,9 +20,10 @@
 import math
 import os
 import logging
+from typing import Callable
 import qrcode
 
-from photobooth.worker import PictureList
+from photobooth.worker.PictureList import PictureList, PictureRef
 
 try:
     from PyQt6 import QtCore
@@ -59,7 +60,7 @@ class SpinningWaitClock(QtWidgets.QWidget):
         return self._value
 
     @value.setter
-    def value(self, value):
+    def value(self, value: int):
 
         if self._value != value:
             self._value = value
@@ -103,7 +104,7 @@ class RoundProgressBar(QtWidgets.QWidget):
     # to PyQt5, using the PyQt4-version offered at
     # https://stackoverflow.com/a/33583019
 
-    def __init__(self, begin, end, value):
+    def __init__(self, begin: int, end: int, value: int):
 
         super().__init__()
         self.setObjectName('RoundProgressBar')
@@ -122,7 +123,7 @@ class RoundProgressBar(QtWidgets.QWidget):
         return self._value
 
     @value.setter
-    def value(self, value):
+    def value(self, value: str):
 
         if self._value != value:
             if value < self._begin:
@@ -200,7 +201,7 @@ class RoundProgressBar(QtWidgets.QWidget):
 
 class TransparentOverlay(QtWidgets.QWidget):
 
-    def __init__(self, parent, timeout=None, timeout_handle=None):
+    def __init__(self, parent, timeout: int=None, timeout_handle=None):
 
         super().__init__(parent)
         self.setObjectName('TransparentOverlay')
@@ -239,7 +240,7 @@ LabelBackgroundColor = QtGui.QColor(255, 255, 255, 70)
 
 class GalleryThumbnailDelegate(QtWidgets.QStyledItemDelegate):
     
-    def __init__(self, gallery_select_action=None):
+    def __init__(self, gallery_select_action: Callable[[PictureRef], None]=None):
 
         super().__init__()
 

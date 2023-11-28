@@ -24,7 +24,7 @@ import os
 
 class Config:
 
-    def __init__(self, filename):
+    def __init__(self, filename: str):
 
         self._filename = filename
 
@@ -33,12 +33,12 @@ class Config:
         self.read()
 
     @property
-    def filename(self):
+    def filename(self) -> str:
 
         return self._filename
 
     @filename.setter
-    def filename(self, value):
+    def filename(self, value: str):
 
         self._filename = value
 
@@ -59,29 +59,29 @@ class Config:
         with open(self._filename, 'w') as configfile:
             self._cfg.write(configfile)
 
-    def get(self, section, key):
+    def get(self, section: str, key: str) -> str:
 
         return self._cfg[section][key]
 
-    def getInt(self, section, key):
+    def getInt(self, section: str, key: str) -> int:
 
         return self._cfg.getint(section, key)
 
-    def getFloat(self, section, key):
+    def getFloat(self, section: str, key: str) -> float:
 
         return self._cfg.getfloat(section, key)
 
-    def getBool(self, section, key):
+    def getBool(self, section: str, key: str) -> bool:
 
         return self._cfg.getboolean(section, key)
 
-    def getIntList(self, section, key):
+    def getIntList(self, section: str, key: str) -> list[int]:
 
         if len(self._cfg[section][key].strip()) > 0:
             return [int(i) for i in self._cfg[section][key].split(',')]
         else:
             return []
 
-    def set(self, section, key, value):
+    def set(self, section: str, key: str, value: str | int | bool | list[str]):
 
         self._cfg[section][key] = value

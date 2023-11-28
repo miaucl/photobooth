@@ -23,14 +23,24 @@ import logging
 import os.path
 from glob import glob
 from time import localtime, strftime
-from collections import namedtuple
 
 import random
+from typing import NamedTuple
 
-Picture = namedtuple("Picture", "original watermarked thumbnail")
-Picture.__annotations__ = { "original": BytesIO, "watermarked": BytesIO, "thumbnail": BytesIO }
-PictureRef = namedtuple("PictureRef", "original watermarked thumbnail")
-PictureRef.__annotations__ = { "original": str, "watermarked": str, "thumbnail": str }
+PictureData = BytesIO
+Shot = PictureData
+ShotRef = str
+
+class Picture(NamedTuple):
+    original: PictureData
+    watermarked: PictureData
+    thumbnail: PictureData
+
+class PictureRef(NamedTuple):
+    original: str
+    watermarked: str
+    thumbnail: str
+
 
 class PictureList:
     """A simple helper class.
@@ -39,7 +49,7 @@ class PictureList:
     of taken and previously existing pictures.
     """
 
-    def __init__(self, basename):
+    def __init__(self, basename: str):
         """Initialize filenames to the given basename and search for
         existing files. Set the counter accordingly.
         """
@@ -98,7 +108,7 @@ class PictureList:
         return self._basename
 
     @basename.setter
-    def basename(self, basename):
+    def basename(self, basename: str):
         logging.info('New basename is {}'.format(basename))
         self._basename = basename
 
@@ -106,19 +116,19 @@ class PictureList:
         """Return the count"""
         return self.counter
 
-    def getFilename(self, count):
+    def getFilename(self, count: int):
         """Return the file name for a given file number"""
         return self.basename + str(count).zfill(self.count_width) + self.suffix
 
-    def getThumbnail(self, count):
+    def getThumbnail(self, count: int):
         """Return the thumbnail name for a given file number"""
         return self.basename + str(count).zfill(self.count_width) + ".thumbnail" + self.suffix
 
-    def getWatermarked(self, count):
+    def getWatermarked(self, count: str):
         """Return the watermarked name for a given file number"""
         return self.basename + str(count).zfill(self.count_width) + ".watermark" + self.suffix
 
-    def getFilenameShot(self, count, shotCount):
+    def getFilenameShot(self, count: str, shotCount: str):
         """Return the file name for a given shot & file number"""
         return self.getFilename(count+1)[:-len(self.suffix)] + \
             '_shot' + str(shotCount).zfill(3) + self.suffix
@@ -139,16 +149,16 @@ class PictureList:
         
         self.findExistingFiles()
         if self.counter == 0:
-            return self.getFilename(0)
+            return self.getPicture(0), 0
         else:
             r = random.randrange(self.counter)+1
             return self.getPicture(random.randrange(self.counter)+1), r
 
-    def getPicture(self, count) -> PictureRef:
+    def getPicture(self, count: str):
         """Return the picture for a given file number"""
         return PictureRef(self.getFilename(count), self.getWatermarked(count), self.getThumbnail(count))
 
-    def getNextPicture(self, picture: PictureRef) -> PictureRef or None:
+    def getNextPicture(self, picture: PictureRef):
         """Return the next filename or None if not available"""
         index = int(picture.original[len(self.basename):-4])
         if index < self.counter:
@@ -156,7 +166,7 @@ class PictureList:
         else:
             None
 
-    def getPreviousPicture(self, picture: PictureRef) -> PictureRef or None:
+    def getPreviousPicture(self, picture: PictureRef):
         """Return the previous filename or None if not available"""
         index = int(picture.original[len(self.basename):-4])
         if index > 0:
@@ -164,6 +174,6 @@ class PictureList:
         else:
             None
 
-    def getLast(self) -> PictureRef or None:
+    def getLast(self):
         """Return the current filename"""
         return self.getPicture(self.counter)

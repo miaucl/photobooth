@@ -18,14 +18,17 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
+from photobooth.Config import Config
+
+
 class GuiPostprocessor:
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
 
         super().__init__()
 
-        self._optionalItems = []
-        self._automItems = []
+        self._optionalItems: list[PostprocessItem] = []
+        self._automItems: list[PostprocessItem] = []
 
         if config.getBool('Printer', 'enable'):
             if config.getBool('Printer', 'confirmation'):
@@ -47,7 +50,7 @@ class GuiPostprocessor:
 
 class PostprocessItem:
 
-    def __init__(self, label, action):
+    def __init__(self, label: str, action: str):
 
         super().__init__()
         self.label = label
@@ -59,7 +62,7 @@ class PostprocessItem:
         return self._label
 
     @label.setter
-    def label(self, label):
+    def label(self, label: str):
 
         if not isinstance(label, str):
             raise TypeError('Label must be a string')
@@ -72,7 +75,7 @@ class PostprocessItem:
         return self._action
 
     @action.setter
-    def action(self, action):
+    def action(self, action: str):
 
         if not isinstance(action, str):
             raise TypeError('Action must be a string')

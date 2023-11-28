@@ -20,6 +20,7 @@
 import os
 import logging
 import boto3
+from photobooth.Config import Config
 
 from photobooth.worker.PictureList import Picture, PictureRef
 
@@ -29,7 +30,7 @@ from .PictureWorkerTask import PictureWorkerTask
 
 class PictureUploadS3(PictureWorkerTask):
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
 
         super().__init__()
 

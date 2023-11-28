@@ -3,6 +3,9 @@
 
 import logging
 
+from photobooth.Config import Config
+from photobooth.worker.PictureList import Picture, ShotRef
+
 from . import Template
 
 from PIL import Image
@@ -13,7 +16,7 @@ from .PictureDimensions import PictureDimensions
 
 class StandardTemplate(Template):
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
 
         super().__init__(config)
 
@@ -31,7 +34,7 @@ class StandardTemplate(Template):
         self._wm_template = None
 
 
-    def startup(self, capture_size):
+    def startup(self, capture_size: int):
         
         self._pic_dims.computeThumbnailDimensions(capture_size)
 
@@ -54,7 +57,7 @@ class StandardTemplate(Template):
             self._wm_template = wm_picture.resize(self._pic_dims.outputSize)
 
 
-    def assemblePicture(self, pictures):
+    def assemblePicture(self, pictures: list[ShotRef]):
 
         logging.info('Assembling picture')
 
@@ -83,4 +86,4 @@ class StandardTemplate(Template):
         watermarked_byte_data = BytesIO()
         watermarked.save(watermarked_byte_data, format='jpeg')
 
-        return byte_data, thumbnail_byte_data, watermarked_byte_data
+        return Picture(original=byte_data, thumbnail=thumbnail_byte_data, watermarked=watermarked_byte_data)

@@ -8,7 +8,11 @@ from io import BytesIO
 import os
 from xml.etree import ElementTree
 
+from photobooth.worker.PictureList import Picture
+
 from . import Template
+
+# TODO: typing
 
 class AssemblyTask():
     def __init__(self):
@@ -190,7 +194,7 @@ class FancyTemplate(Template):
         thumbnail_byte_data = BytesIO()
         image.save(thumbnail_byte_data, format='jpeg')
 
-        return byte_data, thumbnail_byte_data, byte_data
+        return Picture(original=byte_data, thumbnail=thumbnail_byte_data, watermarked=byte_data)
 
 
 def testassemble(argv):

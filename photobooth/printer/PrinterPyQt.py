@@ -18,6 +18,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+from PIL import ImageQt
 
 try:
     from PyQt6 import QtCore
@@ -38,7 +39,7 @@ from . import Printer
 
 class PrinterPyQt(Printer):
 
-    def __init__(self, page_size, storage_dir):
+    def __init__(self, page_size: tuple[int, int] | list[int], storage_dir: str):
 
         super().__init__(page_size, storage_dir)
 
@@ -50,7 +51,7 @@ class PrinterPyQt(Printer):
 
         logging.info('Using printer "%s"', self._printer.printerName())
 
-    def print(self, picture):
+    def print(self, picture: ImageQt.ImageQt):
 
         logging.info('Printing picture')
         logging.debug('Page Size: {}, PictureSize: {}'.format(

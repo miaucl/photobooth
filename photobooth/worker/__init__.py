@@ -21,11 +21,14 @@ import os.path
 
 from time import localtime, strftime
 
+from photobooth.Config import Config
+from photobooth.worker.WorkerTask import WorkerTask
+
 from .. import StateMachine
-from ..Threading import Workers
+from ..Threading import Communicator, Workers
 
 from .AdList import AdList
-from .PictureList import PictureList
+from .PictureList import Picture, PictureList, PictureRef, Shot, ShotRef
 from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
 from .ShotSaver import ShotSaver
@@ -38,7 +41,7 @@ from .EventLog import EventLog
 
 class Worker:
 
-    def __init__(self, config, comm):
+    def __init__(self, config: Config, comm: Communicator):
 
         self._comm = comm
         
@@ -62,9 +65,9 @@ class Worker:
         self.initPostprocessTasks(config)
         self.initShotTasks(config)
 
-    def initReviewTasks(self, config):
+    def initReviewTasks(self, config: Config):
 
-        self._reviewPictureTasks = []
+        self._reviewPictureTasks: list[WorkerTask] = []
 
         # Counter for assembled pictures
         self._reviewPictureTasks.append(self._pictureCounter)
@@ -87,10 +90,10 @@ class Worker:
         if config.getBool('UploadWebdav', 'enable'):
             self._reviewPictureTasks.append(PictureUploadWebdav(config))
 
-    def initPostprocessTasks(self, config):
+    def initPostprocessTasks(self, config: Config):
 
-        self._postprocessPrintTasks = []
-        self._postProcessAutomTasks = []
+        self._postprocessPrintTasks: list[WorkerTask] = []
+        self._postProcessAutomTasks: list[WorkerTask] = []
 
         # Check print configurations
         if config.getBool('Printer', 'enable'):
@@ -115,9 +118,9 @@ class Worker:
                 # Event log for printed pictures
                 self._postProcessAutomTasks.append(self._eventLogPrint)
 
-    def initShotTasks(self, config):
+    def initShotTasks(self, config: Config):
 
-        self._shotTasks = []
+        self._shotTasks: list[WorkerTask] = []
 
         # PictureSaver for single shots
         self._shotTasks.append(ShotSaver())
@@ -132,7 +135,7 @@ class Worker:
 
         return True
 
-    def handleState(self, state):
+    def handleState(self, state: StateMachine.State):
 
         if isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
@@ -155,22 +158,22 @@ class Worker:
 
         pass
 
-    def doReviewPictureTasks(self, picture, pictureRef):
+    def doReviewPictureTasks(self, picture: Picture, pictureRef: PictureRef):
 
         for task in self._reviewPictureTasks:
             task.do(picture=picture, pictureRef=pictureRef)
 
-    def doPostprocessPrintTasks(self, pictureRef):
+    def doPostprocessPrintTasks(self, pictureRef: PictureRef):
 
         for task in self._postprocessPrintTasks:
             task.do(pictureRef=pictureRef)
 
-    def doPostprocessAutomTasks(self, pictureRef):
+    def doPostprocessAutomTasks(self, pictureRef: PictureRef):
 
         for task in self._postProcessAutomTasks:
             task.do(pictureRef=pictureRef)
 
-    def doShotTasks(self, shot, shotRef):
+    def doShotTasks(self, shot: Shot, shotRef: ShotRef):
 
         for task in self._shotTasks:
             task.do(shot=shot, shotRef=shotRef)

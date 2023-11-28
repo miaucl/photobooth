@@ -20,6 +20,14 @@
 from enum import IntEnum
 from multiprocessing import Queue
 
+class Workers(IntEnum):
+
+    MASTER = 0
+    GUI = 1
+    CAMERA = 2
+    GPIO = 3
+    WEB = 4
+    WORKER = 5
 
 class Communicator:
 
@@ -29,45 +37,35 @@ class Communicator:
 
         self._queues = [Queue() for _ in Workers]
 
-    def bcast(self, message):
+    def bcast(self, message: any):
 
         for q in self._queues[1:]:
             q.put(message)
 
-    def send(self, target, message):
+    def send(self, target: Workers, message: any):
 
         if not isinstance(target, Workers):
             raise TypeError('target must be a member of Workers')
 
         self._queues[target].put(message)
 
-    def recv(self, worker, block=True):
+    def recv(self, worker: Workers, block=True):
 
         if not isinstance(worker, Workers):
             raise TypeError('worker must be a member of Workers')
 
         return self._queues[worker].get(block)
 
-    def iter(self, worker):
+    def iter(self, worker: Workers):
 
         if not isinstance(worker, Workers):
             raise TypeError('worker must be a member of Workers')
 
         return iter(self._queues[worker].get, None)
 
-    def empty(self, worker):
+    def empty(self, worker: Workers):
 
         if not isinstance(worker, Workers):
             raise TypeError('worker must be a member of Workers')
 
         return self._queues[worker].empty()
-
-
-class Workers(IntEnum):
-
-    MASTER = 0
-    GUI = 1
-    CAMERA = 2
-    GPIO = 3
-    WEB = 4
-    WORKER = 5

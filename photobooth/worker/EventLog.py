@@ -22,12 +22,15 @@ import os
 from time import localtime, strftime
 from datetime import datetime
 
+from photobooth.Config import Config
+from photobooth.StateMachine import Event
+
 from .WorkerTask import WorkerTask
 
 
 class EventLog(WorkerTask):
 
-    def __init__(self, config, event):
+    def __init__(self, config: Config, event: Event):
 
         super().__init__()
 
@@ -57,7 +60,7 @@ class EventLog(WorkerTask):
                     os.makedirs(dirname)
 
 
-    def assembleEventLog(self, message):
+    def assembleEventLog(self, message: str):
         """Assemble an event log for a message"""
         return '({}) {}\n'.format(datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)"), message)
 

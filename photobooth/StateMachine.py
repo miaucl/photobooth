@@ -18,13 +18,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-
-from photobooth.worker.PictureList import Picture, PictureRef
+from photobooth.Threading import Communicator
+from photobooth.worker.PictureList import Picture, PictureRef, Shot
 
 
 class Context:
 
-    def __init__(self, communicator, omit_welcome=False):
+    def __init__(self, communicator: Communicator, omit_welcome=False):
 
         super().__init__()
         self._comm = communicator
@@ -40,7 +40,7 @@ class Context:
         return self._is_running
 
     @is_running.setter
-    def is_running(self, running):
+    def is_running(self, running: bool):
 
         if not isinstance(running, bool):
             raise TypeError('is_running must be a bool')
@@ -88,7 +88,7 @@ class Context:
 
 class Event:
 
-    def __init__(self, name):
+    def __init__(self, name: str):
 
         super().__init__()
         self.name = name
@@ -103,7 +103,7 @@ class Event:
         return self._name
 
     @name.setter
-    def name(self, name):
+    def name(self, name: str):
 
         if not isinstance(name, str):
             raise TypeError('name must be a str')
@@ -113,7 +113,7 @@ class Event:
 
 class ErrorEvent(Event):
 
-    def __init__(self, origin, message):
+    def __init__(self, origin: str, message: str):
 
         super().__init__('Error')
         self.origin = origin
@@ -129,7 +129,7 @@ class ErrorEvent(Event):
         return self._origin
 
     @origin.setter
-    def origin(self, origin):
+    def origin(self, origin: str):
 
         if not isinstance(origin, str):
             raise TypeError('origin must be a string')
@@ -142,7 +142,7 @@ class ErrorEvent(Event):
         return self._message
 
     @message.setter
-    def message(self, message):
+    def message(self, message: str):
 
         if not isinstance(message, str):
             raise TypeError('message must be a string')
@@ -156,7 +156,7 @@ class TeardownEvent(Event):
     RESTART = 1
     WELCOME = 2
 
-    def __init__(self, target):
+    def __init__(self, target: str):
 
         self._target = target
         super().__init__('Teardown({})'.format(target))
@@ -169,7 +169,7 @@ class TeardownEvent(Event):
 
 class GuiEvent(Event):
 
-    def __init__(self, name, pictureRef=None, postprocessAction=None):
+    def __init__(self, name: str, pictureRef: PictureRef=None, postprocessAction: str=None):
 
         super().__init__(name)
         self._pictureRef = pictureRef
@@ -196,7 +196,7 @@ class WebEvent(Event):
 
 class CameraEvent(Event):
 
-    def __init__(self, name, picture: Picture=None, shot=None, num_shots=None):
+    def __init__(self, name, picture: Picture=None, shot: Shot=None, num_shots: int=None):
 
         super().__init__(name)
         self._picture = picture
@@ -204,7 +204,7 @@ class CameraEvent(Event):
         self._num_shots = num_shots
 
     @property
-    def picture(self) -> Picture:
+    def picture(self):
 
         return self._picture
 
@@ -238,7 +238,7 @@ class State:
 
         pass
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         raise NotImplementedError()
 
@@ -305,7 +305,7 @@ class ErrorState(State):
 
         self._is_running = running
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if isinstance(event, GuiEvent) and event.name == 'retry':
             context.state = self.old_state
@@ -331,7 +331,7 @@ class TeardownState(State):
 
         return self._target
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if self._target == TeardownEvent.WELCOME:
             if isinstance(event, GuiEvent) and event.name == 'welcome':
@@ -348,7 +348,7 @@ class WelcomeState(State):
 
         super().__init__()
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if isinstance(event, GuiEvent):
             if event.name == 'start':
@@ -365,7 +365,7 @@ class StartupState(State):
 
         super().__init__()
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if isinstance(event, CameraEvent) and event.name == 'ready':
             context.num_shots = event.num_shots
@@ -381,7 +381,7 @@ class IdleState(State):
 
         super().__init__()
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'trigger'):
@@ -399,7 +399,7 @@ class SlideshowState(State):
 
         super().__init__()
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'trigger'):
@@ -417,7 +417,7 @@ class GalleryState(State):
 
         super().__init__()
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'trigger'):
@@ -431,14 +431,14 @@ class GalleryState(State):
 
 class GallerySelectState(State):
 
-    def __init__(self, pictureRef: PictureRef=None, action=None):
+    def __init__(self, pictureRef: PictureRef=None, action: str=None):
 
         super().__init__()
         self._pictureRef = pictureRef
         self._action = action
 
     @property
-    def pictureRef(self) -> PictureRef:
+    def pictureRef(self):
 
         return self._pictureRef
 
@@ -448,7 +448,7 @@ class GallerySelectState(State):
         return self._action
 
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if (isinstance(event, GuiEvent) and
            event.name == 'close'):
@@ -465,12 +465,12 @@ class GallerySelectState(State):
 
 class GreeterState(State):
 
-    def __init__(self, num_shots=None):
+    def __init__(self, num_shots: int=None):
 
         super().__init__()
         self._num_shots = num_shots
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'countdown'):
@@ -485,7 +485,7 @@ class GreeterState(State):
 
 class CountdownState(State):
 
-    def __init__(self, num_picture, num_shots=0):
+    def __init__(self, num_picture: int, num_shots: int=0):
 
         super().__init__()
 
@@ -502,7 +502,7 @@ class CountdownState(State):
 
         return self._num_shots
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if isinstance(event, GuiEvent) and event.name == 'countdown':
             pass
@@ -514,7 +514,7 @@ class CountdownState(State):
 
 class CaptureState(State):
 
-    def __init__(self, num_picture, num_shots):
+    def __init__(self, num_picture: int, num_shots: int):
 
         super().__init__()
 
@@ -531,7 +531,7 @@ class CaptureState(State):
 
         return self._num_shots
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if isinstance(event, CameraEvent) and event.name == 'countdown':
             context.state = CountdownState(self.num_picture + 1, self._num_shots)
@@ -547,7 +547,7 @@ class AssembleState(State):
 
         super().__init__()
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if isinstance(event, CameraEvent) and event.name == 'review':
             context.state = ReviewState(event.picture)
@@ -567,7 +567,7 @@ class ReviewState(State):
 
         return self._picture
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if isinstance(event, GuiEvent) and event.name == 'postprocess':
             context.state = PostprocessState()
@@ -577,7 +577,7 @@ class ReviewState(State):
 
 class PostprocessState(State):
 
-    def __init__(self, pictureRef: PictureRef=None, action=None):
+    def __init__(self, pictureRef: PictureRef=None, action: str=None):
 
         super().__init__()
         self._pictureRef = pictureRef
@@ -594,7 +594,7 @@ class PostprocessState(State):
         return self._action
 
 
-    def handleEvent(self, event, context):
+    def handleEvent(self, event: Event, context: Context):
 
         if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
            event.name == 'idle'):

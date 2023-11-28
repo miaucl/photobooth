@@ -20,6 +20,8 @@
 import logging
 import os
 import signal
+from typing import Callable
+from photobooth.Config import Config
 
 from photobooth.worker import AdList
 
@@ -41,8 +43,8 @@ from PIL import Image, ImageQt
 
 from time import localtime, strftime
 
-from ...StateMachine import CameraEvent, GallerySelectState, GuiEvent, ReviewState, TeardownEvent
-from ...Threading import Workers
+from ...StateMachine import CameraEvent, CountdownState, Event, GallerySelectState, GalleryState, GreeterState, GuiEvent, IdleState, PostprocessState, ReviewState, SlideshowState, StartupState, State, TeardownEvent, WelcomeState
+from ...Threading import Communicator, Workers
 from ...worker.PictureList import PictureList
 from ...worker.Count import Count
 
@@ -57,7 +59,7 @@ from . import Worker
 
 class PyQtGui(GuiSkeleton):
 
-    def __init__(self, argv, config, comm):
+    def __init__(self, argv, config: Config, comm: Communicator):
 
         super().__init__(comm)
 
@@ -194,7 +196,7 @@ class PyQtGui(GuiSkeleton):
         if self._gui.close():
             self._comm.send(Workers.MASTER, TeardownEvent(TeardownEvent.EXIT))
 
-    def teardown(self, state):
+    def teardown(self, state: State):
 
         if state.target == TeardownEvent.WELCOME:
             self._comm.send(Workers.MASTER, GuiEvent('welcome'))
@@ -202,7 +204,7 @@ class PyQtGui(GuiSkeleton):
             self._worker.put(None)
             self._app.exit(0)
 
-    def showError(self, state):
+    def showError(self, state: State):
 
         logging.error('%s: %s', state.origin, state.message)
 
@@ -222,7 +224,7 @@ class PyQtGui(GuiSkeleton):
         else:
             self._comm.send(Workers.MASTER, GuiEvent('abort'))
 
-    def showWelcome(self, state):
+    def showWelcome(self, state: WelcomeState):
 
         self._disableTrigger()
         self._disableEscape()
@@ -237,7 +239,7 @@ class PyQtGui(GuiSkeleton):
         if QtWidgets.QApplication.overrideCursor() != 0:
             QtWidgets.QApplication.restoreOverrideCursor()
 
-    def showStartup(self, state):
+    def showStartup(self, state: StartupState):
 
         self._disableTrigger()
         self._enableEscape()
@@ -245,7 +247,7 @@ class PyQtGui(GuiSkeleton):
         if self._cfg.getBool('Gui', 'hide_cursor'):
             QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.BlankCursor)
 
-    def showIdle(self, state):
+    def showIdle(self, state: IdleState):
 
         logging.info('Start Idle')
 
@@ -267,7 +269,7 @@ class PyQtGui(GuiSkeleton):
         self._timerStartSlideshow.setSingleShot(True)
         self._timerStartSlideshow.start(slideshow_time)
     
-    def showSlideshow(self, state):
+    def showSlideshow(self, state: SlideshowState):
 
         logging.info('Start Slideshow')
 
@@ -283,14 +285,14 @@ class PyQtGui(GuiSkeleton):
         self._setWidget(Frames.SlideshowMessage(media, text, self._cfg.getBool('Slideshow', 'fade'),
                                                 lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger'))))
         
-    def updateSlideshow(self, event):
+    def updateSlideshow(self, event: Event):
                 
         picture, _ = self._newslideshowMedia()            
         self._gui.centralWidget().alpha = 0.0
         self._gui.centralWidget().slide = picture
         self._gui.centralWidget().update()
                 
-    def showGallery(self, state):
+    def showGallery(self, state: GalleryState):
 
         logging.info('Start Gallery')
 
@@ -332,7 +334,7 @@ class PyQtGui(GuiSkeleton):
         else:
             logging.info('Skip Reinitializing Gallery Select')
       
-    def showGreeter(self, state):
+    def showGreeter(self, state: GreeterState):
 
         logging.info('Timer Remaining time"{}" '.format(self._timerStartSlideshow.remainingTime()))
         self._timerStartSlideshow.stop()
@@ -349,7 +351,7 @@ class PyQtGui(GuiSkeleton):
             greeter_time,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('countdown')))
 
-    def showCountdown(self, state):
+    def showCountdown(self, state: CountdownState):
 
         countdown_time = self._cfg.getInt('Photobooth', 'countdown_time')
         self._setWidget(Frames.CountdownMessage(
@@ -380,7 +382,7 @@ class PyQtGui(GuiSkeleton):
             review_time,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('postprocess')))
 
-    def showPostprocess(self, state):
+    def showPostprocess(self, state: PostprocessState):
 
         # Refresh list, as here the new image has been saved
         self._pictureList.findExistingFiles()
@@ -398,7 +400,7 @@ class PyQtGui(GuiSkeleton):
             lambda: self._comm.send(Workers.MASTER, GuiEvent('idle')),
             postproc_t * 1000)
 
-    def _handleKeypressEvent(self, event):
+    def _handleKeypressEvent(self, event: Event):
 
         if self._is_escape and event.key() == QtCore.Qt.Key.Key_Escape:
             self._comm.send(Workers.MASTER,
@@ -427,7 +429,7 @@ class PyQtGui(GuiSkeleton):
 
 class PyQtMainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, config, keypress_handler):
+    def __init__(self, config: Config, keypress_handler: Callable[[Event], None]):
 
         super().__init__()
 
@@ -459,6 +461,6 @@ class PyQtMainWindow(QtWidgets.QMainWindow):
         else:
             e.ignore()
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: Event):
 
         self._handle_key(event)

@@ -17,25 +17,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import logging
-import os
 
-from photobooth.Config import Config
+from photobooth.worker.PictureList import Shot, ShotRef
+from .WorkerTask import WorkerTask
 
 
-class Count():
+class ShotWorkerTask(WorkerTask):
 
-    def __init__(self, config: Config, subject: str):
+    def __init__(self, **kwargs):
 
-        # Counter file
-        filename = 'counter_{}.txt'.format(subject)
-        self._counterFile = os.path.join(config.get('Storage', 'basedir'),
-                            filename)
+        assert not kwargs
 
-    def get(self):
-        with open(self._counterFile) as f:
-            try:
-                return int(f.read()) 
-            except ValueError:
-                logging.info('Cound not read content of counter file at {}'.format(self._counterFile))
-                return 0        
+    def do(self, shot: Shot, shotRef: ShotRef):
+
+        raise NotImplementedError()

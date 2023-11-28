@@ -18,20 +18,20 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from photobooth.worker.PictureList import PictureRef
-from .. import printer
+from photobooth import printer
 from ..util import lookup_and_import
 from PIL import Image, ImageQt
 from .PostprocessorWorkerTask import PostprocessorWorkerTask
-
+from typing import cast
 
 class PostprocessorPrinter(PostprocessorWorkerTask):
 
-    def __init__(self, printer_module, paper_size, storage_dir, **kwargs):
+    def __init__(self, printer_module: str, paper_size: str, storage_dir: str, **kwargs):
 
         super().__init__(**kwargs)
 
-        Printer = lookup_and_import(printer.modules, printer_module, 'printer')
-        self._printer = Printer(paper_size, storage_dir)
+        mod = lookup_and_import(printer.modules, printer_module, 'printer')
+        self._printer = cast(printer.Printer, mod(paper_size, storage_dir))
 
     def do(self, pictureRef: PictureRef):
         self._printer.print(ImageQt.ImageQt(Image.open(pictureRef.original)))

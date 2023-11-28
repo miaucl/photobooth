@@ -17,81 +17,82 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from photobooth.Threading import Communicator
 from .. import StateMachine
 
 
 class GuiSkeleton:
 
-    def __init__(self, communicator):
+    def __init__(self, communicator: Communicator):
 
         super().__init__()
         self._comm = communicator
 
-    def updatePreview(self, state):
+    def updatePreview(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def updateSlideshow(self, state):
+    def updateSlideshow(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showError(self, state):
+    def showError(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showWelcome(self, state):
+    def showWelcome(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showStartup(self, state):
+    def showStartup(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showSettings(self, state):
+    def showSettings(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showIdle(self, state):
+    def showIdle(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showSlideshow(self, state):
+    def showSlideshow(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showGallery(self, state):
+    def showGallery(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showGallerySelect(self, state):
+    def showGallerySelect(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showGreeter(self, state):
+    def showGreeter(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showCountdown(self, state):
+    def showCountdown(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showCapture(self, state):
+    def showCapture(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showAssemble(self, state):
+    def showAssemble(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showReview(self, state):
+    def showReview(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def showPostprocess(self, state):
+    def showPostprocess(self, state: StateMachine.State):
 
         raise NotImplementedError()
 
-    def teardown(self, state):
+    def teardown(self, state: StateMachine.State):
 
         raise NotImplementedError()
 

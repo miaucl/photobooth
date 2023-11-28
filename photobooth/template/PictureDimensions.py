@@ -19,10 +19,12 @@
 
 import logging
 
+from photobooth.Config import Config
+
 
 class PictureDimensions:
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
 
         self._num_shots = (config.getInt('Picture', 'num_x'),
                               config.getInt('Picture', 'num_y'))
@@ -43,21 +45,21 @@ class PictureDimensions:
 
 
 
-    def _computeResizeFactor(self, coord, inner_size):
+    def _computeResizeFactor(self, coord: int, inner_size: int) -> float:
 
         return ((inner_size - (self.numPictures[coord] + 1) *
                  self.innerDistance[coord]) /
                 (self.numPictures[coord] * self.captureSize[coord]))
 
 
-    def _computeContainFill(self, coord, inner_size):
+    def _computeContainFill(self, coord: int, inner_size: int):
 
         return (inner_size 
                     - self.numPictures[coord] * self.thumbnailSize[coord] 
                     - self.innerDistance[coord] * (self.numPictures[coord] + 1))
 
 
-    def computeThumbnailDimensions(self, capture_size):
+    def computeThumbnailDimensions(self, capture_size: int):
 
         self._capture_size = capture_size
         

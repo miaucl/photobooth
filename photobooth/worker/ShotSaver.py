@@ -19,17 +19,19 @@
 
 import logging
 
-from .PictureWorkerTask import PictureWorkerTask
+from photobooth.worker.PictureList import Shot, ShotRef
+
+from .ShotWorkerTask import ShotWorkerTask
 
 
-class ShotSaver(PictureWorkerTask):
+class ShotSaver(ShotWorkerTask):
 
     def __init__(self):
 
         super().__init__()
 
 
-    def do(self, shot, shotRef):
+    def do(self, shot: Shot, shotRef: ShotRef):
 
         logging.info('Saving shot as %s', shotRef)
         with open(shotRef, 'wb') as f:

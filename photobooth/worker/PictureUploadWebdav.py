@@ -21,6 +21,7 @@ import logging
 import requests
 
 from pathlib import Path
+from photobooth.Config import Config
 
 from photobooth.worker.PictureList import Picture, PictureRef
 
@@ -29,7 +30,7 @@ from .PictureWorkerTask import PictureWorkerTask
 
 class PictureUploadWebdav(PictureWorkerTask):
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
 
         super().__init__()
 
