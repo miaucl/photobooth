@@ -92,6 +92,23 @@ Don't forget to define the `wifi.json` file with wifi network access:
 
 _Order the list according to your prioritisation._
 
+### CUPS Printer
+
+Install CUPS, enable remote admin
+
+```bash
+sudo apt update
+sudo apt upgrade
+sudo apt install cups
+sudo cupsctl --remote-admin
+```
+
+Use ssh forward `ssh pi@photomaton.local -T -L 3631:localhost:631` and open admin page on `https://localhost:3631` on your machine.
+
+Add the printer and **set it as default**.
+
+Source: <https://www.elektronik-kompendium.de/sites/raspberry-pi/2007081.htm>
+
 ### Miscellaneous
 
 Hide the taskbar as discussed [here](<https://raspberrypi.stackexchange.com/questions/8874/how-do-i-auto-hide-the-taskbar>) like following: Panel Settings > Advanced > Minimize panel when not in use
@@ -101,19 +118,3 @@ Hide volumes and wastebasket on the desktop by right clicking on desktop and ope
 Disable [popup](<https://ubuntuforums.org/showthread.php?t=1935099>) when inserting a usb stick like following: `pcmanfm` > edit > preferences > volume management > Untick third box (Show only be necessary when USB Stick is **not yet** inserted at startup)
 
 Set desktop background to: `./media/desktop-bg.png`
-
-
-
-
-
-
-
-
-
-
-
-TODO: 
-
-
-
-Setup cups with the printer: <https://www.elektronik-kompendium.de/sites/raspberry-pi/2007081.htm>
