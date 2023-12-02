@@ -82,6 +82,6 @@ class Config:
         else:
             return []
 
-    def set(self, section: str, key: str, value: str | int | bool | list[str]):
+    def set(self, section: str, key: str, value: str or int or bool or list[str]):
 
         self._cfg[section][key] = value

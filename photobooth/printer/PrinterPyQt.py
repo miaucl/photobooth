@@ -39,7 +39,7 @@ from . import Printer
 
 class PrinterPyQt(Printer):
 
-    def __init__(self, page_size: tuple[int, int] | list[int], storage_dir: str):
+    def __init__(self, page_size: tuple[int, int] or list[int], storage_dir: str):
 
         super().__init__(page_size, storage_dir)
 

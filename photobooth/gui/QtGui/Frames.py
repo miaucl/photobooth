@@ -569,7 +569,7 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
         tabs = QtWidgets.QTabWidget()
         tabs.addTab(QtWidgets.QLabel(""), _('Picture'))
         if self._uploads3["link"]:
-            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureRef.original))), _('QR'))
+            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureRef.original))), _('QR Download'))
 
         layout = QtWidgets.QVBoxLayout()
         layout.addLayout(headerLayout, stretch=0)
@@ -737,7 +737,7 @@ class PostprocessMessage(Widgets.TransparentOverlay):
         tabs = QtWidgets.QTabWidget()
         tabs.addTab(QtWidgets.QLabel(""), _('Picture'))
         if self._uploads3["enable"]:
-            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureList.getLast().original))), _('QR'))
+            tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureList.getLast().original))), _('QR Download'))
 
         layout = QtWidgets.QVBoxLayout()
         self._label = QtWidgets.QLabel(_('Happy with your picture?'))
@@ -847,11 +847,11 @@ class Settings(QtWidgets.QFrame):
 
         self._widgets[category] = {}
 
-    def add(self, category: str, key: str, value: str | int | bool | list[int]):
+    def add(self, category: str, key: str, value: str or int or bool or list[int]):
 
         self._widgets[category][key] = value
 
-    def get(self, category: str, key: str) -> str | int | bool | list[int]:
+    def get(self, category: str, key: str) -> str or int or bool or list[int]:
 
         return self._widgets[category][key]
 
