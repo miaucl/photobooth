@@ -151,7 +151,6 @@ QWidget#GallerySelectMessage QPushButton:disabled {
 }
 
 QWidget#GallerySelectMessage QTabWidget::pane {
-    font-size: 24px;
     margin: 0; 
     border-style: none;
     background-color: transparent;
@@ -169,7 +168,6 @@ QWidget#GallerySelectMessage QTabBar::tab {
     border-color: #4d6100;
     padding: 4px;
     margin: 4px;
-    font-size: 24px;
 }
 
 QWidget#GallerySelectMessage QTabBar::tab:selected {
@@ -255,7 +253,6 @@ QWidget#PostprocessMessage QPushButton:disabled {
 }
 
 QWidget#PostprocessMessage QTabWidget::pane {
-    font-size: 24px;
     margin: 0; 
     border-style: none;
     background-color: transparent;
@@ -273,7 +270,6 @@ QWidget#PostprocessMessage QTabBar::tab {
     border-color: #4d6100;
     padding: 4px;
     margin: 4px;
-    font-size: 24px;
 }
 
 QWidget#PostprocessMessage QTabBar::tab:selected {
