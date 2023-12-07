@@ -70,9 +70,13 @@ The slideshow presents images already taken in a random order after a set idle t
 A selection of working builds are documented in this repo. Use the one closest to your setting and start from there. The rest is up to you ;)
 
 * [Ubuntu](./supplementals/builds/ubuntu/INSTALL.md)
-* [Raspberry](./supplementals/builds/classic/INSTALL.md) + [Raspberry alternative](./supplementals/builds/prototype/INSTALL.md)
+* Raspbian
+  * [Variant 1](./supplementals/builds/prototype/INSTALL.md)
+  * [Variant 2](./supplementals/builds/classic/INSTALL.md)
+  * [Variant 3](./supplementals/builds/pro/INSTALL.md)
 * [Mac](./supplementals/builds/mac/INSTALL.md)
 * [Windows*](./supplementals/builds/windows/INSTALL.md)
+* [Docker](./supplementals/builds/docker/INSTALL.md)
 
 ### Hardware requirements
 

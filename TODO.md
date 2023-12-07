@@ -2,10 +2,6 @@
 
 List of things left to do.
 
-## Type
-
-Add type hinting
-
 ## Quick setting for single picture in standard template
 
 Option to disable/enable it and provide values for single pictures

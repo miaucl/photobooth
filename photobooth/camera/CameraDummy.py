@@ -33,7 +33,7 @@ class CameraDummy(CameraInterface):
 
         self.hasPreview = True
         self.hasIdle = False
-        self._size = (1920, 1280)
+        self._size = (1280, 1920)
 
         self._hue = 0
 
