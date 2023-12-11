@@ -13,4 +13,6 @@ COPY autostart.sh autorun.sh /opt/photobooth
 COPY photobooth /opt/photobooth/photobooth
 COPY supplementals/builds/docker/photobooth.cfg /opt/photobooth
 EXPOSE 8080
-CMD ["/opt/photobooth/autorun.sh"]
+ARG START_SCRIPT=autostart.sh
+ENV START_PATH=/opt/photobooth/${START_SCRIPT}
+CMD ${START_PATH}

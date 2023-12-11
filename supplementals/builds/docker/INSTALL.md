@@ -17,6 +17,7 @@ For windows based hosts, help yourself ;)
 You might need to adjust the ENV variable `DISPLAY` according to your setup.
 
 ```bash
+export DISPLAY=<your_settings|:0>
 docker compose up --build
 ```
 
@@ -24,7 +25,7 @@ _`--build` flag is useful for development :)_
 
 ## Configure Dockerfile
 
-Replace the the `autostart.sh` with `autorun.sh` to skip the home screen.
+Provide a build arg to the docker compose command `--build-arg='autostart.sh'` or `--build-arg='autostart.sh'` to choose the start script.
 
 Replace the CMD with `CMD ["sleep", "infinity"]` for debugging.
 
