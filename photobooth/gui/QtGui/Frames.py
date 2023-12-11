@@ -568,12 +568,12 @@ class GallerySelectMessage(Widgets.GallerySelectOverlay):
 
         tabs = QtWidgets.QTabWidget()
         tabs.addTab(QtWidgets.QLabel(""), _('Picture'))
-        if self._uploads3["link"]:
+        if self._uploads3["enable"]:
             tabs.addTab(Widgets.UploadS3Overlay(self, os.path.join(self._uploads3["link"], os.path.basename(self._pictureRef.original))), _('QR Download'))
 
         layout = QtWidgets.QVBoxLayout()
         layout.addLayout(headerLayout, stretch=0)
-        if self._uploads3["link"]:
+        if self._uploads3["enable"]:
             layout.addWidget(tabs)
         else:
             layout.addStretch(1)
