@@ -642,7 +642,7 @@ class CountdownMessage(QtWidgets.QFrame):
     def _initProgressBar(self, time: int):
 
         self._bar = Widgets.RoundProgressBar(0, time, time)
-        self._bar.setFixedSize(160, 160)
+        self._bar.setFixedSize(240, 240)
 
     def _updateProgressBar(self):
 
