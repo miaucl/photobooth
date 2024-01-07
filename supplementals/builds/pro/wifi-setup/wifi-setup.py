@@ -61,6 +61,10 @@ else:
 
 # Iterate through all possible wifi connections
 for wifi in wifi_list:
+    # Skip inactive wifi
+    if not wifi["active"]:
+        continue
+
     # grep did not match any lines
     print("No wireless networks connected")
 
