@@ -102,6 +102,16 @@ git clone https://github.com/miaucl/photobooth.git
 
 This will create a folder `photobooth` with all necessary files.
 
+#### Development
+
+Alternatively, for developing, there is a `deploy.sh` script that lets one deploy the local changes.
+
+```bash
+bash deploy.sh <host> <user:pi> <target:~/photobooth>
+```
+
+_The first parameter is required and can be something like `photobooth.local` or an IP address._
+
 ### Install photobooth with dependencies
 
 Run the following command to download and install all dependencies and the photobooth:

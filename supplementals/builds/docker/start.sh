@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Start script: $1"
 
 if [ "$(uname)" == "Darwin" ]; then

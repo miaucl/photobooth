@@ -70,6 +70,38 @@
       "options": {
         "cwd": "${workspaceFolder}"
       }
+    },
+    {
+      "label": "Deploy: Classic",
+      "type": "shell",
+      "command": "bash supplementals/builds/classic/deploy.sh ${input:deploy_host_param}",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      },
+      "presentation": {
+        "focus": true,
+        "reveal": "always"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Deploy: Pro",
+      "type": "shell",
+      "command": "bash supplementals/builds/pro/deploy.sh ${input:deploy_host_param}",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      },
+      "presentation": {
+        "focus": true,
+        "reveal": "always"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
     }
   ],
   "inputs": [
@@ -80,5 +112,11 @@
       "options": ["autostart.sh", "autorun.sh", "autousb.sh"],
       "type": "pickString"
     },
-]
+    {
+      "id": "deploy_host_param",
+      "description": "Provide the deploy target (host/IP)",
+      "default": "photobooth.local",
+      "type": "promptString"
+    },
+  ]
 }
