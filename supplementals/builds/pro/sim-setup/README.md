@@ -40,7 +40,7 @@ and look for something like
 
 Good, the device is connected, but you will not see an interface with `ifconfig -a`
 
-Know to set it up, place the magic file `40-huawei.rule` at `/etc/udev/rules.d/40-huawei.rule`
+Know to set it up, place the magic file `40-huawei.rules` at `/etc/udev/rules.d/40-huawei.rules`
 
 Reboot and hope for the best!
 
@@ -85,7 +85,7 @@ Consult the internet ;)
 When you plug the usb device in, after the pi has started, it usually just works. But if it is connected, sometimes it stays in default mode and `usb_modeswitch` is needed to kick things off. To do so, following script `setup.sh` can be installed at `/etc/huawei_brovi/setup.sh` called with a `1m` period in the cron tab of the pi. It does not hurt when everything is already set up and it keeps running, just make sure it is executable.
 
 ```txt
-* * * * * /etc/huawei_brovi/setup.sh 2>&1 /etc/huawei_brovi/setup.log
+* * * * * /etc/huawei_brovi/setup.sh
 ```
 
 ### Sources
