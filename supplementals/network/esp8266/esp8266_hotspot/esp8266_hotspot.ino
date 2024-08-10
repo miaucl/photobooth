@@ -1,7 +1,10 @@
 #include <ESP8266WiFi.h>
 
-const char* ssid     = "o3pxxkr5khPC";
-const char* password = "87faNAMhrGrq";
+const char* ssid     = "Photomaton Hotspot";
+const char* password = "321smile";
+
+WiFiEventHandler stationConnectedHandler;
+WiFiEventHandler stationDisconnectedHandler;
 
 void setup()
 {
@@ -18,10 +21,35 @@ void setup()
   {
     Serial.println("Failed!");
   }
+
+  stationConnectedHandler = WiFi.onSoftAPModeStationConnected(&onStationConnected);
+
+  stationDisconnectedHandler = WiFi.onSoftAPModeStationDisconnected(&onStationDisconnected);
+}
+
+void onStationConnected(const WiFiEventSoftAPModeStationConnected& evt) 
+{
+  Serial.print("Station connected: ");
+  Serial.println(evt.aid);
+  Serial.println(macToString(evt.mac));
+}
+
+void onStationDisconnected(const WiFiEventSoftAPModeStationDisconnected& evt) 
+{
+  Serial.print("Station disconnected: ");
+  Serial.println(evt.aid);
+  Serial.println(macToString(evt.mac));
 }
 
 void loop()
 {
   Serial.printf("Stations connected = %d\n", WiFi.softAPgetStationNum());
   delay(3000);
+}
+
+String macToString(const unsigned char* mac)
+{
+  char buf[20];
+  snprintf(buf, sizeof(buf), "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+  return String(buf);
 }
