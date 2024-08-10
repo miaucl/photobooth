@@ -186,7 +186,7 @@ class Gpio:
 
     def showPostprocess(self):
 
-        self.disableTrigger()
+        self.enableTrigger()
         self.disableLamp()
 
 
